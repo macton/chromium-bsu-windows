@@ -1,0 +1,41 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.Analysis.props(24,5): warning MSB4211: The property "MsvcAnalysisPluginPath" is being set to a value for the first time, but it was already consumed at "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CodeAnalysis.Extensions.props (33,5)".
+  FTBuffer.cpp
+  FTCharmap.cpp
+  FTContour.cpp
+  FTFace.cpp
+  FTBitmapFont.cpp
+  FTBufferFont.cpp
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTFont\FTBufferFont.cpp(189,16): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
+  FTExtrudeFont.cpp
+  FTFont.cpp
+  FTFontGlue.cpp
+  FTOutlineFont.cpp
+  FTPixmapFont.cpp
+  FTPolygonFont.cpp
+  FTTextureFont.cpp
+  FTGlyphContainer.cpp
+  FTBitmapGlyph.cpp
+  FTBufferGlyph.cpp
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTGlyph\FTBufferGlyph.cpp(100,26): warning C4018: '<': signed/unsigned mismatch
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTGlyph\FTBufferGlyph.cpp(105,30): warning C4018: '<': signed/unsigned mismatch
+  FTExtrudeGlyph.cpp
+  FTGlyph.cpp
+  FTGlyphGlue.cpp
+  FTOutlineGlyph.cpp
+  Compiling...
+  FTPixmapGlyph.cpp
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTGlyph\FTPixmapGlyph.cpp(125,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTGlyph\FTPixmapGlyph.cpp(126,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  FTPolygonGlyph.cpp
+  FTTextureGlyph.cpp
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTGlyph\FTTextureGlyph.cpp(134,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\src\FTGlyph\FTTextureGlyph.cpp(135,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  FTLayout.cpp
+  FTLayoutGlue.cpp
+  FTSimpleLayout.cpp
+  FTLibrary.cpp
+  FTPoint.cpp
+  FTSize.cpp
+  FTVectoriser.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1571,5): warning MSB8012: TargetPath(C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\msvc\vc8\x64\Release\ftgl_static.lib) does not match the Library's OutputFile property value (C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\msvc\build\ftgl_static.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+  ftgl_static.vcxproj -> C:\Projects\chromium-bsu-0.9.16.1\external\ftgl-2.1.3~rc5\msvc\vc8\x64\Release\ftgl_static.lib

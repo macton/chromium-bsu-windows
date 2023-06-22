@@ -1,0 +1,69 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.Analysis.props(24,5): warning MSB4211: The property "MsvcAnalysisPluginPath" is being set to a value for the first time, but it was already consumed at "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CodeAnalysis.Extensions.props (33,5)".
+  autofit.c
+  ftbase.c
+  ftbbox.c
+  ftbdf.c
+  ftbitmap.c
+  ftcid.c
+  ftfstype.c
+  ftgasp.c
+  ftglyph.c
+  ftgxval.c
+  ftinit.c
+  ftmm.c
+  ftotval.c
+  ftpatent.c
+  ftpfr.c
+  ftstroke.c
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\base\ftcalc.c(1106,30): warning C4244: 'return': conversion from 'FT_Int64' to 'FT_Int32', possible loss of data (compiling source file ..\..\..\src\base\ftbase.c)
+  ftsynth.c
+  fttype1.c
+  ftwinfnt.c
+  bdf.c
+  ftcache.c
+  cff.c
+  type1cid.c
+  dlgwrap.c
+  ftgzip.c
+  ftlzw.c
+  pcf.c
+  pfr.c
+  psaux.c
+  pshinter.c
+  psmodule.c
+  raster.c
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\psaux\t1decode.c(1996,23): warning C4267: '=': conversion from 'size_t' to 'FT_Int', possible loss of data (compiling source file ..\..\..\src\psaux\psaux.c)
+  sfnt.c
+  smooth.c
+  sdf.c
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\psaux\psintrp.c(1005,25): warning C4267: '=': conversion from 'size_t' to 'FT_Fast', possible loss of data (compiling source file ..\..\..\src\psaux\psaux.c)
+  svg.c
+  truetype.c
+  type1.c
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\sfdriver.c(859,13): warning C4267: '=': conversion from 'size_t' to 'FT_UInt', possible loss of data (compiling source file ..\..\..\src\sfnt\sfnt.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\sfdriver.c(1011,36): warning C4244: 'function': conversion from '__int64' to 'const unsigned int', possible loss of data (compiling source file ..\..\..\src\sfnt\sfnt.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\ttcolr.c(702,51): warning C4244: '+=': conversion from 'FT_ItemVarDelta' to 'FT_F2Dot14', possible loss of data (compiling source file ..\..\..\src\sfnt\sfnt.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\ttcolr.c(1649,47): warning C4244: '+=': conversion from 'FT_Int' to 'FT_F2Dot14', possible loss of data (compiling source file ..\..\..\src\sfnt\sfnt.c)
+  type42.c
+  winfnt.c
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\smooth\ftgrays.c(1980,20): warning C4267: '+=': conversion from 'size_t' to 'TCoord', possible loss of data (compiling source file ..\..\..\src\smooth\smooth.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(287,48): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(308,55): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(340,62): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(370,19): warning C4267: '=': conversion from 'size_t' to 'FT_UInt', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(579,56): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(588,55): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(597,58): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(606,60): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1driver.c(616,55): warning C4267: '=': conversion from 'size_t' to 'FT_ULong', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1load.c(1775,64): warning C4244: '=': conversion from '__int64' to 'FT_Int', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type1\t1load.c(1945,36): warning C4244: '=': conversion from '__int64' to 'FT_Int', possible loss of data (compiling source file ..\..\..\src\type1\type1.c)
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sdf\ftsdf.c(2856): warning C4701: potentially uninitialized local variable 'nearest_point' used
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\ttcolr.c(729): warning C4706: assignment within conditional expression
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\ttcolr.c(777): warning C4706: assignment within conditional expression
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\sfnt\ttcolr.c(839): warning C4706: assignment within conditional expression
+C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\src\type42\t42parse.c(870,62): warning C4244: '=': conversion from '__int64' to 'FT_Int', possible loss of data (compiling source file ..\..\..\src\type42\type42.c)
+  ftdebug.c
+  ftsystem.c
+     Creating library ..\..\..\objs\x64\Release\freetype.lib and object ..\..\..\objs\x64\Release\freetype.exp
+  freetype.vcxproj -> C:\Projects\chromium-bsu-0.9.16.1\external\freetype-2.13.0\objs\x64\Release\freetype.dll
