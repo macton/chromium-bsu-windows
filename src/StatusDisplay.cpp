@@ -74,27 +74,22 @@ void StatusDisplay::loadTextures()
 {
 	int i;
 	char	filename[128];
-#ifdef GL_CLAMP_TO_EDGE
-	GLenum clamp = GL_CLAMP_TO_EDGE;
-#else
-	GLenum clamp = GL_CLAMP;
-#endif
 
-	statTex      = Image::load(dataLoc("png/statBar.png"), IMG_NOMIPMAPS, IMG_BLEND1, GL_REPEAT, GL_NEAREST, GL_NEAREST);
-	shldTex      = Image::load(dataLoc("png/shields.png"), IMG_SIMPLEMIPMAPS, IMG_BLEND1, clamp, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-	topTex       = Image::load(dataLoc("png/stat-top.png"), IMG_NOMIPMAPS, IMG_BLEND1, clamp, GL_LINEAR, GL_NEAREST);
-	heroSuperTex = Image::load(dataLoc("png/heroSuper.png"), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
-	heroShieldTex = Image::load(dataLoc("png/heroShields.png"), IMG_NOMIPMAPS, IMG_BLEND2, clamp, GL_LINEAR, GL_LINEAR);
+	statTex = Image::load(dataLoc("png/statBar.png"));
+	shldTex = Image::load(dataLoc("png/shields.png"));
+	topTex = Image::load(dataLoc("png/stat-top.png"));
+	heroSuperTex = Image::load(dataLoc("png/heroSuper.png"));
+	heroShieldTex = Image::load(dataLoc("png/heroShields.png"));
 	for(i = 0; i < NUM_HERO_AMMO_TYPES; i++)
 	{
 		sprintf(filename, "png/heroAmmoFlash%02d.png", i);
-		heroAmmoFlash[i] = Image::load(dataLoc(filename), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+		heroAmmoFlash[i] = Image::load(dataLoc(filename));
 	}
-	useFocus = Image::load(dataLoc("png/useFocus.png"), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+	useFocus = Image::load(dataLoc("png/useFocus.png"));
 	for(i = 0; i < NUM_HERO_ITEMS; i++)
 	{
 		sprintf(filename, "png/useItem%02d.png", i);
-		useItem[i] = Image::load(dataLoc(filename), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+		useItem[i] = Image::load(dataLoc(filename));
 	}
 }
 

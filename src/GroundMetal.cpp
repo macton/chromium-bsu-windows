@@ -70,21 +70,21 @@ void GroundMetal::loadTextures()
 	switch(variation)
 	{
 		case 0:
-			tex[Base] = Image::load(dataLoc("png/gndMetalBase00.png"), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+			tex[Base] = Image::load(dataLoc("png/gndMetalBase00.png"));
 			break;
 		case 1:
-			tex[Base] = Image::load(dataLoc("png/gndMetalBase01.png"), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+			tex[Base] = Image::load(dataLoc("png/gndMetalBase01.png"));
 			break;
 		case 2:
-			tex[Base] = Image::load(dataLoc("png/gndMetalBase02.png"), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+			tex[Base] = Image::load(dataLoc("png/gndMetalBase02.png"));
 			break;
 		default:
-			tex[Base] = Image::load(dataLoc("png/gndMetalBase00.png"), IMG_NOMIPMAPS, IMG_ALPHA, clamp, GL_LINEAR, GL_LINEAR);
+			tex[Base] = Image::load(dataLoc("png/gndMetalBase00.png"));
 			break;
 	}
 	if(config->texBorder())
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, tbc);
-	tex[Blip] = Image::load(dataLoc("png/gndMetalBlip.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+	tex[Blip] = Image::load(dataLoc("png/gndMetalBlip.png"));
 }
 
 //----------------------------------------------------------

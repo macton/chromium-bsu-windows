@@ -109,7 +109,7 @@ PowerUps::~PowerUps()
 //----------------------------------------------------------
 void	PowerUps::loadTextures()
 {
-	pwrTex			= Image::load(dataLoc("png/powerUpTex.png"), IMG_NOMIPMAPS, IMG_BLEND3, GL_CLAMP, GL_LINEAR, GL_LINEAR);
+	pwrTex = Image::load(dataLoc("png/powerUpTex.png"));
 	tex[Shields]	= Image::load(dataLoc("png/powerUpShield.png"));
 	tex[SuperShields] = tex[Shields];
 	tex[Repair]		= tex[Shields];

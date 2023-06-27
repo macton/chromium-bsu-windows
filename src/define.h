@@ -12,12 +12,6 @@
 #include <chromium-bsu-config.h>
 #endif
 
-
-
-
-//#define SRAND (2.0*(0.5-(rand()/(double)RAND_MAX)))
-//#define FRAND (rand()/(double)RAND_MAX)
-//#define IRAND (rand())
 #define SRAND (Global::randS[(++Global::randIndex)%256])
 #define FRAND (Global::randF[(++Global::randIndex)%256])
 #define IRAND (Global::randI[(++Global::randIndex)%256])

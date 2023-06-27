@@ -100,15 +100,14 @@ MenuGL::~MenuGL()
 //----------------------------------------------------------
 void MenuGL::loadTextures()
 {
-	elecTex   = Image::load(dataLoc("png/electric.png"), IMG_NOMIPMAPS, IMG_BLEND3, GL_CLAMP, GL_LINEAR, GL_LINEAR);
-	backTex   = Image::load(dataLoc("png/menu_back.png"), IMG_NOMIPMAPS, IMG_SOLID, GL_REPEAT, GL_LINEAR, GL_LINEAR);
-//	csrTex    = Image::load(dataLoc("png/cursor.png"));
+	elecTex = Image::load(dataLoc("png/electric.png"));
+	backTex = Image::load(dataLoc("png/menu_back.png"));
 	csrTex    = Image::load(dataLoc("png/heroAmmoFlash00.png"));
 	updwnTex  = Image::load(dataLoc("png/menu_updown.png"));
 	//-- Environment map
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-	envTex = Image::load(dataLoc("png/reflect.png"), IMG_BUILDMIPMAPS, IMG_SOLID, GL_CLAMP, GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR);
+	envTex = Image::load(dataLoc("png/reflect.png"));
 
 	listChrom = glGenLists(1);
 	listBSU = glGenLists(1);

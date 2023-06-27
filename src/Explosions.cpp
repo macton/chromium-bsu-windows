@@ -161,25 +161,24 @@ Explosions::~Explosions()
 //----------------------------------------------------------
 void	Explosions::loadTextures()
 {
-	tex[EnemyDestroyed]	= Image::load(dataLoc("png/enemyExplo.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_CLAMP, GL_NEAREST, GL_LINEAR);
+	tex[EnemyDestroyed] = Image::load(dataLoc("png/enemyExplo.png"));
 	tex[EnemyDamage]	= tex[EnemyDestroyed];
 	tex[EnemyAmmo00]	= Image::load(dataLoc("png/enemyAmmoExplo00.png"));
-	tex[EnemyAmmo01]	= Image::load(dataLoc("png/enemyAmmoExplo01.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_CLAMP, GL_NEAREST, GL_LINEAR);
+	tex[EnemyAmmo01] = Image::load(dataLoc("png/enemyAmmoExplo01.png"));
 	tex[EnemyAmmo02]	= Image::load(dataLoc("png/enemyAmmoExplo02.png"));
 	tex[EnemyAmmo03]	= Image::load(dataLoc("png/enemyAmmoExplo03.png"));
 	tex[EnemyAmmo04]	= Image::load(dataLoc("png/enemyAmmoExplo04.png"));
-	tex[HeroDestroyed]	= Image::load(dataLoc("png/enemyExplo.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_CLAMP, GL_NEAREST, GL_LINEAR);
+	tex[HeroDestroyed] = Image::load(dataLoc("png/enemyExplo.png"));
 	tex[HeroDamage]		= tex[HeroDestroyed];
-	tex[HeroAmmo00]		= Image::load(dataLoc("png/heroAmmoExplo00.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_CLAMP, GL_NEAREST, GL_NEAREST);
-	tex[HeroAmmo01]		= Image::load(dataLoc("png/heroAmmoExplo01.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_CLAMP, GL_NEAREST, GL_LINEAR);
-	tex[HeroAmmo02]		= Image::load(dataLoc("png/heroAmmoExplo02.png"), IMG_NOMIPMAPS, IMG_ALPHA, GL_CLAMP, GL_NEAREST, GL_LINEAR);
-	tex[HeroShields]	= Image::load(dataLoc("png/heroShields.png"), IMG_NOMIPMAPS, IMG_BLEND3, GL_CLAMP, GL_LINEAR, GL_LINEAR);
-//	tex[HeroShields]	= Image::load(dataLoc("png/heroShields.png"), IMG_NOMIPMAPS, IMG_BLEND1, GL_CLAMP, GL_LINEAR, GL_LINEAR);
-	tex[PowerBurst]		= Image::load(dataLoc("png/powerUpTex.png"), IMG_NOMIPMAPS, IMG_BLEND3, GL_CLAMP, GL_LINEAR, GL_LINEAR);
+	tex[HeroAmmo00] = Image::load(dataLoc("png/heroAmmoExplo00.png"));
+	tex[HeroAmmo01] = Image::load(dataLoc("png/heroAmmoExplo01.png"));
+	tex[HeroAmmo02] = Image::load(dataLoc("png/heroAmmoExplo02.png"));
+	tex[HeroShields] = Image::load(dataLoc("png/heroShields.png"));
+	tex[PowerBurst] = Image::load(dataLoc("png/powerUpTex.png"));
 	tex[AddLife]		= Image::load(dataLoc("png/life.png"));
 	tex[LoseLife]		= tex[AddLife];
 	tex[ScoreLife]		= tex[AddLife];
-	tex[Electric]		= Image::load(dataLoc("png/electric.png"), IMG_NOMIPMAPS, IMG_BLEND3, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+	tex[Electric] = Image::load(dataLoc("png/electric.png"));
 	tex[Glitter]		= Image::load(dataLoc("png/glitter.png"));
 }
 
