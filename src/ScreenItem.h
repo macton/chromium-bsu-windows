@@ -11,6 +11,16 @@
 #include <stdio.h>
 #include <math.h>
 
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+
 class ScreenItem
 {
 public:
@@ -36,7 +46,7 @@ public:
 		int start_x = 10 + (int)floorf(pos[0]);
 		// sprintf(description, "--------------------");
 		// description[start_x] = '*';
-		sprintf(description, "%d", start_x);
+		sprintf(description, "%d", min(max(start_x,0),19));
 		// sprintf(description, "age: %d pos: %f, %f vel: %f, %f", age, pos[0], pos[1], vel[0], vel[1]);
 		return description;
 	}

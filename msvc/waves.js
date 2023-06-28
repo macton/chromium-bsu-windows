@@ -27,7 +27,6 @@ const writeWavesFile = (filename_in, filename_out) => {
     }
     const lines = type_lines[type_name].sort( (a,b) => a[0]-b[0] );
     waves_file_text += type_name + ":" + "\n";
-    // console.log(type_name + ":");
   
     let last_line_text = "--------------------";
     let last_line_time = "0";
@@ -37,7 +36,6 @@ const writeWavesFile = (filename_in, filename_out) => {
   	const line_index = line[1]|0;
           if ( line_time != last_line_time ) {
             if ( last_line_ready) {
-              // console.log( last_line_time + " " + last_line_text );
               waves_file_text += last_line_time + " " + last_line_text + "\n";
   	  } 
             last_line_text = "--------------------";
@@ -49,7 +47,6 @@ const writeWavesFile = (filename_in, filename_out) => {
           last_line_ready = true; 
     });
     if ( last_line_ready) {
-      // console.log( last_line_time + " " + last_line_text );
       waves_file_text += last_line_time + " " + last_line_text + "\n";
     }
   });
