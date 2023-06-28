@@ -794,6 +794,7 @@ void MenuGL::incItem()
 			break;
 		case GameLevel:
 			game->gameLevel++;
+			/*
 			if(game->gameLevel > config->maxLevel())
 			{
 				mssgHelpOverride = true;
@@ -802,6 +803,7 @@ void MenuGL::incItem()
 				game->gameLevel = config->maxLevel();
 			}
 			else
+			*/
 				game->newGame();
 			break;
 		case Graphics:

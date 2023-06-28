@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Ammo.cpp" />
+    <ClCompile Include="..\src\Atlas.cpp" />
     <ClCompile Include="..\src\Audio.cpp" />
     <ClCompile Include="..\src\AudioSDLMixer.cpp" />
     <ClCompile Include="..\src\Config.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="..\external\SDL2-2.28.0\include\SDL_video.h" />
     <ClInclude Include="..\external\SDL2-2.28.0\include\SDL_vulkan.h" />
     <ClInclude Include="..\src\Ammo.h" />
+    <ClInclude Include="..\src\Atlas.h" />
     <ClInclude Include="..\src\Audio.h" />
     <ClInclude Include="..\src\AudioSDLMixer.h" />
     <ClInclude Include="..\src\compatibility.h" />

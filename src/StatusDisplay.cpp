@@ -34,7 +34,7 @@
 #include "Global.h"
 #include "Explosions.h"
 #include "Image.h"
-
+#include "Atlas.h"
 
 static float statPosAmmo[3] =	{-10.5,  8.00, 25.0 };
 static float statPosShld[3] =	{-10.4, -7.80, 25.0 };
@@ -182,53 +182,52 @@ void StatusDisplay::drawGL(HeroAircraft	*hero)
 	}
 
 	//-- draw ship lives
-	glPushMatrix();
-	glColor4f(0.6, 0.6, 0.7, 1.0);
-	glBindTexture(GL_TEXTURE_2D, game->hero->heroTex);
-	glTranslatef(10.2, 7.4, 25.0);
-	size[0] = game->hero->getSize(0)*0.5;
-	size[1] = game->hero->getSize(1)*0.5;
-	for(i = 0; i < game->hero->getLives(); i++)
 	{
-		drawQuad(size[0], size[1]);
-		glTranslatef(0.0, -size[1]*2.0, 0.0);
+		const float sx     = game->hero->getSize(0) * 0.5f;
+		const float sy     = game->hero->getSize(1) * 0.5f;
+		const float x      = 10.2f;
+		const float y      = 7.4f;
+		const float step_y = -sy * 2.0f;
+
+		glColor4f(0.6, 0.6, 0.7, 1.0);
+		for (i = 0; i < game->hero->getLives(); i++)
+		{
+			AtlasDrawSprite(kHero, x, y + (step_y * (float)i), sx, sy);
+		}
 	}
-	glPopMatrix();
 
 	//-- draw usable items
 	if(config->gfxLevel() > 1)
 	{
-		glPushMatrix();
-		glColor4f(1.0, 1.0, 1.0, 1.0);
-		glTranslatef(8.5, -7.7, 25.0);
-		size[0] = 0.4;
-		size[1] = 0.5;
+		float px = 8.5f;
+		float py = -7.7f;
+		float szx = 0.4f;
+		float szy = 0.5f;
+
 		for(i = 0; i < NUM_HERO_ITEMS; i++)
 		{
 			if(i == game->hero->currentItem())
 			{
 				float a = game->hero->itemArmed()*0.8;
+
 				glColor4f(0.4+a, 0.4, 0.4, 0.4+a);
-				glBindTexture(GL_TEXTURE_2D, useFocus);
-				drawQuad(size[1], size[1]);
-				glColor4f(1.0, 1.0, 1.0, 1.0);
+				AtlasDrawSprite(kUseFocus, px, py, szx, szy);
 			}
-			glBindTexture(GL_TEXTURE_2D, useItem[i]);
-			drawQuad(size[0], size[0]);
-			glTranslatef(-size[1]*2.0, 0.0, 0.0);
+			glColor4f(1.0, 1.0, 1.0, 1.0);
+			AtlasDrawSprite(kUseItem, px, py, szx, szy);
 		}
-		glPopMatrix();
 	}
 
 	//-- draw 'enemy-got-past' Warning
 	if(enemyWarn && game->hero->getLives() >= 0)
 	{
-		glPushMatrix();
+		float px = 0.0f;
+		float py = -8.75f;
+		float szx = 12.0f;
+		float szy = 3.0f;
+
 		glColor4f(1.0, 0.0, 0.0, enemyWarn+0.15*sin(game->gameFrame*0.7));
-		glTranslatef(0.0, -8.75, 25.0);
-		glBindTexture(GL_TEXTURE_2D, heroAmmoFlash[0]);
-		drawQuad(12.0, 3.0);
-		glPopMatrix();
+		AtlasDrawSprite(kHeroAmmoFlash00, px, py, szx, szy);
 		enemyWarn = 0.0;
 	}
 

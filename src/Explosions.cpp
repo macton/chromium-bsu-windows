@@ -25,6 +25,7 @@
 #include "Global.h"
 #include "HeroAircraft.h"
 #include "Image.h"
+#include "Atlas.h"
 
 //====================================================================
 Explosions::Explosions()
@@ -34,7 +35,6 @@ Explosions::Explosions()
 	int		i;
 	for(i = 0; i < (int)NumExploTypes; i++)
 	{
-		tex[i]  = 0;
 		exploRoot[i] = new Explo();
 		exploSize[i][0] = 0.5;
 		exploSize[i][1] = 0.5;
@@ -44,8 +44,6 @@ Explosions::Explosions()
 		exploPause[i][2] = 0;
 	}
 	exploPool = new Explo();
-
-	loadTextures();
 
 	exploSize[EnemyDestroyed][0] = 1.35;
 	exploSize[EnemyDestroyed][1] = 1.35;
@@ -154,42 +152,6 @@ Explosions::~Explosions()
 	for(int i = 0; i < (int)NumExploTypes; i++)
 		delete exploRoot[i];
 	delete exploPool;
-
-	deleteTextures();
-}
-
-//----------------------------------------------------------
-void	Explosions::loadTextures()
-{
-	tex[EnemyDestroyed] = Image::load(dataLoc("png/enemyExplo.png"));
-	tex[EnemyDamage]	= tex[EnemyDestroyed];
-	tex[EnemyAmmo00]	= Image::load(dataLoc("png/enemyAmmoExplo00.png"));
-	tex[EnemyAmmo01] = Image::load(dataLoc("png/enemyAmmoExplo01.png"));
-	tex[EnemyAmmo02]	= Image::load(dataLoc("png/enemyAmmoExplo02.png"));
-	tex[EnemyAmmo03]	= Image::load(dataLoc("png/enemyAmmoExplo03.png"));
-	tex[EnemyAmmo04]	= Image::load(dataLoc("png/enemyAmmoExplo04.png"));
-	tex[HeroDestroyed] = Image::load(dataLoc("png/enemyExplo.png"));
-	tex[HeroDamage]		= tex[HeroDestroyed];
-	tex[HeroAmmo00] = Image::load(dataLoc("png/heroAmmoExplo00.png"));
-	tex[HeroAmmo01] = Image::load(dataLoc("png/heroAmmoExplo01.png"));
-	tex[HeroAmmo02] = Image::load(dataLoc("png/heroAmmoExplo02.png"));
-	tex[HeroShields] = Image::load(dataLoc("png/heroShields.png"));
-	tex[PowerBurst] = Image::load(dataLoc("png/powerUpTex.png"));
-	tex[AddLife]		= Image::load(dataLoc("png/life.png"));
-	tex[LoseLife]		= tex[AddLife];
-	tex[ScoreLife]		= tex[AddLife];
-	tex[Electric] = Image::load(dataLoc("png/electric.png"));
-	tex[Glitter]		= Image::load(dataLoc("png/glitter.png"));
-}
-
-//----------------------------------------------------------
-void	Explosions::deleteTextures()
-{
-	for(int i = 0; i < (int)NumExploTypes; i++)
-	{
-		glDeleteTextures(1, &tex[i]);
-		tex[i] = 0;
-	}
 }
 
 //----------------------------------------------------------
@@ -341,16 +303,16 @@ void	Explosions::update()
 void	Explosions::drawGL()
 {
 
-	if(exploRoot[EnemyDestroyed]->next)	drawExplo(EnemyDestroyed);
-	if(exploRoot[EnemyDamage]->next)	drawExplo(EnemyDamage);
+	if(exploRoot[EnemyDestroyed]->next)	drawEnemyDestroyed(EnemyDestroyed);
+	if(exploRoot[EnemyDamage]->next)	drawEnemyDamage(EnemyDamage);
 	if(exploRoot[EnemyAmmo00]->next)	drawAmmo(EnemyAmmo00);
 	if(exploRoot[EnemyAmmo01]->next)	drawAmmo(EnemyAmmo01);
 	if(exploRoot[EnemyAmmo02]->next)	drawAmmo(EnemyAmmo02);
 	if(exploRoot[EnemyAmmo03]->next)	drawAmmo(EnemyAmmo03);
 	if(exploRoot[EnemyAmmo04]->next)	drawAmmo(EnemyAmmo04);
 
-	if(exploRoot[HeroDestroyed]->next)	drawExplo(HeroDestroyed);
-	if(exploRoot[HeroDamage]->next)		drawExplo(HeroDamage);
+	if(exploRoot[HeroDestroyed]->next)	drawHeroDestroyed(HeroDestroyed);
+	if(exploRoot[HeroDamage]->next)		drawHeroDamage(HeroDamage);
 	if(exploRoot[HeroAmmo00]->next)		drawAmmo(HeroAmmo00);
 	if(exploRoot[HeroAmmo01]->next)		drawAmmo(HeroAmmo01);
 	if(exploRoot[HeroAmmo02]->next)		drawAmmo(HeroAmmo02);
@@ -366,73 +328,157 @@ void	Explosions::drawGL()
 	if(exploRoot[Glitter]->next)		drawGlitter(Glitter);
 }
 
-//----------------------------------------------------------
-void	Explosions::drawExplo(ExploType type)
+void	Explosions::drawEnemyDamage(ExploType type)
 {
 	float	age;
 	float	ex, ey;
 	float	exs, eys;
-	float	*p;
+	float* pos;
 	float	clr, tmp;
-	float	xoff,yoff;
-	Explo	*thisExplo;
+	float	xoff, yoff;
+	Explo* thisExplo;
 
-	glColor4f(1.0, 1.0, 1.0, 1.0);
-
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
 	thisExplo = exploRoot[type]->next;
-	glBegin(GL_QUADS);
-	while(thisExplo)
+	while (thisExplo)
 	{
-		age = thisExplo->age*game->speedAdj;
-		if( age >= 0)
+		age = thisExplo->age * game->speedAdj;
+		if (age >= 0)
 		{
-			clr = age/exploStay[type];
-			ex = thisExplo->size*exploSize[type][0]*clr;
-			ey = thisExplo->size*exploSize[type][1]*clr;
-//			ex = thisExplo->size*exploSize[type][0]*((thisExplo->age)/(exploStay[type]));
-//			ey = thisExplo->size*exploSize[type][1]*((thisExplo->age)/(exploStay[type]));
+			clr = age / exploStay[type];
+			ex = thisExplo->size * exploSize[type][0] * clr;
+			ey = thisExplo->size * exploSize[type][1] * clr;
 			exs = ex * 0.7;
 			eys = ey * 0.7;
-			tmp = clr*clr;
-			clr = 1.2-clr;
-			tmp = 0.5+clr*0.5;
-			glColor4f(tmp, tmp, tmp, clr);
-
-			if(type == HeroDamage)
-				p = game->hero->pos;
-			else
-				p = thisExplo->pos;
-
-			if(type == EnemyDestroyed)
-			{
-				xoff = 0.1;
-				yoff = 0.3;
-				glTexCoord2f(0.0, 1.0); glVertex3f(p[0]-exs+xoff, p[1]+eys+yoff, p[2]);
-				glTexCoord2f(0.0, 0.0); glVertex3f(p[0]-exs+xoff, p[1]-eys+yoff, p[2]);
-				glTexCoord2f(1.0, 0.0); glVertex3f(p[0]+exs+xoff, p[1]-eys+yoff, p[2]);
-				glTexCoord2f(1.0, 1.0); glVertex3f(p[0]+exs+xoff, p[1]+eys+yoff, p[2]);
-
-				xoff = -0.2;
-				yoff = -0.4;
-				glTexCoord2f(0.0, 1.0); glVertex3f(p[0]-exs+xoff, p[1]+eys+yoff, p[2]);
-				glTexCoord2f(0.0, 0.0); glVertex3f(p[0]-exs+xoff, p[1]-eys+yoff, p[2]);
-				glTexCoord2f(1.0, 0.0); glVertex3f(p[0]+exs+xoff, p[1]-eys+yoff, p[2]);
-				glTexCoord2f(1.0, 1.0); glVertex3f(p[0]+exs+xoff, p[1]+eys+yoff, p[2]);
-			}
-			xoff =  0.0;
+			tmp = clr * clr;
+			clr = 1.2 - clr;
+			tmp = 0.5 + clr * 0.5;
+			pos = thisExplo->pos;
+			xoff = 0.0;
 			yoff = -0.3;
-			glTexCoord2f(0.0, 1.0); glVertex3f(p[0]-ex+xoff, p[1]+ey+yoff, p[2]);
-			glTexCoord2f(0.0, 0.0); glVertex3f(p[0]-ex+xoff, p[1]-ey+yoff, p[2]);
-			glTexCoord2f(1.0, 0.0); glVertex3f(p[0]+ex+xoff, p[1]-ey+yoff, p[2]);
-			glTexCoord2f(1.0, 1.0); glVertex3f(p[0]+ex+xoff, p[1]+ey+yoff, p[2]);
+
+			// tex[EnemyDamage] = Image::load(dataLoc("png/enemyExplo.png"));
+			glColor4f(tmp, tmp, tmp, clr);
+			AtlasDrawSprite(kShipExplode, pos[0] + xoff, pos[1] + yoff, ex, ey);
 		}
 
 		thisExplo = thisExplo->next; //ADVANCE
 	}
-	glEnd();
-
 }
+
+void	Explosions::drawEnemyDestroyed(ExploType type)
+{
+	float	age;
+	float	ex, ey;
+	float	exs, eys;
+	float* pos;
+	float	clr, tmp;
+	float	xoff, yoff;
+	Explo* thisExplo;
+
+	thisExplo = exploRoot[type]->next;
+	while (thisExplo)
+	{
+		age = thisExplo->age * game->speedAdj;
+		if (age >= 0)
+		{
+			clr = age / exploStay[type];
+			ex = thisExplo->size * exploSize[type][0] * clr;
+			ey = thisExplo->size * exploSize[type][1] * clr;
+			exs = ex * 0.7;
+			eys = ey * 0.7;
+			tmp = clr * clr;
+			clr = 1.2 - clr;
+			tmp = 0.5 + clr * 0.5;
+			pos = thisExplo->pos;
+			xoff = 0.0;
+			yoff = -0.3;
+
+			// tex[EnemyDestroyed] = Image::load(dataLoc("png/enemyExplo.png"));
+			glColor4f(tmp, tmp, tmp, clr);
+			AtlasDrawSprite(kShipExplode, pos[0]+xoff, pos[1]+yoff, ex , ey );
+			AtlasDrawSprite(kShipExplode, pos[0] + xoff + 0.1f, pos[1] + yoff + 0.3f, ex, ey);
+			AtlasDrawSprite(kShipExplode, pos[0] + xoff - 0.2f, pos[1] + yoff - 0.4f, ex, ey);
+		}
+
+		thisExplo = thisExplo->next; //ADVANCE
+	}
+}
+
+void	Explosions::drawHeroDamage(ExploType type)
+{
+	float	age;
+	float	ex, ey;
+	float	exs, eys;
+	float* pos;
+	float	clr, tmp;
+	float	xoff, yoff;
+	Explo* thisExplo;
+
+	thisExplo = exploRoot[type]->next;
+	while (thisExplo)
+	{
+		age = thisExplo->age * game->speedAdj;
+		if (age >= 0)
+		{
+			clr = age / exploStay[type];
+			ex = thisExplo->size * exploSize[type][0] * clr;
+			ey = thisExplo->size * exploSize[type][1] * clr;
+			exs = ex * 0.7;
+			eys = ey * 0.7;
+			tmp = clr * clr;
+			clr = 1.2 - clr;
+			tmp = 0.5 + clr * 0.5;
+			pos = game->hero->pos;
+			xoff = 0.0;
+			yoff = -0.3;
+
+			// tex[HeroDamage] = Image::load(dataLoc("png/enemyExplo.png"));
+			glColor4f(tmp, tmp, tmp, clr);
+			AtlasDrawSprite(kShipExplode, pos[0] + xoff, pos[1] + yoff, ex, ey);
+		}
+
+		thisExplo = thisExplo->next; //ADVANCE
+	}
+}
+
+void	Explosions::drawHeroDestroyed(ExploType type)
+{
+	float	age;
+	float	ex, ey;
+	float	exs, eys;
+	float* pos;
+	float	clr, tmp;
+	float	xoff, yoff;
+	Explo* thisExplo;
+
+	thisExplo = exploRoot[type]->next;
+	while (thisExplo)
+	{
+		age = thisExplo->age * game->speedAdj;
+		if (age >= 0)
+		{
+			clr = age / exploStay[type];
+			ex = thisExplo->size * exploSize[type][0] * clr;
+			ey = thisExplo->size * exploSize[type][1] * clr;
+			exs = ex * 0.7;
+			eys = ey * 0.7;
+			tmp = clr * clr;
+			clr = 1.2 - clr;
+			tmp = 0.5 + clr * 0.5;
+			pos = game->hero->pos;
+			xoff = 0.0;
+			yoff = -0.3;
+
+			// tex[HeroDestroyed] = Image::load(dataLoc("png/enemyExplo.png"));
+			glColor4f(tmp, tmp, tmp, clr);
+			AtlasDrawSprite(kShipExplode, pos[0] + xoff, pos[1] + yoff, ex, ey);
+		}
+
+		thisExplo = thisExplo->next; //ADVANCE
+	}
+}
+
+
 
 //----------------------------------------------------------
 void	Explosions::drawAmmo(ExploType type)
@@ -442,28 +488,24 @@ void	Explosions::drawAmmo(ExploType type)
 	float	clr;//,tmp;
 	float	*pos;
 	Explo	*thisExplo;
+	int      ammo_type_index = type - EnemyAmmo00;
 
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
 	thisExplo = exploRoot[type]->next;
-	glBegin(GL_QUADS);
 	while(thisExplo)
 	{
 		age = thisExplo->age*game->speedAdj;
 		ex = exploSize[type][0]*((age+5.0f)/(exploStay[type]+5.0f));
 		ey = exploSize[type][1]*((age+5.0f)/(exploStay[type]+5.0f));
 		clr = age/exploStay[type];
-		//tmp = clr*clr*clr;
 		if( (clr = (1.2-clr)) > 1.0)
 			clr = 1.0;
-		glColor4f(1.0, 1.0, 1.0, clr);
 		pos = thisExplo->pos;
-		glTexCoord2f(0.0, 0.0); glVertex3f(pos[0]-ex, pos[1]+ey, pos[2]);
-		glTexCoord2f(0.0, 1.0); glVertex3f(pos[0]-ex, pos[1]-ey, pos[2]);
-		glTexCoord2f(1.0, 1.0); glVertex3f(pos[0]+ex, pos[1]-ey, pos[2]);
-		glTexCoord2f(1.0, 0.0); glVertex3f(pos[0]+ex, pos[1]+ey, pos[2]);
+
+		glColor4f(1.0, 1.0, 1.0, clr);
+		AtlasDrawSprite(kEnemyAmmoExplode00 + ammo_type_index, pos[0], pos[1], ex, ey);
+
 		thisExplo = thisExplo->next; //ADVANCE
 	}
-	glEnd();
 }
 
 //----------------------------------------------------------
@@ -475,7 +517,6 @@ void	Explosions::drawBurst(ExploType type)
 	float	*pos;
 	Explo	*thisExplo;
 
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
 	thisExplo = exploRoot[type]->next;
 	while(thisExplo)
 	{
@@ -485,25 +526,12 @@ void	Explosions::drawBurst(ExploType type)
 		ex = thisExplo->size*exploSize[type][0]*clr;
 		ey = thisExplo->size*exploSize[type][1]*clr;
 		clr = tmp*0.75;
-		glColor4f(clr+0.5, clr+0.2, clr+0.1, clr);
 		pos = thisExplo->pos;
-		glPushMatrix();
-		glTranslatef(pos[0], pos[1], pos[2]);
-		glRotatef(IRAND, 0.0, 0.0, 1.0);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0); glVertex3f( -ex,  ey, 0.0);
-		glTexCoord2f(0.0, 1.0); glVertex3f( -ex, -ey, 0.0);
-		glTexCoord2f(1.0, 1.0); glVertex3f(  ex, -ey, 0.0);
-		glTexCoord2f(1.0, 0.0); glVertex3f(  ex,  ey, 0.0);
-		glEnd();
-		glRotatef(IRAND, 0.0, 0.0, 1.0);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0); glVertex3f( -ex,  ey, 0.0);
-		glTexCoord2f(0.0, 1.0); glVertex3f( -ex, -ey, 0.0);
-		glTexCoord2f(1.0, 1.0); glVertex3f(  ex, -ey, 0.0);
-		glTexCoord2f(1.0, 0.0); glVertex3f(  ex,  ey, 0.0);
-		glEnd();
-		glPopMatrix();
+
+		glColor4f(clr + 0.5, clr + 0.2, clr + 0.1, clr);
+		AtlasDrawSprite(kPowerBurst, pos[0], pos[1], ex, ey);
+		AtlasDrawSprite(kPowerBurst, pos[0], pos[1], ex, ey);
+
 		thisExplo = thisExplo->next; //ADVANCE
 	}
 }
@@ -519,7 +547,7 @@ void	Explosions::drawShields(ExploType type)
 
 	if(!game->hero->isVisible())
 		return;
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
+
 	thisExplo = exploRoot[type]->next;
 	while(thisExplo)
 	{
@@ -529,18 +557,11 @@ void	Explosions::drawShields(ExploType type)
 		tmp = 0.5+(clr*0.5);
 		ex = exploSize[type][0]*tmp;
 		ey = exploSize[type][1]*tmp;
-		glColor4f(clr, clr, 1.0, clr*0.7);
 		pos = game->hero->pos;
-		glPushMatrix();
-		glTranslatef(pos[0], pos[1], pos[2]);
-		glRotatef(IRAND, 0.0, 0.0, 1.0);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0); glVertex3f( -ex,  ey, 0.0);
-		glTexCoord2f(0.0, 1.0); glVertex3f( -ex, -ey, 0.0);
-		glTexCoord2f(1.0, 1.0); glVertex3f(  ex, -ey, 0.0);
-		glTexCoord2f(1.0, 0.0); glVertex3f(  ex,  ey, 0.0);
-		glEnd();
-		glPopMatrix();
+
+		glColor4f(clr, clr, 1.0, clr * 0.7);
+		AtlasDrawSprite(kHeroShields, pos[0], pos[1], ex, ey);
+
 		thisExplo = thisExplo->next; //ADVANCE
 	}
 }
@@ -550,20 +571,18 @@ void	Explosions::drawLife(ExploType type)
 {
 	float	age;
 	float	ex, ey;
-	float	*p;
+	float	*pos;
 	float	clr[4] = { 1.0, 1.0, 1.0, 1.0 };
 	float	tmp;
 	Explo	*thisExplo;
 
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
 	thisExplo = exploRoot[type]->next;
-	glBegin(GL_QUADS);
 	while(thisExplo)
 	{
 		age = thisExplo->age*game->speedAdj;
 		if(age >= 0)
 		{
-			p = thisExplo->pos;
+			pos = thisExplo->pos;
 			tmp = age/exploStay[type];
 			if(type == AddLife)
 			{
@@ -585,17 +604,13 @@ void	Explosions::drawLife(ExploType type)
 			}
 			ex = thisExplo->size*exploSize[type][0]*tmp;
 			ey = thisExplo->size*exploSize[type][1]*tmp;
+
 			glColor4fv(clr);
-			glTexCoord2f(0.0, 1.0); glVertex3f(p[0]-ex, p[1]+ey, p[2]);
-			glTexCoord2f(0.0, 0.0); glVertex3f(p[0]-ex, p[1]-ey, p[2]);
-			glTexCoord2f(1.0, 0.0); glVertex3f(p[0]+ex, p[1]-ey, p[2]);
-			glTexCoord2f(1.0, 1.0); glVertex3f(p[0]+ex, p[1]+ey, p[2]);
+			AtlasDrawSprite(kLife, pos[0], pos[1], ex, ey);
 		}
 
 		thisExplo = thisExplo->next; //ADVANCE
 	}
-	glEnd();
-
 }
 
 //----------------------------------------------------------
@@ -609,7 +624,6 @@ void	Explosions::drawElectric(ExploType type)
 	Explo	*thisExplo;
 	float	tOff;
 
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
 	thisExplo = exploRoot[type]->next;
 	while(thisExplo)
 	{
@@ -620,7 +634,6 @@ void	Explosions::drawElectric(ExploType type)
 			alpha = 1.0-tmp;
 			alpha = 5.0*(alpha*alpha);
 			clr = thisExplo->clr;
-			glColor4f(clr[0], clr[1], clr[2], clr[3]*alpha);
 			ex = exploSize[type][0];
 			ey = exploSize[type][1]*tmp;
 			tmp = (1.0-game->speedAdj)+(game->speedAdj*1.075);
@@ -629,15 +642,8 @@ void	Explosions::drawElectric(ExploType type)
 			thisExplo->vel[2] *= tmp;
 			pos = thisExplo->pos;
 			tOff = FRAND;
-			glPushMatrix();
-				glTranslatef(pos[0], pos[1], pos[2]);
-				glBegin(GL_QUADS);
-				glTexCoord2f(0.0, 0.0+tOff); glVertex3f( -ex,  ey, 0.0);
-				glTexCoord2f(0.0, 0.2+tOff); glVertex3f( -ex, -ey, 0.0);
-				glTexCoord2f(1.0, 0.2+tOff); glVertex3f(  ex, -ey, 0.0);
-				glTexCoord2f(1.0, 0.0+tOff); glVertex3f(  ex,  ey, 0.0);
-				glEnd();
-			glPopMatrix();
+			glColor4f(clr[0], clr[1], clr[2], clr[3] * alpha);
+			AtlasDrawSprite(kElectric, pos[0], pos[1], ex, ey);
 		}
 		thisExplo = thisExplo->next; //ADVANCE
 	}
@@ -653,7 +659,6 @@ void	Explosions::drawGlitter(ExploType type)
 	float	*pos;
 	Explo	*thisExplo;
 
-	glBindTexture(GL_TEXTURE_2D, tex[type]);
 	thisExplo = exploRoot[type]->next;
 	while(thisExplo)
 	{
@@ -664,21 +669,13 @@ void	Explosions::drawGlitter(ExploType type)
 			alpha = 1.0-tmp;
 			//alpha = 5.0*(alpha*alpha);
 			clr = thisExplo->clr;
-			glColor4f(clr[0], clr[1], clr[2], clr[3]*alpha);
 			tmp = alpha*alpha;
 			ex = tmp*thisExplo->size*exploSize[type][0];
 			ey = tmp*thisExplo->size*exploSize[type][1]+(0.02*age);
 			pos = thisExplo->pos;
-			glPushMatrix();
-				glTranslatef(pos[0], pos[1], pos[2]);
-				glBegin(GL_QUADS);
-				glTexCoord2f(0.0, 0.0); glVertex3f( -ex,  ey, 0.0);
-				glTexCoord2f(0.0, 1.0); glVertex3f( -ex, -ey, 0.0);
-				glTexCoord2f(1.0, 1.0); glVertex3f(  ex, -ey, 0.0);
-				glTexCoord2f(1.0, 0.0); glVertex3f(  ex,  ey, 0.0);
-				glEnd();
-			glPopMatrix();
 
+			glColor4f(clr[0], clr[1], clr[2], clr[3] * alpha);
+			AtlasDrawSprite(kGlitter, pos[0], pos[1], ex, ey);
 		}
 		thisExplo = thisExplo->next; //ADVANCE
 	}

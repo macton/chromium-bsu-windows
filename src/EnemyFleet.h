@@ -45,26 +45,10 @@ public:
 
 	void	update();
 
-	void	loadTextures();
-	void	deleteTextures();
-
 private:
-	inline void drawQuad(float szx, float szy)
-	{
-		glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(1.0, 0.0); glVertex3f( szx,  szy, 0.0);
-			glTexCoord2f(0.0, 0.0); glVertex3f(-szx,  szy, 0.0);
-			glTexCoord2f(1.0, 1.0); glVertex3f( szx, -szy, 0.0);
-			glTexCoord2f(0.0, 1.0); glVertex3f(-szx, -szy, 0.0);
-		glEnd();
-	}
-
 	void	bossExplosion(EnemyAircraft *);
 
 private:
-	GLuint			shipTex[NumEnemyTypes];
-	GLuint			extraTex[NumEnemyTypes];
-
 	EnemyAircraft	*squadRoot;
 	EnemyAircraft	*currentShip;
 

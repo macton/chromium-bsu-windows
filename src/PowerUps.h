@@ -87,6 +87,26 @@ public:
 	PowerUp *back;
 	PowerUp *next;
 
+	virtual const char* NameString()
+	{
+		switch (type)
+		{
+		case PowerUps::Shields:
+			return "PowerUp_Sheilds";
+		case PowerUps::SuperShields:
+			return "PowerUp_SuperShields";
+		case PowerUps::Repair:
+			return "PowerUp_Repair";
+		case PowerUps::HeroAmmo00:
+			return "PowerUp_HeroAmmo00";
+		case PowerUps::HeroAmmo01:
+			return "PowerUp_HeroAmmo01";
+		case PowerUps::HeroAmmo02:
+			return "PowerUp_HeroAmmo02";
+		};
+		return "PowerUp_UNKNOWN";
+	}
+
 friend class PowerUps;
 
 private:

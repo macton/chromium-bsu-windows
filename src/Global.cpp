@@ -187,7 +187,6 @@ void Global::gotoNextLevel()
 	itemAdd->clear();
 	hero->fullHealth();
 
-//	generateRandom();
 	itemAdd->loadScreenItems("");
 
 	// when more than one ground is used, check here if it
@@ -257,11 +256,6 @@ void Global::deleteTextures()
 	Config *config = Config::instance();
 	glFinish();
 	mainGL->deleteTextures();
-	enemyAmmo->deleteTextures();
-	enemyFleet->deleteTextures();
-	explosions->deleteTextures();
-	hero->deleteTextures();
-	heroAmmo->deleteTextures();
 	ground->deleteTextures();
 	menu->deleteTextures();
 	powerUps->deleteTextures();
@@ -275,11 +269,6 @@ void Global::loadTextures()
 	Config *config = Config::instance();
 	glFinish();
 	mainGL->loadTextures();
-	enemyAmmo->loadTextures();
-	enemyFleet->loadTextures();
-	explosions->loadTextures();
-	hero->loadTextures();
-	heroAmmo->loadTextures();
 	ground->loadTextures();
 	menu->loadTextures();
 	powerUps->loadTextures();

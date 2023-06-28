@@ -64,6 +64,9 @@
 
 #include "GroundMetal.h"
 #include "GroundSea.h"
+#include "Image.h"
+
+GLuint g_AtlasTexture;
 
 //====================================================================
 MainGL::MainGL()
@@ -71,11 +74,13 @@ MainGL::MainGL()
 	game = Global::getInstance();
 	initGL();
 	loadTextures();
+	g_AtlasTexture = Image::load(dataLoc("atlas/atlas.png"));
 }
 
 
 MainGL::~MainGL()
 {
+	glDeleteTextures(1, &g_AtlasTexture);
 	deleteTextures();
 }
 
@@ -91,7 +96,6 @@ int MainGL::initGL()
 	glEnable(GL_TEXTURE_2D);
 
 	glEnable(GL_BLEND);
-//	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	if(config->blend())
@@ -109,7 +113,6 @@ int MainGL::initGL()
 		glEnable(GL_ALPHA_TEST);
 	}
 
-//	glDisable(GL_CULL_FACE);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_NORMALIZE);
 
@@ -190,18 +193,15 @@ void MainGL::drawGameGL()
 	Config *config = Config::instance();
 	//-- Clear buffers
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	glClear( GL_COLOR_BUFFER_BIT );
 
 	//-- Place camera
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, config->zTrans());
-//	glTranslatef(0.0, 5.0, -12.0);
 
 	if(!game->game_pause)
 	{
 		//-- Add items to scene
 		game->itemAdd->putScreenItems();
-		//addItems();
 
 		//-- Update scene
 		game->enemyFleet->update();

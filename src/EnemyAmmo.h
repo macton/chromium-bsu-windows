@@ -41,9 +41,6 @@ public:
 	void	drawGL();
 	void	clear();
 
-	void	loadTextures();
-	void	deleteTextures();
-
 private:
 	ActiveAmmo	*getNewAmmo();
 	void 		killAmmo(ActiveAmmo *dead);
@@ -53,8 +50,6 @@ private:
 	ActiveAmmo	*ammoPool;
 	float		ammoSize[NUM_ENEMY_AMMO_TYPES][2];
 	float		ammoDamage[NUM_ENEMY_AMMO_TYPES];
-
-	GLuint	ammoTex[NUM_ENEMY_AMMO_TYPES];
 
 private:
 	Global *game;

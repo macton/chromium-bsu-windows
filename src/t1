@@ -1,0 +1,1 @@
+void AtlasDrawSprite( int image_index, float pos_x, float pos_y, float rotation, float scale_x, float scale_y )

@@ -131,25 +131,54 @@ void ScreenItemAdd::killScreenItem(ScreenItem *del)
 	}
 }
 
+void DumpLevel(ItemThing* root, const char* filename)
+{
+	ItemThing* curItem = root;
+	FILE* file = fopen(filename, "wb");
+
+	while (curItem)
+	{
+		if (curItem->next == 0)
+		{
+			break;
+		}
+
+		if (curItem->item)
+		{
+			fprintf(file, "%-25s ", curItem->item->NameString());
+			fprintf(file, "%0.3f ", (float)curItem->releaseTime / 50.0f);
+			fprintf(file, "%s\n", curItem->item->DescriptionString());
+		}
+
+		curItem = curItem->next;
+	}
+	fclose(file);
+}
+
 //----------------------------------------------------------
 bool ScreenItemAdd::loadScreenItems(const char* str)
 {
-	switch((game->gameLevel-1)%3)
+	switch((game->gameLevel-1)%4) // was %3 - has no one played level 4 in 20 years?
 	{
 		case 0:
 			loadLevel1();
+			DumpLevel(root, "Level1");
 			break;
 		case 1:
 			loadLevel2();
+			DumpLevel(root, "Level2");
 			break;
 		case 2:
 			loadLevel3();
+			DumpLevel(root, "Level3");
 			break;
 		case 3:
 			loadLevel4();
+			DumpLevel(root, "Level4");
 			break;
 		default:
 			loadLevel1();
+			DumpLevel(root, "Level1");
 			break;
 	}
 	return true;

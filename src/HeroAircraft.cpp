@@ -37,6 +37,7 @@
 #include "Audio.h"
 #include "StatusDisplay.h"
 #include "Image.h"
+#include "Atlas.h"
 
 //====================================================================
 HeroAircraft::HeroAircraft()
@@ -63,30 +64,11 @@ HeroAircraft::HeroAircraft()
 	currentItemIndex = 0;
 	useItemArmed	= 0.0;
 
-	loadTextures();
-
 	reset();
 }
 
 HeroAircraft::~HeroAircraft()
 {
-	deleteTextures();
-}
-
-//----------------------------------------------------------
-void HeroAircraft::loadTextures()
-{
-	heroTex = Image::load(dataLoc("png/hero.png"));
-	bombTex = Image::load(dataLoc("png/superBomb.png"));
-}
-
-//----------------------------------------------------------
-void HeroAircraft::deleteTextures()
-{
-	glDeleteTextures(1, &heroTex);
-	glDeleteTextures(1, &bombTex);
-	heroTex = 0;
-	bombTex = 0;
 }
 
 //----------------------------------------------------------
@@ -797,32 +779,21 @@ void HeroAircraft::update()
 void HeroAircraft::drawGL()
 {
 	//-- draw hero
-	glPushMatrix();
-	glTranslatef(pos[0], pos[1], pos[2]);
 	if(!dontShow)
 	{
 		glColor4f(1.0, 1.0, 1.0, 1.0);
-		glBindTexture(GL_TEXTURE_2D, heroTex);
-		drawQuad(size[0], size[1]);
+		AtlasDrawSprite(kHero, pos[0], pos[1], size[0], size[1]);
 	}
 	else
 	{
 		dontShow--;
 	}
-	//-- draw super shields in StatusDisplay to get better blend mode...
-	glPopMatrix();
 
+	//-- draw super shields in StatusDisplay to get better blend mode...
 	if(superBomb)
 	{
-		float s = superBomb*0.1;
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		glBindTexture(GL_TEXTURE_2D, bombTex);
-		glPushMatrix();
-		glTranslatef(0.0, -15.0, HERO_Z);
-		glRotatef(IRAND, 0.0, 0.0, 1.0);
-		drawQuad(s,s);
-		glPopMatrix();
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+		AtlasDrawSprite(kSuperBomb, 0.0f, -15.0f, superBomb * 0.1f, superBomb * 0.1f);
 	}
 }
 

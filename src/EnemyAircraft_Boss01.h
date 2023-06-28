@@ -24,6 +24,11 @@ public:
 	void	init();
 	void	init(float *p, float randFact = 1.0);
 
+	virtual const char* NameString()
+	{
+		return "EnemyAircraft_Boss01";
+	}
+
 friend class EnemyFleet;
 friend class ScreenItemAdd;
 

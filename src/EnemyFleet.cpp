@@ -34,13 +34,12 @@
 #include "ScreenItemAdd.h"
 #include "StatusDisplay.h"
 #include "Image.h"
+#include "Atlas.h"
 
 //====================================================================
 EnemyFleet::EnemyFleet()
 {
 	game = Global::getInstance();
-
-	loadTextures();
 
 	currentShip = 0;
 	float pos[3] = { 0.0, 0.0, 0.0 };
@@ -51,37 +50,8 @@ EnemyFleet::~EnemyFleet()
 {
 	clear();
 	delete squadRoot;
-	deleteTextures();
 }
 
-//----------------------------------------------------------
-void	EnemyFleet::loadTextures()
-{
-	char	filename[256];
-	for(int i = 0; i < NumEnemyTypes; i++)
-	{
-		sprintf(filename, "png/enemy%02d.png", i);
-		shipTex[i] = Image::load(dataLoc(filename));
-		extraTex[i] = 0;
-	}
-	extraTex[EnemyStraight]	= Image::load(dataLoc("png/enemyAmmo00.png"));
-	extraTex[EnemyOmni]		= Image::load(dataLoc("png/enemy01-extra.png"));
-	extraTex[EnemyTank]		= Image::load(dataLoc("png/enemy03-extra.png"));
-	extraTex[EnemyBoss00]	= extraTex[EnemyTank];
-	extraTex[EnemyBoss01]	= extraTex[EnemyStraight];
-}
-
-//----------------------------------------------------------
-void	EnemyFleet::deleteTextures()
-{
-	for(int i = 0; i < NumEnemyTypes; i++)
-	{
-		glDeleteTextures(1, &shipTex[i]);
-		shipTex[i] = 0;
-		glDeleteTextures(1, &extraTex[i]);
-		extraTex[i] = 0;
-	}
-}
 
 //----------------------------------------------------------
 void	EnemyFleet::clear()
@@ -103,49 +73,37 @@ void	EnemyFleet::clear()
 //----------------------------------------------------------
 void	EnemyFleet::drawGL()
 {
-	float szx, szy;
-	float *p;
 	EnemyAircraft	*thisEnemy;
-
-	glColor4f(1.0, 1.0, 1.0, 1.0);
-
 	thisEnemy = squadRoot->next;
 	int num = 0;
+
 	while(thisEnemy)
 	{
 		num++;
-		p = thisEnemy->pos;
-		szx = thisEnemy->size[0];
-		szy = thisEnemy->size[1];
-		glBindTexture(GL_TEXTURE_2D, shipTex[(int)thisEnemy->type]);
-		glColor4f(1.0, 1.0, 1.0, 1.0);
 
-		glPushMatrix();
-		glTranslatef( p[0],  p[1],  p[2] );
-		glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2f(1.0, 0.0); glVertex3f( szx,  szy, 0.0);
-			glTexCoord2f(0.0, 0.0); glVertex3f(-szx,  szy, 0.0);
-			glTexCoord2f(1.0, 1.0); glVertex3f( szx, -szy, 0.0);
-			glTexCoord2f(0.0, 1.0); glVertex3f(-szx, -szy, 0.0);
-		glEnd();
-		glPopMatrix();
+		{
+			const float px = thisEnemy->pos[0];
+			const float py = thisEnemy->pos[1];
+			const float szx = thisEnemy->size[0];
+			const float szy = thisEnemy->size[1];
+
+			glColor4f(1.0, 1.0, 1.0, 1.0);
+			AtlasDrawSprite(kEnemy00 + thisEnemy->type, px, py, szx, szy);
+		}
 
 		switch(thisEnemy->type)
 		{
 			case EnemyStraight:
 				if(thisEnemy->preFire)
 				{
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-					glBindTexture(GL_TEXTURE_2D, extraTex[EnemyStraight]);
-					glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
-					szx = 0.55*thisEnemy->preFire;
-					glPushMatrix();
-					glTranslatef(p[0], p[1]-0.9, p[2]);
-					glRotatef(IRAND, 0.0, 0.0, 1.0);
-					drawQuad(szx,szx+0.1);
-					glPopMatrix();
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					const float px = thisEnemy->pos[0];
+					const float py = thisEnemy->pos[1] - 0.9f;
+					const float szx = 0.55f * thisEnemy->preFire;
+					const float szy = szx + 0.1f;
+					
+					// extraTex[EnemyStraight] = Image::load(dataLoc("png/enemyAmmo00.png"));
 					glColor4f(1.0, 1.0, 1.0, 1.0);
+					AtlasDrawSprite(kEnemyAmmo00, px, py, szx, szy);
 				}
 			 	if(!((thisEnemy->age-192)%256))
 				{
@@ -153,79 +111,79 @@ void	EnemyFleet::drawGL()
 				}
 				break;
 			case EnemyOmni:
-				glColor4f(1.0, 0.0, 0.0, 1.0);
-				glBindTexture(GL_TEXTURE_2D, extraTex[EnemyOmni]);
-				glPushMatrix();
-				glTranslatef(p[0], p[1], p[2]);
-				glRotatef(-(thisEnemy->age*8), 0.0, 0.0, 1.0);
-				drawQuad(szx,szy);
-				glPopMatrix();
-				glColor4f(1.0, 1.0, 1.0, 1.0);
+				{
+					const float px = thisEnemy->pos[0];
+					const float py = thisEnemy->pos[1];
+					const float szx = thisEnemy->size[0];
+					const float szy = thisEnemy->size[1];
+					const float rot = -(thisEnemy->age * 8);
+
+					// 	extraTex[EnemyOmni] = Image::load(dataLoc("png/enemy01-extra.png")
+					glColor4f(1.0, 0.0, 0.0, 1.0);
+					AtlasDrawSprite(kEnemyExtra01, px, py, szx, szy);
+
+				}
 				break;
 			case EnemyTank:
 				if(thisEnemy->preFire)
 				{
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-					glBindTexture(GL_TEXTURE_2D, extraTex[EnemyTank]);
-					glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
-					glPushMatrix();
-					glTranslatef(p[0], p[1]-0.63, p[2]);//NOTE: offset is ~szy*0.3
-					glRotatef(IRAND, 0.0, 0.0, 1.0);
-					szx = 0.4+0.6*thisEnemy->preFire;
-					drawQuad(szx,szx);
-					glPopMatrix();
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-					glColor4f(1.0, 1.0, 1.0, 1.0);
 				}
 				break;
 			case EnemyBoss00:
 				if(thisEnemy->preFire)
 				{
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-					glBindTexture(GL_TEXTURE_2D, extraTex[EnemyBoss00]);
-					glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
-					szx = 0.4+0.6*thisEnemy->preFire;
-					glPushMatrix();
-					glTranslatef(p[0]+1.1, p[1]-0.4, p[2]);
-					glRotatef(IRAND, 0.0, 0.0, 1.0);
-					drawQuad(szx,szx);
-					glPopMatrix();
-					glPushMatrix();
-					glTranslatef(p[0]-1.1, p[1]-0.4, p[2]);
-					glRotatef(IRAND, 0.0, 0.0, 1.0);
-					drawQuad(szx,szx);
-					glPopMatrix();
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-					glColor4f(1.0, 1.0, 1.0, 1.0);
+					{
+						const float px = thisEnemy->pos[0] + 1.1f;
+						const float py = thisEnemy->pos[1] - 0.4f;
+						const float szx = 0.4 + 0.6 * thisEnemy->preFire;
+						const float szy = szx;
+
+						// extraTex[EnemyBoss00] = Image::load(dataLoc("png/enemy03-extra.png"));
+						glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
+						AtlasDrawSprite(kEnemyExtra03, px, py, szx, szy);
+
+					}
+
+					{
+						const float px = thisEnemy->pos[0] - 1.1f;
+						const float py = thisEnemy->pos[1] - 0.4f;
+						const float szx = 0.4 + 0.6 * thisEnemy->preFire;
+						const float szy = szx;
+
+						// extraTex[EnemyBoss00] = Image::load(dataLoc("png/enemy03-extra.png"));
+						glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
+						AtlasDrawSprite(kEnemyExtra03, px, py, szx, szy);
+
+					}
 				}
 				break;
 			case EnemyBoss01:
 				if(thisEnemy->preFire)
 				{
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-					glBindTexture(GL_TEXTURE_2D, extraTex[EnemyBoss01]);
-					glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
-					szx = 0.9*thisEnemy->preFire;
 					if(thisEnemy->shootSwap)
 					{
-						glPushMatrix();
-						glTranslatef(p[0]-1.22, p[1]-1.22, p[2]);
-						glRotatef(IRAND, 0.0, 0.0, 1.0);
-						drawQuad(szx,szx);
-						drawQuad(szx+0.2,szx+0.2);
-						glPopMatrix();
+						const float px = thisEnemy->pos[0] - 1.22f;
+						const float py = thisEnemy->pos[1] - 1.22f;
+						const float szx = 0.9 * thisEnemy->preFire;
+						const float szy = szx;
+
+						// extraTex[EnemyBoss01] = Image::load(dataLoc("png/enemyAmmo00.png"));
+						glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
+						AtlasDrawSprite(kEnemyAmmo00, px, py, szx, szy);
+						AtlasDrawSprite(kEnemyAmmo00, px, py, szx + 0.2f, szy+0.2f);
 					}
 					else
 					{
-						glPushMatrix();
-						glTranslatef(p[0]+0.55, p[1]-1.7, p[2]);
-						glRotatef(IRAND, 0.0, 0.0, 1.0);
-						drawQuad(szx,szx);
-						drawQuad(szx+0.3,szx+0.3);
-						glPopMatrix();
+						const float px = thisEnemy->pos[0] + 0.55f;
+						const float py = thisEnemy->pos[1] - 1.7f;
+						const float szx = 0.9 * thisEnemy->preFire;
+						const float szy = szx;
+
+						// extraTex[EnemyBoss01] = Image::load(dataLoc("png/enemyAmmo00.png"));
+						glColor4f(1.0, 1.0, 1.0, thisEnemy->preFire);
+						AtlasDrawSprite(kEnemyAmmo00, px, py, szx, szy);
+						AtlasDrawSprite(kEnemyAmmo00, px, py, szx + 0.3f, szy + 0.3f);
 					}
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-					glColor4f(1.0, 1.0, 1.0, 1.0);
 				}
 			 	if(!((thisEnemy->age-272)%256))
 				{

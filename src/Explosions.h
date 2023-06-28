@@ -47,18 +47,17 @@ public:
 	void	drawGL();
 	void	clear();
 
-	void	loadTextures();
-	void	deleteTextures();
-
 private:
 	Explo	*exploRoot[NumExploTypes];
 	Explo	*exploPool;
-	GLuint	tex[NumExploTypes];
 	float	exploSize[NumExploTypes][2];
 	float	exploStay[NumExploTypes];
 	float	exploPause[NumExploTypes][3];	/**< # frames to not allow explosions. [0] = count, [1] = base, [2] = flag */
 
-	void	drawExplo(ExploType);
+	void	drawEnemyDamage(ExploType);
+	void	drawEnemyDestroyed(ExploType);
+	void	drawHeroDamage(ExploType);
+	void	drawHeroDestroyed(ExploType);
 	void	drawAmmo(ExploType);
 	void	drawBurst(ExploType);
 	void	drawShields(ExploType);

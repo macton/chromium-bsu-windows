@@ -77,12 +77,6 @@ public:
 	float	*getPos();
 	inline float getSize(int i)	{ return size[i]; }
 
-	GLuint	heroTex;
-	GLuint	bombTex;
-
-	void	loadTextures();
-	void	deleteTextures();
-
 	friend class StatusDisplay;
 protected:
 	void	setAmmoStock(int, float);

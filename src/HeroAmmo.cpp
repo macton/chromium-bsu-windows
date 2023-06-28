@@ -33,6 +33,7 @@
 #include "EnemyFleet.h"
 #include "EnemyAircraft.h"
 #include "Image.h"
+#include "Atlas.h"
 
 //====================================================================
 HeroAmmo::HeroAmmo()
@@ -49,8 +50,6 @@ HeroAmmo::HeroAmmo()
 		ammoDamage[i]	= 2.5;
 	}
 	ammoPool  = new ActiveAmmo();
-
-	loadTextures();
 
 	ammoSize[0][0] = 0.05;	ammoSize[0][1] = 0.65;
 	ammoSize[1][0] = 0.11;	ammoSize[1][1] = 1.5;
@@ -78,30 +77,8 @@ HeroAmmo::~HeroAmmo()
 	for(int i = 0; i < NUM_HERO_AMMO_TYPES; i++)
 		delete 	ammoRoot[i];
 	delete ammoPool;
-
-	deleteTextures();
 }
 
-//----------------------------------------------------------
-void HeroAmmo::loadTextures()
-{
-	char filename[256];
-	for(int i = 0; i < NUM_HERO_AMMO_TYPES; i++)
-	{
-		sprintf(filename, "png/heroAmmo%02d.png", i);
-		ammoTex[i] = Image::load(dataLoc(filename));
-	}
-}
-
-//----------------------------------------------------------
-void HeroAmmo::deleteTextures()
-{
-	for(int i = 0; i < NUM_HERO_AMMO_TYPES; i++)
-	{
-		glDeleteTextures(1, &ammoTex[i]);
-		ammoTex[i] = 0;
-	}
-}
 
 //----------------------------------------------------------
 ActiveAmmo *HeroAmmo::getNewAmmo()
@@ -297,26 +274,21 @@ void HeroAmmo::checkForHits(EnemyFleet *fleet)
 //----------------------------------------------------------
 void HeroAmmo::drawGL()
 {
-	int i;
-	float	*pos;
 	ActiveAmmo 	*thisAmmo;
 
-	for(i = 0; i < NUM_HERO_AMMO_TYPES; i++)
+	glColor4f(1.0, 1.0, 1.0, 1.0);
+	for(int i = 0; i < NUM_HERO_AMMO_TYPES; i++)
 	{
-		glColor4f(1.0, 1.0, 1.0, 1.0);
-		glBindTexture(GL_TEXTURE_2D, ammoTex[i]);
 		thisAmmo = ammoRoot[i]->next;
-		glBegin(GL_QUADS);
 		while(thisAmmo)
 		{
-			pos = thisAmmo->pos;
-			glTexCoord2f(0.0, 0.0); glVertex3f(pos[0]-ammoSize[i][0], pos[1],     pos[2]);
-			glTexCoord2f(0.0, 1.0); glVertex3f(pos[0]-ammoSize[i][0], pos[1]-ammoSize[i][1], pos[2]);
-			glTexCoord2f(1.0, 1.0); glVertex3f(pos[0]+ammoSize[i][0], pos[1]-ammoSize[i][1], pos[2]);
-			glTexCoord2f(1.0, 0.0); glVertex3f(pos[0]+ammoSize[i][0], pos[1],     pos[2]);
+			float* pos = thisAmmo->pos;
+			float* size = ammoSize[i];
+
+			AtlasDrawSprite(kHeroAmmo00 + i, pos[0], pos[1], size[0], size[1]);
+
 			thisAmmo = thisAmmo->next; //ADVANCE
 		}
-		glEnd();
 	}
 }
 

@@ -1,3 +1,19 @@
+--- CHANGES IN PROGRESS --
+[x] Remove variations of image load (no processing at load time.)
+[x] Remove old build system (no value in maintaining this while doing a bunch of surgery.)
+[ ] Image atlas (there's no reason this game needs more than one texture.)
+[ ] Revise super shields effect (without unique blend mode)
+[ ] Don't rebind atlas texture every sprite call
+[ ] WriteBuffer per feature
+[ ] Save and build wave data
+[ ] Reduce interface: Draw GL
+[ ] Reduce interface: Audio
+[ ] Reduce interface: Font
+[ ] Reduce interface: Platform
+[ ] ...
+[ ] Add new build system (cmake? tundra?)
+
+---
 Chromium B.S.U.
 
 Please read the README.install and INSTALL files for install instructions.
