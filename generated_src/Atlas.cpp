@@ -10,14 +10,13 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "compatibility.h"
-
 #if defined(HAVE_APPLE_OPENGL_FRAMEWORK) || defined(HAVE_OPENGL_GL_H)
 #include <OpenGL/gl.h>
 #else
 #include <GL/gl.h>
 #endif
-#include "define.h"
+#include "../src/compatibility.h"
+#include "../src/define.h"
 
 #include "Atlas.h"
 

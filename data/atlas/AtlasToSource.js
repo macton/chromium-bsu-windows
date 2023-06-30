@@ -83,5 +83,5 @@ cpp_text = cpp_text.replace("IMAGE_TEX_COORDS", image_names.map( name => {
   `  { ${u0.toFixed(8)}, ${v0.toFixed(8)}, ${u1.toFixed(8)}, ${v1.toFixed(8)} }`;
 }).join(",\n"));
 
-fs.writeFileSync("Atlas.h",hpp_text);
-fs.writeFileSync("Atlas.cpp",cpp_text);
+fs.writeFileSync("../../generated_src/Atlas.h",hpp_text);
+fs.writeFileSync("../../generated_src/Atlas.cpp",cpp_text);

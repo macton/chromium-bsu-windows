@@ -66,6 +66,11 @@
 #include "GroundSea.h"
 #include "Image.h"
 
+#include "Simulation.h"
+#include "Draw.h"
+#include "Simulation_EnemyAircraft_Straight.h"
+#include "Simulation_EnemyAmmo00.h"
+
 GLuint g_AtlasTexture;
 
 //====================================================================
@@ -194,6 +199,10 @@ void MainGL::drawGameGL()
 	//-- Clear buffers
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+	g_Simulation_Level = game->gameLevel;
+	Simulation_Update();
+
 	//-- Place camera
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, config->zTrans());
@@ -222,6 +231,9 @@ void MainGL::drawGameGL()
 		game->gameFrame++;
 	}
 
+	Simulation_EnemyAircraft_Straight_Live_Update();
+	Simulation_EnemyAmmo00_Live_Update();
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//-- Draw background
@@ -247,6 +259,9 @@ void MainGL::drawGameGL()
 
 	//-- Draw stats
 	game->statusDisplay->drawGL(game->hero);
+
+	Draw_EnemyAircraft_Straight();
+	Draw_EnemyAmmo00();
 
 }
 
@@ -282,7 +297,14 @@ void MainGL::drawDeadGL()
 	game->hero->update();
 	game->gameFrame++;
 
+
+	Simulation_EnemyAircraft_Straight_Live_Update();
+	Simulation_EnemyAmmo00_Live_Update();
+
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
 	//-- Draw background
 	game->ground->drawGL();
 	//-- Draw actors
@@ -300,6 +322,11 @@ void MainGL::drawDeadGL()
 	game->explosions->drawGL();
 	//-- Draw stats
 	game->statusDisplay->drawGL(game->hero);
+
+
+	Draw_EnemyAircraft_Straight();
+	Draw_EnemyAmmo00();
+
 
 	int		skill = config->intSkill();
 	float	heroScore = game->hero->getScore();
@@ -319,6 +346,7 @@ void MainGL::drawDeadGL()
 	{
 		drawTextGL(_("l o s e r"), game->heroDeath, 0.25);
 	}
+
 }
 
 //----------------------------------------------------------

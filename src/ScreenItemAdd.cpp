@@ -564,7 +564,7 @@ void ScreenItemAdd::addStraightWave(int o, int duration, float density)
 	straightWave.setXRand(8.0);
 	straightWave.setFrequency((int)(60*freq), 5);
 	straightWave.setInOut(o, o+duration);
-	addWave(straightWave);
+//	addWave(straightWave);
 }
 
 //----------------------------------------------------------
@@ -585,7 +585,7 @@ void ScreenItemAdd::addOmniWave(int o, int duration, float density)
 	straightWave.setXRand(8.0);
 	straightWave.setFrequency(200, 50);
 	straightWave.setInOut(o+100, o+duration);
-	addWave(straightWave);
+//	addWave(straightWave);
 }
 
 //----------------------------------------------------------
@@ -600,7 +600,7 @@ void ScreenItemAdd::addStraightArrowWave(int o, int duration, float density)
 	straightArrow.setFrequency((int)(50*freq), 0);
 	straightArrow.setXRand(1.6);
 	straightArrow.setFormation(EnemyWave::Arrow);
-	addWave(straightArrow);
+//	addWave(straightArrow);
 
 	EnemyWave	omniWave(EnemyOmni);
 	omniWave.setFrequency((int)(15*freq), 5);

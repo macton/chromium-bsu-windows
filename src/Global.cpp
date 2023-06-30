@@ -17,6 +17,10 @@
 #include "HiScore.h"
 #include "Config.h"
 
+#include "Simulation.h"
+#include "Simulation_EnemyAircraft_Straight.h"
+#include "Simulation_EnemyAmmo00.h"
+
 Text	*Global::text	= 0;
 
 MainToolkit *Global::toolkit = 0;
@@ -167,6 +171,10 @@ void Global::newGame()
 		fclose(eventFile);
 
 	audio->setMusicIndex(gameLevel-1);
+
+	Simulation_Reset();
+	Simulation_EnemyAircraft_Straight_Live_Reset();
+	Simulation_EnemyAmmo00_Live_Reset();
 }
 
 //----------------------------------------------------------
