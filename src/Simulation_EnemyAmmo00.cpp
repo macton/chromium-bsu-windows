@@ -25,9 +25,10 @@ float EnemyAircraft_Straight_EnemyAmmo00_NextFireAge(float age)
     return floorf(age) + 1.0f;
 }
 
-void Simulation_EnemyAmmo00_Live_Update_From_EnemyAircraft_Straight_Live()
+void Simulation_EnemyAmmo00_Live_CreateFrom_EnemyAircraft_Straight()
 {
     float  next_update_time     = g_Simulation_Time;
+    vec2   turret_pos_offset    = kSimulation_EnemyAmmo00_EnemyAircraft_Straight_Turret_Pos_Offset;
 
     int    ammo_live_max_count  = kSimulation_EnemyAmmo00_Live_MaxCount;
     int    ammo_live_count      = g_Simulation_EnemyAmmo00_Live_Count;
@@ -50,7 +51,7 @@ void Simulation_EnemyAmmo00_Live_Update_From_EnemyAircraft_Straight_Live()
             if ((enemy_last_age < enemy_next_fire_age) && (enemy_age > enemy_next_fire_age))
             {
                 vec2  enemy_pos = enemy_live_pos[enemy_index];
-                vec2  ammo_pos  = enemy_pos;
+                vec2  ammo_pos  = enemy_pos + turret_pos_offset;
                 float ammo_age  = FLT_MIN;
                 int   ammo_index = ammo_live_count % ammo_live_max_count;
 
@@ -66,7 +67,7 @@ void Simulation_EnemyAmmo00_Live_Update_From_EnemyAircraft_Straight_Live()
 
 void Simulation_EnemyAmmo00_Live_Update()
 {
-    Simulation_EnemyAmmo00_Live_Update_From_EnemyAircraft_Straight_Live();
+    Simulation_EnemyAmmo00_Live_CreateFrom_EnemyAircraft_Straight();
 
     int    ammo_live_max_count = kSimulation_EnemyAmmo00_Live_MaxCount;
     int    ammo_live_count = g_Simulation_EnemyAmmo00_Live_Count;

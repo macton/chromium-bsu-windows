@@ -25,7 +25,7 @@ Simulation_EnemyAircraft_Straight_Live_Reset()
 }
 
 void
-Simulation_EnemyAircraft_Straight_Live_CreateFromWave()
+Simulation_EnemyAircraft_Straight_Live_CreateFrom_Wave()
 {
     const int       level_wave_count[] = { EnemyAircraft_Straight_Level_1_Count, EnemyAircraft_Straight_Level_2_Count, EnemyAircraft_Straight_Level_3_Count, EnemyAircraft_Straight_Level_4_Count };
     const float* level_wave_start_time[] = { EnemyAircraft_Straight_StartTime_Level_1, EnemyAircraft_Straight_StartTime_Level_2, EnemyAircraft_Straight_StartTime_Level_3, EnemyAircraft_Straight_StartTime_Level_4 };
@@ -86,7 +86,7 @@ Simulation_EnemyAircraft_Straight_Live_CreateFromWave()
 void
 Simulation_EnemyAircraft_Straight_Live_Update()
 {
-    Simulation_EnemyAircraft_Straight_Live_CreateFromWave();
+    Simulation_EnemyAircraft_Straight_Live_CreateFrom_Wave();
 
     int    enemy_live_count = g_Simulation_EnemyAircraft_Straight_Live_Count;
     int    enemy_live_max_count = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
@@ -98,7 +98,6 @@ Simulation_EnemyAircraft_Straight_Live_Update()
     float           simulation_rect_top = simulation_rect.y;
     float           simulation_rect_bottom = -simulation_rect.y;
     float           simulation_time_step = g_Simulation_TimeStep;
-
 
     for (int live_ndx = 0; live_ndx < enemy_update_count; live_ndx++)
     {
