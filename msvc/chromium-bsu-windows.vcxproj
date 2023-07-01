@@ -198,6 +198,7 @@
     <ClCompile Include="..\src\Config.cpp" />
     <ClCompile Include="..\src\Draw_GL_EnemyAircraft_Straight.cpp" />
     <ClCompile Include="..\src\Draw_GL_EnemyAmmo00.cpp" />
+    <ClCompile Include="..\src\Draw_GL_Hero.cpp" />
     <ClCompile Include="..\src\EnemyAircraft.cpp" />
     <ClCompile Include="..\src\EnemyAircraft_Boss00.cpp" />
     <ClCompile Include="..\src\EnemyAircraft_Boss01.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="..\src\HeroAmmo.cpp" />
     <ClCompile Include="..\src\HiScore.cpp" />
     <ClCompile Include="..\src\Image.cpp" />
+    <ClCompile Include="..\src\Input.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MainGL.cpp" />
     <ClCompile Include="..\src\MainSDL.cpp" />
@@ -232,6 +234,7 @@
     <ClCompile Include="..\src\Simulation.cpp" />
     <ClCompile Include="..\src\Simulation_EnemyAircraft_Straight.cpp" />
     <ClCompile Include="..\src\Simulation_EnemyAmmo00.cpp" />
+    <ClCompile Include="..\src\Simulation_Hero.cpp" />
     <ClCompile Include="..\src\StatusDisplay.cpp" />
     <ClCompile Include="..\src\Text.cpp" />
     <ClCompile Include="..\src\TextFTGL.cpp" />
@@ -392,6 +395,7 @@
     <ClInclude Include="..\src\HeroAmmo.h" />
     <ClInclude Include="..\src\HiScore.h" />
     <ClInclude Include="..\src\Image.h" />
+    <ClInclude Include="..\src\Input.h" />
     <ClInclude Include="..\src\main.h" />
     <ClInclude Include="..\src\MainSDL.h" />
     <ClInclude Include="..\src\PowerUps.h" />
@@ -400,6 +404,7 @@
     <ClInclude Include="..\src\Simulation.h" />
     <ClInclude Include="..\src\Simulation_EnemyAircraft_Straight.h" />
     <ClInclude Include="..\src\Simulation_EnemyAmmo00.h" />
+    <ClInclude Include="..\src\Simulation_Hero.h" />
     <ClInclude Include="..\src\StatusDisplay.h" />
     <ClInclude Include="..\src\Text.h" />
     <ClInclude Include="..\src\textGeometry.h" />

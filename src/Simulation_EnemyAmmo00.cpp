@@ -12,7 +12,7 @@
 int    g_Simulation_EnemyAmmo00_Live_Count;
 vec2   g_Simulation_EnemyAmmo00_Live_Pos[kSimulation_EnemyAmmo00_Live_MaxCount];
 float  g_Simulation_EnemyAmmo00_Live_Age[kSimulation_EnemyAmmo00_Live_MaxCount];
-float  g_Simulation_EnemyAmmo00_Live_EnemyAircraft_Straight_Live_LastAge[kSimulation_EnemyAircraft_Straight_Live_MaxCount];
+float  g_Simulation_EnemyAmmo00_EnemyAircraft_Straight_Live_LastAge[kSimulation_EnemyAircraft_Straight_Live_MaxCount];
 
 void Simulation_EnemyAmmo00_Live_Reset()
 {
@@ -46,7 +46,7 @@ void Simulation_EnemyAmmo00_Live_CreateFrom_EnemyAircraft_Straight()
         float enemy_age = enemy_live_age[enemy_index];
         if (enemy_age > 0.0f)
         {
-            float enemy_last_age        = g_Simulation_EnemyAmmo00_Live_EnemyAircraft_Straight_Live_LastAge[enemy_index];
+            float enemy_last_age        = g_Simulation_EnemyAmmo00_EnemyAircraft_Straight_Live_LastAge[enemy_index];
             float enemy_next_fire_age   = EnemyAircraft_Straight_EnemyAmmo00_NextFireAge(enemy_last_age);
             if ((enemy_last_age < enemy_next_fire_age) && (enemy_age > enemy_next_fire_age))
             {
@@ -59,7 +59,7 @@ void Simulation_EnemyAmmo00_Live_CreateFrom_EnemyAircraft_Straight()
                 g_Simulation_EnemyAmmo00_Live_Age[ammo_index] = ammo_age;
                 ammo_live_count++;
             }
-            g_Simulation_EnemyAmmo00_Live_EnemyAircraft_Straight_Live_LastAge[enemy_index] = enemy_age;
+            g_Simulation_EnemyAmmo00_EnemyAircraft_Straight_Live_LastAge[enemy_index] = enemy_age;
         }
     }
     g_Simulation_EnemyAmmo00_Live_Count = ammo_live_count;
@@ -74,7 +74,7 @@ void Simulation_EnemyAmmo00_Live_Update()
     int    ammo_update_count = ammo_live_count % ammo_live_max_count;
 
     vec2            ammo_vel = kSimulation_EnemyAmmo00_Live_BaseVel;
-    vec2            simulation_rect = g_Simulation_Rect;
+    vec2            simulation_rect = kSimulation_PlayArea;
     float           simulation_rect_left = -simulation_rect.x;
     float           simulation_rect_width = 2.0f * simulation_rect.x;
     float           simulation_rect_top = simulation_rect.y;

@@ -138,6 +138,159 @@
     <ClCompile Include="..\src\textGeometryChromium.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated_src\Atlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Boss00_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Boss00_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Boss01_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Boss01_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Gnat_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Gnat_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Gnat_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_RayGun_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_RayGun_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\EnemyAircraft_Tank_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Repair_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Repair_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Repair_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Repair_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Sheilds_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Sheilds_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Sheilds_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_Sheilds_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_SuperShields_Wave_Level_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_SuperShields_Wave_Level_2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_SuperShields_Wave_Level_3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated_src\PowerUp_SuperShields_Wave_Level_4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Draw_GL_EnemyAircraft_Straight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Draw_GL_EnemyAmmo00.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation_EnemyAircraft_Straight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation_EnemyAmmo00.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation_Hero.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Draw_GL_Hero.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Ammo.h">
@@ -490,6 +643,153 @@
     </ClInclude>
     <ClInclude Include="..\chromium-bsu-config.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\Atlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Boss00_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Boss00_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Boss01_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Boss01_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Gnat_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Gnat_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Gnat_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Omni_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_RayGun_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_RayGun_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Straight_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\EnemyAircraft_Tank_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo00_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo01_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_HeroAmmo02_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Repair_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Repair_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Repair_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Repair_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Sheilds_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Sheilds_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Sheilds_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_Sheilds_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_SuperShields_Wave_Level_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_SuperShields_Wave_Level_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_SuperShields_Wave_Level_3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated_src\PowerUp_SuperShields_Wave_Level_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation_EnemyAircraft_Straight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation_EnemyAmmo00.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation_Hero.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Input.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -43,7 +43,7 @@ Simulation_EnemyAircraft_Straight_Live_CreateFrom_Wave()
     const float* wave_start_time = level_wave_start_time[level];
     const uint32_t* wave_start_location = level_wave_start_location[level];
 
-    vec2            simulation_rect = g_Simulation_Rect;
+    vec2            simulation_rect = kSimulation_PlayArea;
     float           simulation_rect_left = -simulation_rect.x;
     float           simulation_rect_width = 2.0f * simulation_rect.x;
     float           simulation_rect_top = simulation_rect.y;
@@ -92,7 +92,7 @@ Simulation_EnemyAircraft_Straight_Live_Update()
     int    enemy_live_max_count = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
     int    enemy_update_count = enemy_live_count % enemy_live_max_count;
 
-    vec2            simulation_rect = g_Simulation_Rect;
+    vec2            simulation_rect = kSimulation_PlayArea;
     float           simulation_rect_left = -simulation_rect.x;
     float           simulation_rect_width = 2.0f * simulation_rect.x;
     float           simulation_rect_top = simulation_rect.y;

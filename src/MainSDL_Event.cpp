@@ -29,6 +29,8 @@
 #include "Audio.h"
 #include "Ground.h"
 
+void Input_SDL_Bridge_Event(SDL_Event* event);
+
 #if SDL_VERSION_ATLEAST(2,0,0)
 		#define SDLK_KP1 SDLK_KP_1
 		#define SDLK_KP2 SDLK_KP_2
@@ -44,6 +46,8 @@
 //----------------------------------------------------------
 bool MainSDL::process(SDL_Event *event)
 {
+    Input_SDL_Bridge_Event(event);
+
 	Global	*game = Global::getInstance();
 	bool shown = false;
 	bool mouse = false;

@@ -70,6 +70,7 @@
 #include "Draw.h"
 #include "Simulation_EnemyAircraft_Straight.h"
 #include "Simulation_EnemyAmmo00.h"
+#include "Simulation_Hero.h"
 
 GLuint g_AtlasTexture;
 
@@ -221,18 +222,19 @@ void MainGL::drawGameGL()
 		if(game->gameMode == Global::Game)
 		{
 			game->enemyAmmo->checkForHits(game->hero);
-			game->hero->checkForCollisions(game->enemyFleet);
-			game->hero->checkForPowerUps(game->powerUps);
+//			game->hero->checkForCollisions(game->enemyFleet);
+//			game->hero->checkForPowerUps(game->powerUps);
 		}
 		game->explosions->update();
 		game->audio->update();
 
-		game->hero->update();
+		// game->hero->update();
 		game->gameFrame++;
 	}
 
 	Simulation_EnemyAircraft_Straight_Live_Update();
 	Simulation_EnemyAmmo00_Live_Update();
+	Simulation_Hero_Update();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -241,7 +243,7 @@ void MainGL::drawGameGL()
 
 	//-- Draw actors
 	game->enemyFleet->drawGL();
-	game->hero->drawGL();
+//	game->hero->drawGL();
 
 	if(config->gfxLevel() > 0)
 		game->statusDisplay->darkenGL();
@@ -262,6 +264,7 @@ void MainGL::drawGameGL()
 
 	Draw_EnemyAircraft_Straight();
 	Draw_EnemyAmmo00();
+	Draw_Hero();
 
 }
 
@@ -294,13 +297,12 @@ void MainGL::drawDeadGL()
 	game->enemyAmmo->updateAmmo();
 	game->heroAmmo->checkForHits(game->enemyFleet);
 	game->audio->update();
-	game->hero->update();
+//	game->hero->update();
 	game->gameFrame++;
 
 
 	Simulation_EnemyAircraft_Straight_Live_Update();
 	Simulation_EnemyAmmo00_Live_Update();
-
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -326,7 +328,7 @@ void MainGL::drawDeadGL()
 
 	Draw_EnemyAircraft_Straight();
 	Draw_EnemyAmmo00();
-
+	Draw_Hero();
 
 	int		skill = config->intSkill();
 	float	heroScore = game->hero->getScore();
@@ -382,14 +384,14 @@ void MainGL::drawSuccessGL()
 	game->enemyFleet->update();
 	game->explosions->update();
 	game->heroAmmo->updateAmmo();
-	game->hero->update();
+//	game->hero->update();
 	game->audio->update();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//-- Draw background
 	game->ground->drawGL();
 	//-- Draw actors
-	game->hero->drawGL();
+//	game->hero->drawGL();
 
 	if(config->gfxLevel() > 0)
 		game->statusDisplay->darkenGL();
