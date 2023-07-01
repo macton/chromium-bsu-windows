@@ -94,6 +94,7 @@ void EnemyAircraft_Omni::update()
 				shootVec[0] = ammoSpeed*v[0];
 				shootVec[1] = ammoSpeed*v[1]/*+vel[1]*/;
 			}
+			printf("Ammo1 Omni %p C %d\n", this, age);
 			game->enemyAmmo->addAmmo(1, p, shootVec);
 		}
 		if(pos[1] < config->screenBoundY())

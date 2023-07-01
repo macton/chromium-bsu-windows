@@ -84,6 +84,7 @@ void EnemyAircraft_Gnat::update()
 		{
 			v[1] = -0.39;
 			p[1] = pos[1]-0.5;
+			printf("Ammo4 Gnat %p T %d\n", this, age);
 			game->enemyAmmo->addAmmo(4, p, v);
 		}
 	}

@@ -85,7 +85,9 @@ void EnemyAircraft_Tank::update()
 		{
 			v[1] = -0.2;
 			p[0] = pos[0] + 1.5;
+			printf("Ammo0 Tank %p L %d\n", this, age);
 			game->enemyAmmo->addAmmo(0, p, v);
+			printf("Ammo0 Tank %p R %d\n", this, age);
 			p[0] = pos[0] - 1.5;
 			game->enemyAmmo->addAmmo(0, p, v);
 		}
@@ -114,6 +116,7 @@ void EnemyAircraft_Tank::update()
 				shootVec[1] = 2.0*ammoSpeed*b/dist;
 				secondaryMove[0] -= shootVec[0]*0.1;
 				secondaryMove[1] -= shootVec[1]*0.1;
+				printf("Ammo2 Tank %p C %d\n", this, age);
 				game->enemyAmmo->addAmmo(2, p, shootVec);
 				preFire -= 0.4;
 				if(preFire < 0.0)

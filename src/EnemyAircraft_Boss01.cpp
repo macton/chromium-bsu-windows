@@ -84,16 +84,20 @@ void EnemyAircraft_Boss01::update()
 			{
 				p[0] = pos[0]+0.55;
 				p[1] = pos[1]-1.7;
+				printf("Ammo0 Boss01 %p T %d\n", this, age);
 				game->enemyAmmo->addAmmo(0, p, shootVec);
 				p[1] += 0.5;
+				printf("Ammo0 Boss01 %p B %d\n", this, age);
 				game->enemyAmmo->addAmmo(0, p, shootVec);
 			}
 			else
 			{
 				p[0] = pos[0]-1.22;
 				p[1] = pos[1]-1.22;
+				printf("Ammo0 Boss01 %p T %d\n", this, age);
 				game->enemyAmmo->addAmmo(0, p, shootVec);
 				p[1] += 0.5;
+				printf("Ammo0 Boss01 %p B %d\n", this, age);
 				game->enemyAmmo->addAmmo(0, p, shootVec);
 			}
 		}

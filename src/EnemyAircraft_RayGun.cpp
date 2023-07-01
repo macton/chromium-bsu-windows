@@ -79,6 +79,7 @@ void EnemyAircraft_RayGun::update()
 	{
 		v[1] = -0.6;
 		p[1] = pos[1]-0.5;
+		printf("Ammo3 RayGun %p C %d\n", this, age);
 		game->enemyAmmo->addAmmo(3, p, v);
 	}
 }

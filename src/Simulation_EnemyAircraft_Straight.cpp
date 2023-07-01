@@ -82,7 +82,6 @@ Simulation_EnemyAircraft_Straight_Live_CreateFrom_Wave()
     g_Simulation_EnemyAircraft_Straight_Live_Count = enemy_live_count;
 }
 
-
 void
 Simulation_EnemyAircraft_Straight_Live_Update()
 {

@@ -80,6 +80,7 @@ void EnemyAircraft_Straight::update()
 	{
 		calcShootInterval();
 		p[1] -= 0.9;
+		printf("Ammo0 Straight %p C %d\n", this, age);
 		game->enemyAmmo->addAmmo(0, p, shootVec);
 	}
 }

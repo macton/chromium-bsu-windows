@@ -80,6 +80,7 @@ void EnemyAircraft_Boss00::update()
 	{
 		v[1] = -0.6;
 		p[1] = pos[1]-1.7;
+		printf("Ammo3 Boss00 %p C %d\n", this, age);
 		game->enemyAmmo->addAmmo(3, p, v);
 	}
 	if(!(age%5)) //-- side cannons
@@ -91,8 +92,10 @@ void EnemyAircraft_Boss00::update()
 			v[1] = -0.2;
 			p[1] = pos[1]-1.9;
 			p[0] = pos[0]+2.0+((shootSwap%3)*0.4);
+			printf("Ammo0 Boss00 %p L %d\n", this, age);
 			game->enemyAmmo->addAmmo(0, p, v);
 			p[0] = pos[0]-2.0-((shootSwap%3)*0.4);
+			printf("Ammo0 Boss00 %p R %d\n", this, age);
 			game->enemyAmmo->addAmmo(0, p, v);
 		}
 	}
@@ -110,8 +113,10 @@ void EnemyAircraft_Boss00::update()
 			{
 				p[1] = pos[1]-0.45;
 				p[0] = pos[0]-1.1;
+				printf("Ammo1 Boss00 %p L %d\n", this, age);
 				game->enemyAmmo->addAmmo(1, p, shootVec);
 				p[0] = pos[0]+1.1;
+				printf("Ammo1 Boss00 %p R %d\n", this, age);
 				game->enemyAmmo->addAmmo(1, p, shootVec);
 			}
 			preFire = (age%100)/100.0f;
@@ -126,12 +131,14 @@ void EnemyAircraft_Boss00::update()
 			dist = fabs(a) + fabs(b);
 			shootVec[0] = 2.0*ammoSpeed*a/dist;
 			shootVec[1] = 2.0*ammoSpeed*b/dist;
+			printf("Ammo2 Boss00 %p L %d\n", this, age);
 			game->enemyAmmo->addAmmo(2, p, shootVec);
 			p[0] = pos[0]+1.1;
 			a = hpos[0]-p[0];
 			dist = fabs(a) + fabs(b);
 			shootVec[0] = 2.0*ammoSpeed*a/dist;
 			shootVec[1] = 2.0*ammoSpeed*b/dist;
+			printf("Ammo2 Boss00 %p R %d\n", this, age);
 			game->enemyAmmo->addAmmo(2, p, shootVec);
 			preFire -= 0.4;
 			if(preFire < 0.0)
