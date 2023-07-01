@@ -1,11 +1,13 @@
 --- CHANGES IN PROGRESS --
 [x] Remove variations of image load (no processing at load time.)
 [x] Remove old build system (no value in maintaining this while doing a bunch of surgery.)
-[ ] Image atlas (there's no reason this game needs more than one texture.)
-[ ] Revise super shields effect (without unique blend mode)
+[x] Image atlas (there's no reason this game needs more than one texture.)
+[ ] Revise all the effects.
 [ ] Don't rebind atlas texture every sprite call
 [ ] WriteBuffer per feature
-[ ] Save and build wave data
+[x] Save and build wave data
+[ ] Variations for draw backend: GL, ncurses
+[ ] Text in atlas
 [ ] Reduce interface: Draw GL
 [ ] Reduce interface: Audio
 [ ] Reduce interface: Font
