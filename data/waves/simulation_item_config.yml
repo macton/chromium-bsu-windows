@@ -2,6 +2,8 @@ EnemyAircraft_Straight:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 3.50, 4.50, 4.00, 1.00 ]
+  SpawnTimeOffset: [ 0.50, 2.00, 2.00, 0.50 ]
   Level_1:
     - [     0.0200, "--------------*-----" ]
     - [     3.0800, "----------------*---" ]
@@ -331,6 +333,8 @@ PowerUp_HeroAmmo00:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 36.50, 38.50, 29.50, 35.00 ]
+  SpawnTimeOffset: [ 2.00, 0.50, 2.50, 1.00 ]
   Level_1:
     - [     1.6600, "------*-------------" ]
     - [    41.4400, "-----*--------------" ]
@@ -391,6 +395,8 @@ PowerUp_HeroAmmo01:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 49.00, 47.50, 36.50, 42.50 ]
+  SpawnTimeOffset: [ 3.50, 3.00, 3.00, 5.00 ]
   Level_1:
     - [     3.1800, "---------*----------" ]
     - [    43.5600, "-----*--------------" ]
@@ -442,6 +448,8 @@ PowerUp_Sheilds:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 51.00, 50.50, 46.00, 46.00 ]
+  SpawnTimeOffset: [ 13.50, 15.50, 13.00, 12.00 ]
   Level_1:
     - [    13.1800, "----*---------------" ]
     - [    65.4800, "----------------*---" ]
@@ -487,6 +495,8 @@ EnemyAircraft_Omni:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 1.00, 1.50, 1.50, 2.00 ]
+  SpawnTimeOffset: [ 16.50, 10.00, 10.00, 28.00 ]
   Level_1:
     - [    16.4000, "-------*------------" ]
     - [    17.1400, "--------*-----------" ]
@@ -1106,6 +1116,8 @@ PowerUp_HeroAmmo02:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 73.50, 69.50, 48.00, 62.00 ]
+  SpawnTimeOffset: [ 22.50, 23.00, 1.50, 23.50 ]
   Level_1:
     - [    22.1000, "------*-------------" ]
     - [   101.6400, "------*-------------" ]
@@ -1144,6 +1156,8 @@ PowerUp_Repair:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 72.50, 72.50, 73.00, 82.50 ]
+  SpawnTimeOffset: [ 33.50, 32.50, 26.50, 26.00 ]
   Level_1:
     - [    33.2200, "----------*---------" ]
     - [    98.5200, "---*----------------" ]
@@ -1176,6 +1190,8 @@ PowerUp_SuperShields:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 141.00, 108.50, 55.50, 86.50 ]
+  SpawnTimeOffset: [ 39.00, 33.00, 45.00, 25.00 ]
   Level_1:
     - [    39.0000, "--------------*-----" ]
     - [   196.5800, "-----*--------------" ]
@@ -1204,6 +1220,8 @@ EnemyAircraft_RayGun:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 39.00, 0.00, 0.00, 39.00 ]
+  SpawnTimeOffset: [ 120.00, 0.00, 0.00, 120.00 ]
   Level_1:
     - [   120.0000, "----------*---------" ]
     - [   154.0000, "--------*-----------" ]
@@ -1217,6 +1235,8 @@ EnemyAircraft_Boss00:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 0.00, 0.00, 0.00, 0.00 ]
+  SpawnTimeOffset: [ 228.50, 0.00, 0.00, 235.50 ]
   Level_1:
     - [   228.4800, "------*-------------" ]
   Level_4:
@@ -1226,6 +1246,8 @@ EnemyAircraft_Gnat:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 0.00, 0.50, 1.00, 3.50 ]
+  SpawnTimeOffset: [ 0.00, 44.00, 60.00, 60.00 ]
   Level_2:
     - [    44.0000, "-----------*--------" ]
     - [    48.2800, "-----------------*--" ]
@@ -1837,15 +1859,19 @@ EnemyAircraft_Boss01:
   MaxCount:     8
   BaseSize:     [ 0.50, 0.50 ]
   BaseVelocity: [ 0.00, -0.05 ]
+  SpawnTimeStep: [ 0.00, 0.00, 0.00, 0.00 ]
+  SpawnTimeOffset: [ 0.00, 294.00, 294.00, 0.00 ]
   Level_2:
     - [   294.0000, "-------------*------" ]
   Level_3:
     - [   294.0000, "----------*---------" ]
 
 EnemyAircraft_Tank:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
+  MaxCount:        8
+  BaseSize:        [ 0.50, 0.50 ]
+  BaseVelocity:    [ 0.00, -0.05 ]
+  SpawnTimeStep:   [ 0.00, 0.00, 47.50, 0.00 ]
+  SpawnTimeOffset: [ 0.00, 0.00, 83.00, 0.00 ]
   Level_3:
     - [    82.8200, "----------------*---" ]
     - [   158.9200, "-------------------*" ]
