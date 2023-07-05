@@ -1,0 +1,14 @@
+#pragma once
+#include "vec2.h"
+
+const int  kSimulation_$(ItemName)_Live_MaxCount = $(MaxCount);
+const vec2 kSimulation_$(ItemName)_Live_Size     = vec2($(Size));
+const vec2 kSimulation_$(ItemName)_Live_BaseVel  = vec2($(BaseVel));
+
+extern int   g_Simulation_$(ItemName)_Live_Count;
+extern vec2  g_Simulation_$(ItemName)_Live_Pos[kSimulation_$(ItemName)_Live_MaxCount];
+extern vec2  g_Simulation_$(ItemName)_Live_Vel[kSimulation_$(ItemName)_Live_MaxCount];
+extern float g_Simulation_$(ItemName)_Live_Age[kSimulation_$(ItemName)_Live_MaxCount];
+
+void Simulation_$(ItemName)_Live_Reset();
+void Simulation_$(ItemName)_Live_Update();
