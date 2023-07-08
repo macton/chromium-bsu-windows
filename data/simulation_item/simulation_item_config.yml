@@ -1,449 +1,151 @@
-EnemyAircraft_Straight:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Weapons:
-    - Ammo:        Ammo00
-      Pos:         [ 0.0, -0.9 ]
-      FirePattern: ---------*---------*---------*
-  Level_1:
-    SpawnTimeStep:   3.50
-    SpawnTimeOffset: 0.50
-    SpawnTimeEnd:    208.00
-    SpawnExpression:
-      - 0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-      - -0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_2:
-    SpawnTimeStep:   4.50
-    SpawnTimeOffset: 2.00
-    SpawnTimeEnd:    225.50
-    SpawnExpression:
-      - 0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-      - -0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_3:
-    SpawnTimeStep:   4.00
-    SpawnTimeOffset: 2.00
-    SpawnTimeEnd:    271.50
-    SpawnExpression:
-      - 0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-      - -0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_4:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 0.50
-    SpawnTimeEnd:    217.50
-    SpawnExpression:
-      - 0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-      - -0.8 * sin((4.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-      - -0.3 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
+Item:
+  EnemyAircraft_Straight:
+    MaxCount:     8
+    BaseSize:     [ 0.75, 1.02 ]
+    BaseVelocity: [ 0.00, -0.05 ]
+    Weapons:
+      - Ammo:        Ammo00
+        Pos:         [ 0.0, 0.9 ]
+        FireRate:    0.1
+        FirePattern: ---------*---------*---------*
+  EnemyAircraft_Omni:
+    MaxCount:     8
+    BaseSize:     [ 0.7, 0.7 ]
+    BaseVelocity: [ 0.00, -0.09 ]
+  EnemyAircraft_RayGun:
+    MaxCount:     8
+    BaseSize:     [ 1.2, 1.2 ]
+    BaseVelocity: [ 0.00, -0.03 ]
+  EnemyAircraft_Tank:
+    MaxCount:     8
+    BaseSize:     [ 1.9, 2.1 ]
+    BaseVelocity: [ 0.00, -0.03 ]
+  EnemyAircraft_Gnat:
+    MaxCount:     8
+    BaseSize:     [ 0.45, 0.45 ]
+    BaseVelocity: [ 0.00, -0.02 ]
+  EnemyAircraft_Boss00:
+    MaxCount:     8
+    BaseSize:     [ 3.5, 2.75 ]
+    BaseVelocity: [ 0.00, -0.02 ]
+  EnemyAircraft_Boss01:
+    MaxCount:     8
+    BaseSize:     [ 2.6, 2.3 ]
+    BaseVelocity: [ 0.00, -0.02 ]
+  PowerUp_HeroAmmo00:
+    MaxCount:     1
+    BaseSize:     [ 0.6, 0.6 ]
+    BaseVelocity: [ 0.00, -0.05 ]
+  PowerUp_HeroAmmo01:
+    MaxCount:     1
+    BaseSize:     [ 0.6, 0.6 ]
+    BaseVelocity: [ 0.00, -0.05 ]
+  PowerUp_Shields:
+    MaxCount:     1
+    BaseSize:     [ 0.6, 0.6 ]
+    BaseVelocity: [ 0.00, -0.05 ]
 
-PowerUp_HeroAmmo00:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   36.50
-    SpawnTimeOffset: 2.00
-    SpawnTimeEnd:    368.00
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_2:
-    SpawnTimeStep:   38.50
-    SpawnTimeOffset: 0.50
-    SpawnTimeEnd:    425.50
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_3:
-    SpawnTimeStep:   29.50
-    SpawnTimeOffset: 2.50
-    SpawnTimeEnd:    446.50
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_4:
-    SpawnTimeStep:   35.00
-    SpawnTimeOffset: 1.00
-    SpawnTimeEnd:    391.00
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
+SpawnExpression:
+  Sin: sin((SpawnRepeat * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
 
-PowerUp_HeroAmmo01:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   49.00
-    SpawnTimeOffset: 3.50
-    SpawnTimeEnd:    396.50
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_2:
-    SpawnTimeStep:   47.50
-    SpawnTimeOffset: 3.00
-    SpawnTimeEnd:    434.00
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_3:
-    SpawnTimeStep:   36.50
-    SpawnTimeOffset: 3.00
-    SpawnTimeEnd:    446.50
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_4:
-    SpawnTimeStep:   42.50
-    SpawnTimeOffset: 5.00
-    SpawnTimeEnd:    392.00
-    SpawnExpression:
-      - 0.8 * sin((0.5 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
+SpawnFormation:
+  Form1:
+    - .........*..........
+    - ........*.*.........
+    - .......*...*........
+    - ......*.....*.......
+    - .....*.......*......
+    - .........*..........
+    - ........*.*.........
+    - .......*...*........
+    - .........*..........
+    - ......*.....*.......
+    - ........*.*.........
+    - .........*..........
+    - ........*.*.........
+    - .......*...*........
+    - ......*.....*.......
+    - .....*.......*......
+    - ....*.........*.....
 
-PowerUp_Sheilds:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   51.00
-    SpawnTimeOffset: 13.50
-    SpawnTimeEnd:    372.00
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_2:
-    SpawnTimeStep:   50.50
-    SpawnTimeOffset: 15.50
-    SpawnTimeEnd:    421.00
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_3:
-    SpawnTimeStep:   46.00
-    SpawnTimeOffset: 13.00
-    SpawnTimeEnd:    431.00
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_4:
-    SpawnTimeStep:   46.00
-    SpawnTimeOffset: 12.00
-    SpawnTimeEnd:    380.50
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-
-EnemyAircraft_Omni:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  SpawnFormations:
-    Form1:
-      - .........*..........
-      - ........*.*.........
-      - .......*...*........
-      - ......*.....*.......
-      - .....*.......*......
-      - .........*..........
-      - ........*.*.........
-      - .......*...*........
-      - .........*..........
-      - ......*.....*.......
-      - ........*.*.........
-      - .........*..........
-      - ........*.*.........
-      - .......*...*........
-      - ......*.....*.......
-      - .....*.......*......
-      - ....*.........*.....
-  Level_1:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 16.50
-    SpawnTimeEnd:    224.50
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-    SpawnFormationStamps:
-      - TimeStart: 30.50
-        Formation: Form1
-      - TimeStart: 90.50
-        Formation: Form1
-      - TimeStart: 150.50
-        Formation: Form1
-      - TimeStart: 210.50
-        Formation: Form1
-  Level_2:
-    SpawnTimeStep:   1.50
-    SpawnTimeOffset: 10.00
-    SpawnTimeEnd:    285.00
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-    SpawnFormationStamps:
-      - TimeStart: 30.50
-        Formation: Form1
-      - TimeStart: 90.50
-        Formation: Form1
-      - TimeStart: 150.50
-        Formation: Form1
-      - TimeStart: 210.50
-        Formation: Form1
-  Level_3:
-    SpawnTimeStep:   1.50
-    SpawnTimeOffset: 10.00
-    SpawnTimeEnd:    275.50
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-    SpawnFormationStamps:
-      - TimeStart: 30.50
-        Formation: Form1
-      - TimeStart: 90.50
-        Formation: Form1
-      - TimeStart: 150.50
-        Formation: Form1
-      - TimeStart: 210.50
-        Formation: Form1
-  Level_4:
-    SpawnTimeStep:   2.00
-    SpawnTimeOffset: 28.00
-    SpawnTimeEnd:    230.50
-    SpawnExpression:
-      - 0.8 * sin((SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-    SpawnFormationStamps:
-      - TimeStart: 30.50
-        Formation: Form1
-      - TimeStart: 90.50
-        Formation: Form1
-      - TimeStart: 150.50
-        Formation: Form1
-      - TimeStart: 210.50
-        Formation: Form1
-
-PowerUp_HeroAmmo02:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   73.50
-    SpawnTimeOffset: 22.50
-    SpawnTimeEnd:    390.00
-    SpawnPattern:
-      - ------*-------------
-      - ------*-------------
-      - ---*----------------
-      - ----*---------------
-      - --------*-----------
-      - -------*------------
-  Level_2:
-    SpawnTimeStep:   69.50
-    SpawnTimeOffset: 23.00
-    SpawnTimeEnd:    442.00
-    SpawnPattern:
-      - --*-----------------
-      - -----------*--------
-      - -----*--------------
-      - --*-----------------
-      - --------*-----------
-      - ----------------*---
-      - ----*---------------
-  Level_3:
-    SpawnTimeStep:   48.00
-    SpawnTimeOffset: 1.50
-    SpawnTimeEnd:    386.50
-    SpawnPattern:
-      - -----------*--------
-      - --------*-----------
-      - ------------*-------
-      - -------*------------
-      - ------*-------------
-      - ---------*----------
-      - ---------*----------
-      - ---------*----------
-      - --*-----------------
-  Level_4:
-    SpawnTimeStep:   62.00
-    SpawnTimeOffset: 23.50
-    SpawnTimeEnd:    396.00
-    SpawnPattern:
-      - ------*-------------
-      - -----------*--------
-      - ---------------*----
-      - --------------*-----
-      - --------------*-----
-      - ---*----------------
-      - --------------*-----
-
-PowerUp_Repair:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   72.50
-    SpawnTimeOffset: 33.50
-    SpawnTimeEnd:    398.00
-    SpawnPattern:
-      - ----------*---------
-      - ---*----------------
-      - --------*-----------
-      - ---------------*----
-      - ----*---------------
-      - --------*-----------
-  Level_2:
-    SpawnTimeStep:   72.50
-    SpawnTimeOffset: 32.50
-    SpawnTimeEnd:    396.00
-    SpawnPattern:
-      - -----*--------------
-      - ------------*-------
-      - -----------*--------
-      - ----*---------------
-      - ------------*-------
-      - -----*--------------
-  Level_3:
-    SpawnTimeStep:   73.00
-    SpawnTimeOffset: 26.50
-    SpawnTimeEnd:    393.00
-    SpawnPattern:
-      - ------------*-------
-      - ----------------*---
-      - -------*------------
-      - ----------------*---
-      - --*-----------------
-      - -----*--------------
-  Level_4:
-    SpawnTimeStep:   82.50
-    SpawnTimeOffset: 26.00
-    SpawnTimeEnd:    357.00
-    SpawnPattern:
-      - --------------*-----
-      - -----------*--------
-      - --------------*-----
-      - ------*-------------
-      - --------*-----------
-
-PowerUp_SuperShields:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   141.00
-    SpawnTimeOffset: 39.00
-    SpawnTimeEnd:    322.00
-    SpawnPattern:
-      - --------------*-----
-      - -----*--------------
-      - -----------------*--
-  Level_2:
-    SpawnTimeStep:   108.50
-    SpawnTimeOffset: 33.00
-    SpawnTimeEnd:    358.50
-    SpawnPattern:
-      - ------------*-------
-      - ---------------*----
-      - --------*-----------
-      - ----*---------------
-  Level_3:
-    SpawnTimeStep:   55.50
-    SpawnTimeOffset: 45.00
-    SpawnTimeEnd:    436.50
-    SpawnPattern:
-      - -----*--------------
-      - ---------*----------
-      - --------------*-----
-      - --------------*-----
-      - ---------------*----
-      - ------------*-------
-      - --*-----------------
-      - ------------*-------
-  Level_4:
-    SpawnTimeStep:   86.50
-    SpawnTimeOffset: 25.00
-    SpawnTimeEnd:    284.50
-    SpawnPattern:
-      - -----*--------------
-      - ------------*-------
-      - -----*--------------
-      - -----------*--------
-
-EnemyAircraft_RayGun:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   39.00
-    SpawnTimeOffset: 120.00
-    SpawnTimeEnd:    198.50
-    SpawnPattern:
-      - ----------*---------
-      - --------*-----------
-      - ------*-------------
-  Level_4:
-    SpawnTimeStep:   39.00
-    SpawnTimeOffset: 120.00
-    SpawnTimeEnd:    199.00
-    SpawnPattern:
-      - ----------------*---
-      - ------*-------------
-      - ----------*---------
-
-EnemyAircraft_Boss00:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_1:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 228.50
-    SpawnTimeEnd:    228.50
-    SpawnPattern:
-      - ------*-------------
-  Level_4:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 235.50
-    SpawnTimeEnd:    235.50
-    SpawnPattern:
-      - ------------*-------
-
-EnemyAircraft_Gnat:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_2:
-    SpawnTimeStep:   0.50
-    SpawnTimeOffset: 44.00
-    SpawnTimeEnd:    249.00
-    SpawnExpression:
-      - 0.9 * sin((16.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_3:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 60.00
-    SpawnTimeEnd:    268.00
-    SpawnExpression:
-      - 0.9 * sin((16.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-  Level_4:
-    SpawnTimeStep:   3.50
-    SpawnTimeOffset: 60.00
-    SpawnTimeEnd:    220.00
-    SpawnExpression:
-      - 0.9 * sin((2.0 * SpawnTime * M_PI * 2.0)/SpawnTimeLength)
-
-EnemyAircraft_Boss01:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_2:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 294.00
-    SpawnTimeEnd:    294.00
-    SpawnPattern:
-      - -------------*------
-  Level_3:
-    SpawnTimeStep:   1.00
-    SpawnTimeOffset: 294.00
-    SpawnTimeEnd:    294.00
-    SpawnPattern:
-      - ----------*---------
-
-EnemyAircraft_Tank:
-  MaxCount:     8
-  BaseSize:     [ 0.50, 0.50 ]
-  BaseVelocity: [ 0.00, -0.05 ]
-  Level_3:
-    SpawnTimeStep:   47.50
-    SpawnTimeOffset: 83.00
-    SpawnTimeEnd:    322.50
-    SpawnPattern:
-      - ----------------*---
-      - -------------------*
-      - -----------*--------
-      - ------------*-------
-      - -----------*--------
-      - ----------*---------
+Levels:
+  - Time: 300
+    Spawn:
+      EnemyAircraft_Straight:
+        TimeStep: 3.50
+        Pattern:
+          - Expression: Sin
+            Width:      0.8
+            Repeat:     4.0
+            TimeStart:  0.50
+            TimeStop:   240
+          - Expression: Sin
+            Width:      -0.8
+            Repeat:     3.0
+            TimeStart:  60.0
+            TimeStop:   240
+      EnemyAircraft_Omni:
+        TimeStep: 1.0
+        Pattern:
+          - Expression: Sin
+            Width:      0.8
+            Repeat:     1.0
+            TimeStart:  16.0
+            TimeStop:   300
+          - Formation:  Form1
+            TimeStart:  30.0
+          - Formation:  Form1
+            TimeStart:  90.0
+          - Formation:  Form1
+            TimeStart:  150.0
+          - Formation:  Form1
+            TimeStart:  210.0
+      PowerUp_HeroAmmo00:
+        TimeStep: 36.50
+        Pattern:
+          - Expression: Sin
+            Width:      0.8
+            Repeat:     0.5
+            TimeStart:  2.0
+            TimeStop:   300
+      PowerUp_HeroAmmo01:
+        TimeStep: 49.0
+        Pattern:
+          - Expression: Sin
+            Width:      -0.8
+            Repeat:     0.5
+            TimeStart:  3.5
+            TimeStop:   300
+      PowerUp_HeroAmmo02:
+        TimeStep: 73.5
+        Pattern:
+          - Expression: Sin
+            Width:      -0.8
+            Repeat:     1.0
+            TimeStart:  22.50
+            TimeStop:   300
+      PowerUp_Shields:
+        TimeStep: 51.0
+        Pattern:
+          - Expression: Sin
+            Width:      0.8
+            Repeat:     1.0
+            TimeStart:  13.5
+            TimeStop:   300
+      PowerUp_Repair:
+        TimeStep: 72.50
+        Pattern:
+          - Expression: Sin
+            Width:      0.7
+            Repeat:     1.0
+            TimeStart:  33.5
+            TimeStop:   300
+      PowerUp_SuperShields:
+        TimeStep: 141.0
+        Pattern:
+          - Expression: Sin
+            Width:      0.7
+            Repeat:     1.0
+            TimeStart:  39.0
+            TimeStop:   300
 

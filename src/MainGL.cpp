@@ -201,7 +201,7 @@ void MainGL::drawGameGL()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	g_Simulation_Level = game->gameLevel;
+	g_Simulation_Level = game->gameLevel-1;
 	Simulation_Update();
 
 	//-- Place camera

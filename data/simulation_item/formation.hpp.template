@@ -1,0 +1,11 @@
+#pragma once
+
+<% let next_offset = 0;
+   Object.keys(SpawnFormation).forEach( function( formation_name ) { 
+   const formation = SpawnFormation[ formation_name ];
+%>
+const int kSpawnFormation_<%= formation_name %>_Offset = <%= next_offset %>;
+const int kSpawnFormation_<%= formation_name %>_Count  = <%= formation.length %>;
+<% next_offset += formation.length; _%>
+<% }); // Object.keys(SpawnFormation).forEach %>
+extern uint32_t g_SpawnFormation[];

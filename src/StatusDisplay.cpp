@@ -304,7 +304,6 @@ void StatusDisplay::drawGL(HeroAircraft	*hero)
 		float c2f = -dl;
 		float c1[4] = { 0.85, 0.65, 1.00, 0.7 };
 		float c2[4] = { 1.00, 0.20, 0.25, 0.7 };
-//		glColor4f(0.9, 0.7, 1.0, 0.7);
 		glColor4f(	c1[0]*c1f+c2[0]*c2f,
 					c1[1]*c1f+c2[1]*c2f,
 					c1[2]*c1f+c2[2]*c2f,
@@ -605,7 +604,6 @@ void StatusDisplay::drawGL(HeroAircraft	*hero)
 		glTexCoord2f( 0.0, 1.0+sl); glVertex3f( statPosShld[0]-szx, statPosShld[1]    , statPosShld[2] );
 		glTexCoord2f( 1.0, 1.0+sl); glVertex3f( statPosShld[0]    , statPosShld[1]    , statPosShld[2] );
 		//-- Life
-
 		if( (dl < -0.7 && blink) )
 			glColor4fv(statClrWarn);
 		else

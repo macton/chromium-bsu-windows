@@ -1,0 +1,20 @@
+#include <stdint.h>
+
+uint32_t g_SpawnFormation[] = 
+{
+<% Object.keys(SpawnFormation).forEach( function( formation_name ) { 
+   const formation = SpawnFormation[ formation_name ];
+%>
+    // <%= formation_name %>
+  <% formation.forEach( function(line) { 
+    let line_value = 0;
+    for (let i=0;i<20;i++) { 
+      if (line[i] == "*") {
+        line_value |= (1<<i);
+      }
+    }
+  _%>
+  0x<%= line_value.toString(16).padStart(8,'0'); %>, // <%= line %>
+  <% }); // formation.forEach _%>
+<% }); // Object.keys(SpawnFormation).forEach %>
+};

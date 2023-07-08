@@ -1,0 +1,196 @@
+#include <float.h>
+#include <math.h>
+#include <stdint.h>
+#include "../src/vec2.h"
+#include "../src/compatibility.h"
+
+// Read Buffers
+#include "../src/Simulation.h"
+#include "Formation.hpp"
+
+// Write Buffer
+#include "<%= Item.Name %>_Live.hpp"
+
+int    g_Simulation_<%= Item.Name %>_Live_Count;
+vec2   g_Simulation_<%= Item.Name %>_Live_Pos[kSimulation_<%= Item.Name %>_Live_MaxCount];
+float  g_Simulation_<%= Item.Name %>_Live_Age[kSimulation_<%= Item.Name %>_Live_MaxCount];
+float  g_Simulation_<%= Item.Name %>_NextSpawnTime;
+
+void
+Simulation_<%= Item.Name %>_Live_Reset()
+{
+  g_Simulation_<%= Item.Name %>_Live_Count    = 0;
+  g_Simulation_<%= Item.Name %>_NextSpawnTime = 0.0f;
+}
+
+<% Levels.forEach( function(level,level_ndx) { 
+   const has_spawn = level.Spawn.hasOwnProperty(Item.Name);
+   if (has_spawn) {
+     const spawn     = level.Spawn[ Item.Name ];
+_%>
+void
+Simulation_<%= Item.Name %>_Live_CreateNew_Level_<%= level_ndx %>()
+{
+  // Read Buffers
+  const float     time                    = g_Simulation_Time;
+  const float     time_step               = <%= spawn.TimeStep.toFixed(2) %>f;
+  const vec2      base_vel                = kSimulation_<%= Item.Name %>_Live_BaseVelocity;
+  const int       live_max_count          = kSimulation_<%= Item.Name %>_Live_MaxCount;
+  const vec2      simulation_rect         = kSimulation_PlayArea;
+  const float     simulation_rect_left    = -simulation_rect.x;
+  const float     simulation_rect_width   = 2.0f * simulation_rect.x;
+  const float     simulation_rect_top     = simulation_rect.y;
+  const float     simulation_rect_bottom  = -simulation_rect.y;
+  const float     simulation_time_step    = g_Simulation_TimeStep;
+  const uint32_t* spawn_formation         = g_SpawnFormation;
+
+  // Write Buffer
+  float           next_spawn_time         = g_Simulation_<%= Item.Name %>_NextSpawnTime;
+  int             live_count              = g_Simulation_<%= Item.Name %>_Live_Count;
+  vec2*           live_pos                = g_Simulation_<%= Item.Name %>_Live_Pos;
+  float*          live_age                = g_Simulation_<%= Item.Name %>_Live_Age;
+
+  if ( time < next_spawn_time )
+  {
+    return;
+  }
+  
+  <% spawn.Pattern.forEach( function(pattern) { %>
+  <% if (pattern.hasOwnProperty("Expression")) {
+     const pattern_expression_name = pattern.Expression;
+     const pattern_width           = pattern.Width;
+     const pattern_repeat          = pattern.Repeat;
+     const pattern_time_start      = pattern.TimeStart;
+     const pattern_time_stop       = pattern.TimeStop;
+     const pattern_expression      = SpawnExpression[ pattern_expression_name ]
+                                     .replace(/sin/g,"sinf")
+                                     .replace(/cos/g,"cosf")
+                                     .replace(/SpawnWidth/g,"width")
+                                     .replace(/SpawnTimeLength/g,"length")
+                                     .replace(/SpawnTime/g,"time")
+                                     .replace(/SpawnRepeat/g,"repeat");
+  %>
+  // Expression
+  {
+    float time_start     = <%= pattern_time_start.toFixed(2) %>f;
+    float time_stop      = <%= pattern_time_stop.toFixed(2) %>f;
+    int   in_time_window = (time >= time_start) && (time <= time_stop);
+    if ( in_time_window )
+    {
+      const float width    = <%= pattern_width.toFixed(2) %>f;
+      const float repeat   = <%= pattern_repeat.toFixed(2) %>f;
+      const float length   = <%= (pattern_time_stop-pattern_time_start).toFixed(2) %>f;
+      const float entry    = <%= pattern_expression %>;
+      const float offset_x = 0.5f * ((1.0f - width) * simulation_rect_width);
+      const float entry_x  = simulation_rect_left + offset_x + (entry * width * simulation_rect_width);
+      const float entry_y  = simulation_rect_top;
+      const int   live_ndx = live_count % live_max_count;
+
+      live_pos[live_ndx] = vec2( entry_x, entry_y );
+      live_age[live_ndx] = FLT_MIN;
+      live_count++;
+    }
+  }
+  <% }   // pattern.hasOwnProperty("Expression") %>
+  <% if (pattern.hasOwnProperty("Formation")) {
+     const pattern_formation_name  = pattern.Formation;
+     const pattern_time_start      = pattern.TimeStart;
+     const pattern_formation       = SpawnFormation[ pattern_formation_name ];
+     const pattern_time_length     = pattern_formation.length * spawn.TimeStep;
+  %>
+  // Formation
+  {
+    float time_start     = <%= pattern_time_start.toFixed(2) %>f;
+    float time_stop      = time_start + <%= pattern_time_length.toFixed(2) %>f;
+    int   in_time_window = (time >= time_start) && (time < time_stop);
+    if ( in_time_window )
+    {
+      int      formation_offset = kSpawnFormation_<%= pattern_formation_name %>_Offset;
+      int      formation_count  = kSpawnFormation_<%= pattern_formation_name %>_Count;
+      int      formation_index  = (int)floorf((time-time_start)/time_step);
+      uint32_t pattern          = spawn_formation[ formation_offset + formation_index ];
+
+      for (int i=0;i<20;i++)
+      {
+        if (pattern & (1<<i))
+        {
+          const float entry_x  = simulation_rect_left + (((float)i) * (1.0f/20.0f) * simulation_rect_width);
+          const float entry_y  = simulation_rect_top;
+          const int   live_ndx = live_count % live_max_count;
+    
+          live_pos[live_ndx] = vec2( entry_x, entry_y );
+          live_age[live_ndx] = FLT_MIN;
+          live_count++;
+        }
+      }
+    }
+  }
+  <% }   // pattern.hasOwnProperty("Formation") %>
+  <% }); // spawn.Pattern.forEach %>
+
+  g_Simulation_<%= Item.Name %>_Live_Count    = live_count;
+  g_Simulation_<%= Item.Name %>_NextSpawnTime = time + time_step;
+}
+<% }   // if (has_spawn) %>
+<% }); // Levels.forEach %>
+
+void
+Simulation_<%= Item.Name %>_Live_CreateNew()
+{
+  // Read Buffers
+  const int    level = g_Simulation_Level;
+
+  switch (level)
+  {
+    <% Levels.forEach( function(level,level_ndx) { 
+       const has_spawn = level.Spawn.hasOwnProperty(Item.Name);
+       if (has_spawn) {
+    %>
+    case <%= level_ndx %>: Simulation_<%= Item.Name %>_Live_CreateNew_Level_<%= level_ndx %>(); break;
+    <% 
+      }   // if (has_spawn)
+      }); // Levels.forEach
+    %>
+  }
+}
+
+void
+Simulation_<%= Item.Name %>_Live_UpdateExisting()
+{
+  // Read Buffers
+  const vec2   simulation_rect         = kSimulation_PlayArea;
+  const float  simulation_rect_left    = -simulation_rect.x;
+  const float  simulation_rect_width   = 2.0f * simulation_rect.x;
+  const float  simulation_rect_top     = simulation_rect.y;
+  const float  simulation_rect_bottom  = -simulation_rect.y;
+  const float  simulation_time_step    = g_Simulation_TimeStep;
+  const vec2   base_vel                = kSimulation_<%= Item.Name %>_Live_BaseVelocity;
+  const int    live_count              = g_Simulation_<%= Item.Name %>_Live_Count;
+  const int    live_max_count          = kSimulation_<%= Item.Name %>_Live_MaxCount;
+  const int    update_count            = live_count % live_max_count;
+
+  // Write Buffer
+  vec2*        live_pos                = g_Simulation_<%= Item.Name %>_Live_Pos;
+  float*       live_age                = g_Simulation_<%= Item.Name %>_Live_Age;
+
+  for (int live_ndx = 0; live_ndx < update_count; live_ndx++)
+  {
+    float age = live_age[live_ndx];
+
+    if (age > 0.0f)
+    {
+      vec2 pos = live_pos[live_ndx] + base_vel;
+      age      = (pos.y < simulation_rect_bottom)?0.0f:(age + simulation_time_step);
+
+      live_pos[live_ndx] = pos;
+      live_age[live_ndx] = age;
+    }
+  }
+}
+
+void
+Simulation_<%= Item.Name %>_Live_Update()
+{
+  Simulation_<%= Item.Name %>_Live_CreateNew();
+  Simulation_<%= Item.Name %>_Live_UpdateExisting();
+}

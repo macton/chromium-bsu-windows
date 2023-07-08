@@ -25,8 +25,7 @@ const ConfigWaveToString = (wave) => {
   return wave.map( sample => {
     const sample_time    = sample[0];
     const sample_trigger = sample[1];
-
-    return "    - [ " + sample_time.toFixed(4).padStart(10," ") + ", \"" + sample_trigger + "\" ]";
+    return    "      - \"" + sample_trigger + "\"";
   }).join("\n");;
 }
 
@@ -55,6 +54,13 @@ const SpawnTimeOffset = (wave) => {
   return quantized_offset;
 }
 
+const SpawnTimeEnd = (wave) => {
+  if (!wave) return 0.0;
+  const offset = wave[wave.length-1][0] + 0.4999;
+  const quantized_offset = ((offset * 2.0)|0) * 0.5;
+  return quantized_offset;
+}
+
 const ConfigItemToString = (item_name) => {
   const item = config[ item_name ];
   let output = "";
@@ -68,37 +74,46 @@ const ConfigItemToString = (item_name) => {
   const time_step_3 = AverageSpawnTime( item["Level_3"] );
   const time_step_4 = AverageSpawnTime( item["Level_4"] );
 
+  const time_end_1 = SpawnTimeEnd( item["Level_1"] );
+  const time_end_2 = SpawnTimeEnd( item["Level_2"] );
+  const time_end_3 = SpawnTimeEnd( item["Level_3"] );
+  const time_end_4 = SpawnTimeEnd( item["Level_4"] );
+
   const time_offset_1 = SpawnTimeOffset( item["Level_1"] );
   const time_offset_2 = SpawnTimeOffset( item["Level_2"] );
   const time_offset_3 = SpawnTimeOffset( item["Level_3"] );
   const time_offset_4 = SpawnTimeOffset( item["Level_4"] );
 
-  output += "  SpawnTimeStep: [ ";
-  output += time_step_1.toFixed(2) + ", ";
-  output += time_step_2.toFixed(2) + ", ";
-  output += time_step_3.toFixed(2) + ", ";
-  output += time_step_4.toFixed(2) + " ]\n" ;
-
-  output += "  SpawnTimeOffset: [ ";
-  output += time_offset_1.toFixed(2) + ", ";
-  output += time_offset_2.toFixed(2) + ", ";
-  output += time_offset_3.toFixed(2) + ", ";
-  output += time_offset_4.toFixed(2) + " ]\n" ;
-
   if (item.hasOwnProperty("Level_1")) {
     output += "  Level_1:\n";
+    output += "    SpawnTimeStep:   " + time_step_1.toFixed(2) + "\n";
+    output += "    SpawnTimeOffset: " + time_offset_1.toFixed(2) + "\n";
+    output += "    SpawnTimeEnd:    " + time_end_1.toFixed(2) + "\n";
+    output += "    SpawnPattern:\n";
     output += ConfigWaveToString( item["Level_1"] ) + "\n";
   }
   if (item.hasOwnProperty("Level_2")) {
     output += "  Level_2:\n";
+    output += "    SpawnTimeStep:   " + time_step_2.toFixed(2) + "\n";
+    output += "    SpawnTimeOffset: " + time_offset_2.toFixed(2) + "\n";
+    output += "    SpawnTimeEnd:    " + time_end_2.toFixed(2) + "\n";
+    output += "    SpawnPattern:\n";
     output += ConfigWaveToString( item["Level_2"] ) + "\n";
   }
   if (item.hasOwnProperty("Level_3")) {
     output += "  Level_3:\n";
+    output += "    SpawnTimeStep:   " + time_step_3.toFixed(2) + "\n";
+    output += "    SpawnTimeOffset: " + time_offset_3.toFixed(2) + "\n";
+    output += "    SpawnTimeEnd:    " + time_end_3.toFixed(2) + "\n";
+    output += "    SpawnPattern:\n";
     output += ConfigWaveToString( item["Level_3"] ) + "\n";
   }
   if (item.hasOwnProperty("Level_4")) {
     output += "  Level_4:\n";
+    output += "    SpawnTimeStep:   " + time_step_4.toFixed(2) + "\n";
+    output += "    SpawnTimeOffset: " + time_offset_4.toFixed(2) + "\n";
+    output += "    SpawnTimeEnd:    " + time_end_4.toFixed(2) + "\n";
+    output += "    SpawnPattern:\n";
     output += ConfigWaveToString( item["Level_4"] ) + "\n";
   }
   return output + "\n";

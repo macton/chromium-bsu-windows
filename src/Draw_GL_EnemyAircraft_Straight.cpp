@@ -9,9 +9,9 @@
 
 void Draw_EnemyAircraft_Straight()
 {
-    int    enemy_live_count = g_Simulation_EnemyAircraft_Straight_Live_Count;
+    int    enemy_live_count     = g_Simulation_EnemyAircraft_Straight_Live_Count;
     int    enemy_live_max_count = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
-    int    enemy_update_count = enemy_live_count % enemy_live_max_count;
+    int    enemy_update_count   = min( enemy_live_count, enemy_live_max_count );
 
     vec2 size = kSimulation_EnemyAircraft_Straight_Live_Size;
     for (int enemy_index = 0; enemy_index < enemy_update_count; enemy_index++)

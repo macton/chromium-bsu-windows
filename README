@@ -15,6 +15,11 @@
 [ ] ...
 [ ] Add new build system (cmake? tundra?)
 
+Other notes:
+- Looking at approx grid size based on vel, size
+- See: HeroAmmo::checkForHits -> EnemyAircraft::checkHit (HeroAmmo size?)
+
+
 ---
 Chromium B.S.U.
 

@@ -28,13 +28,13 @@ void
 Simulation_EnemyAircraft_Straight_Live_CreateFrom_Wave()
 {
     const int       level_wave_count[] = { EnemyAircraft_Straight_Level_1_Count, EnemyAircraft_Straight_Level_2_Count, EnemyAircraft_Straight_Level_3_Count, EnemyAircraft_Straight_Level_4_Count };
-    const float* level_wave_start_time[] = { EnemyAircraft_Straight_StartTime_Level_1, EnemyAircraft_Straight_StartTime_Level_2, EnemyAircraft_Straight_StartTime_Level_3, EnemyAircraft_Straight_StartTime_Level_4 };
+    const float*    level_wave_start_time[] = { EnemyAircraft_Straight_StartTime_Level_1, EnemyAircraft_Straight_StartTime_Level_2, EnemyAircraft_Straight_StartTime_Level_3, EnemyAircraft_Straight_StartTime_Level_4 };
     const uint32_t* level_wave_start_location[] = { EnemyAircraft_Straight_StartLocation_Level_1, EnemyAircraft_Straight_StartLocation_Level_2, EnemyAircraft_Straight_StartLocation_Level_3, EnemyAircraft_Straight_StartLocation_Level_4 };
     const vec2      base_vel = kSimulation_EnemyAircraft_Straight_Live_BaseVel;
 
-    int    enemy_live_count = g_Simulation_EnemyAircraft_Straight_Live_Count;
-    int    enemy_live_max_count = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
-    int    enemy_update_count = enemy_live_count % enemy_live_max_count;
+    int             enemy_live_count = g_Simulation_EnemyAircraft_Straight_Live_Count;
+    int             enemy_live_max_count = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
+    int             enemy_update_count = enemy_live_count % enemy_live_max_count;
 
     int             wave_ndx = s_Simulation_EnemyAircraft_Straight_Live_LastWaveIndex;
     int             level = g_Simulation_Level;
@@ -91,12 +91,12 @@ Simulation_EnemyAircraft_Straight_Live_Update()
     int    enemy_live_max_count = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
     int    enemy_update_count = enemy_live_count % enemy_live_max_count;
 
-    vec2            simulation_rect = kSimulation_PlayArea;
-    float           simulation_rect_left = -simulation_rect.x;
-    float           simulation_rect_width = 2.0f * simulation_rect.x;
-    float           simulation_rect_top = simulation_rect.y;
-    float           simulation_rect_bottom = -simulation_rect.y;
-    float           simulation_time_step = g_Simulation_TimeStep;
+    vec2   simulation_rect = kSimulation_PlayArea;
+    float  simulation_rect_left = -simulation_rect.x;
+    float  simulation_rect_width = 2.0f * simulation_rect.x;
+    float  simulation_rect_top = simulation_rect.y;
+    float  simulation_rect_bottom = -simulation_rect.y;
+    float  simulation_time_step = g_Simulation_TimeStep;
 
     for (int live_ndx = 0; live_ndx < enemy_update_count; live_ndx++)
     {
