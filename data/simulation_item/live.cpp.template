@@ -38,6 +38,7 @@ Simulation_<%= Item.Name %>_Live_CreateNew_Level_<%= level_ndx %>()
   const int       live_max_count          = kSimulation_<%= Item.Name %>_Live_MaxCount;
   const vec2      simulation_rect         = kSimulation_PlayArea;
   const float     simulation_rect_left    = -simulation_rect.x;
+  const float     simulation_rect_hwidth  = simulation_rect.x;
   const float     simulation_rect_width   = 2.0f * simulation_rect.x;
   const float     simulation_rect_top     = simulation_rect.y;
   const float     simulation_rect_bottom  = -simulation_rect.y;
@@ -81,8 +82,7 @@ Simulation_<%= Item.Name %>_Live_CreateNew_Level_<%= level_ndx %>()
       const float repeat   = <%= pattern_repeat.toFixed(2) %>f;
       const float length   = <%= (pattern_time_stop-pattern_time_start).toFixed(2) %>f;
       const float entry    = <%= pattern_expression %>;
-      const float offset_x = 0.5f * ((1.0f - width) * simulation_rect_width);
-      const float entry_x  = simulation_rect_left + offset_x + (entry * width * simulation_rect_width);
+      const float entry_x  = entry * simulation_rect_hwidth;
       const float entry_y  = simulation_rect_top;
       const int   live_ndx = live_count % live_max_count;
 
@@ -167,7 +167,7 @@ Simulation_<%= Item.Name %>_Live_UpdateExisting()
   const vec2   base_vel                = kSimulation_<%= Item.Name %>_Live_BaseVelocity;
   const int    live_count              = g_Simulation_<%= Item.Name %>_Live_Count;
   const int    live_max_count          = kSimulation_<%= Item.Name %>_Live_MaxCount;
-  const int    update_count            = live_count % live_max_count;
+  const int    update_count            = min(live_count, live_max_count);
 
   // Write Buffer
   vec2*        live_pos                = g_Simulation_<%= Item.Name %>_Live_Pos;

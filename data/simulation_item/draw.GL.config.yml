@@ -1,0 +1,21 @@
+Item:
+  EnemyAircraft_Straight:
+    Sprite: Enemy00
+  EnemyAircraft_Omni:
+    Sprite: Enemy01
+  EnemyAircraft_RayGun:
+    Sprite: Enemy02
+  EnemyAircraft_Tank:
+    Sprite: Enemy03
+  EnemyAircraft_Gnat:
+    Sprite: Enemy04
+  EnemyAircraft_Boss00:
+    Sprite: Enemy05
+  EnemyAircraft_Boss01:
+    Sprite: Enemy06
+  PowerUp_HeroAmmo00:
+    Sprite: PowerUpAmmo
+  PowerUp_HeroAmmo01:
+    Sprite: PowerUpAmmo
+  PowerUp_Shields:
+    Sprite: PowerUpShield
