@@ -88,52 +88,100 @@ const PreProcess_Spawn_AtGroup_Expression = ( spawn_in, config_in ) => {
 
     pattern.push( '0x' + (index >>> 0).toString(16).padStart(2,'0') );
   }
-  return {
-    ContinuousPattern: pattern,
+  return { 
+    Asset:     spawn_in.Asset,
+    AtGroup:   spawn_in.AtGroup,
+    TimeStep:  spawn_in.TimeStep,
+    TimeStart: spawn_in.TimeStart,
+    TimeStop:  spawn_in.TimeStop,
+    Pattern:   pattern,
   };
 }
 
 const PreProcess_Spawn_AtGroup = ( spawn_in, config_in ) => {
-  if ( spawn_in.hasOwnProperty('Expression') ) {
-    return {
-      Asset:     spawn_in.Asset,
-      AtGroup:   spawn_in.AtGroup,
-      TimeStep:  spawn_in.TimeStep,
-      TimeStart: spawn_in.TimeStart,
-      TimeStop:  spawn_in.TimeStop,
-      ...PreProcess_Spawn_AtGroup_Expression( spawn_in, config_in ),
-    };
-  } else {
-    return null;
-  }
 }
 
 const PreProcess_Spawn = ( spawn_in, config_in ) => {
-  return spawn_in.map( spawn => {
-    if ( spawn.hasOwnProperty('AtEach') ) {
-      return PreProcess_Spawn_AtEach( spawn, config_in );
-    } else if ( spawn.hasOwnProperty('AtGroup') ) {
-      return PreProcess_Spawn_AtGroup( spawn, config_in );
-    }
-  });
+  const spawn_in_at_each             = spawn_in.filter( spawn => spawn.hasOwnProperty('AtEach') );
+  const spawn_in_at_group_expression = spawn_in.filter( spawn => spawn.hasOwnProperty('AtGroup') && spawn.hasOwnProperty('Expression') );
+
+  return {
+    SpawnAtEach:            spawn_in_at_each.map( spawn => PreProcess_Spawn_AtEach( spawn, config_in ) ),
+    SpawnAtGroupExpression: spawn_in_at_group_expression.map( spawn => PreProcess_Spawn_AtGroup_Expression( spawn, config_in ) ),
+  }
 }
 
 const PreProcess = ( config_in ) => {
+
+  //
+  // Pass-1
+  //
+
   const preprocessor = {
-    PlayArea:         value => value,
-    MaxLocationCount: value => value,
-    Location:         value => value, 
-    BaseSize:         value => value, 
-    BaseSpeed:        value => value, 
+    PlayArea:         value => { return { PlayArea: value } },
+    MaxLocationCount: value => { return { MaxLocationCount: value } },
+    Location:         value => { return { Location: value } },  
+    BaseSize:         value => { return { BaseSize: value } }, 
+    BaseSpeed:        value => { return { BaseSpeed: value } }, 
     Spawn:            PreProcess_Spawn,
   };
   config_out = {};
   Object.keys(config_in).forEach( key => {
     if ( preprocessor.hasOwnProperty(key) ) {
       const value = config_in[key];
-      config_out[ key ] = preprocessor[key](value, config_in);
+      config_out = { ...config_out, ...preprocessor[key](value, config_in) };
     }
   });
+
+  //
+  // Pass-2 
+  //   - Move index patterns to shaded table
+  //
+
+  if ( config_out.hasOwnProperty('SpawnAtGroupExpression') ) {
+    let text_u8 = [];
+    config_out.SpawnAtGroupExpression.forEach( spawn => {
+      const pattern = [ ...spawn.Pattern ];
+      delete spawn.Pattern;
+                
+      const text_u8_str = text_u8.join('');
+      const pattern_str  = pattern.join('');
+      let pattern_index = text_u8_str.indexOf( pattern_str );
+
+      if ( pattern_index == -1 ) {
+        pattern_index = text_u8.length;
+        text_u8       = [ ...text_u8, ...pattern ];
+      } else {
+        pattern_index = pattern_index / 4; // "0x--"
+      }
+
+      spawn.PatternLength = pattern.length;
+      spawn.PatternTextU8Offset = pattern_index;
+    });
+    config_out.TextU8 = text_u8;
+  }
+  if ( config_out.hasOwnProperty('SpawnAtEach') ) {
+    let text_u32 = [];
+    config_out.SpawnAtEach.forEach( spawn => {
+      const pattern = [ ...spawn.Pattern ];
+      delete spawn.Pattern;
+
+      const text_u32_str = text_u32.join('');
+      const pattern_str  = pattern.join('');
+      let pattern_index = text_u32_str.indexOf( pattern_str );
+ 
+      if ( pattern_index == -1 ) {
+        pattern_index = text_u32.length;
+        text_u32      = [ ...text_u32, ...pattern ];
+      } else {
+        pattern_index = pattern_index / 10; // "0x--------"
+      }
+
+      spawn.PatternTextU32Offset = pattern_index;
+    });
+    config_out.TextU32 = text_u32;
+  }
+
   return config_out;
 }
 
