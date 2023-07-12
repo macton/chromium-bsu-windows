@@ -19,3 +19,5 @@ Item:
     Sprite: PowerUpAmmo
   PowerUp_Shields:
     Sprite: PowerUpShield
+  EnemyAmmo00:
+    Sprite: EnemyAmmo00

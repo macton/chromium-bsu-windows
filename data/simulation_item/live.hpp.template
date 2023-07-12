@@ -2,12 +2,11 @@
 #include "../src/vec2.h"
 
 const int  kSimulation_<%- Item.Name _%>_Live_MaxCount     = <%- Item.MaxCount _%>;
-const vec2 kSimulation_<%- Item.Name _%>_Live_BaseSize     = vec2(<%- Item.BaseSize.x _%>f, <%- Item.BaseSize.y _%>f);
-const vec2 kSimulation_<%- Item.Name _%>_Live_BaseVelocity = vec2(<%- Item.BaseVelocity.x _%>f, <%- Item.BaseVelocity.y _%>f);
+const vec2 kSimulation_<%- Item.Name _%>_Live_BaseSize     = vec2(<%- Item.BaseSize[0].toFixed(2) _%>f, <%- Item.BaseSize[1].toFixed(2) _%>f);
+const vec2 kSimulation_<%- Item.Name _%>_Live_BaseVelocity = vec2(<%- Item.BaseVelocity[0].toFixed(2) _%>f, <%- Item.BaseVelocity[1].toFixed(2) _%>f);
 
 extern int   g_Simulation_<%- Item.Name _%>_Live_Count;
 extern vec2  g_Simulation_<%- Item.Name _%>_Live_Pos[kSimulation_<%- Item.Name _%>_Live_MaxCount];
-extern vec2  g_Simulation_<%- Item.Name _%>_Live_Vel[kSimulation_<%- Item.Name _%>_Live_MaxCount];
 extern float g_Simulation_<%- Item.Name _%>_Live_Age[kSimulation_<%- Item.Name _%>_Live_MaxCount];
 
 void Simulation_<%- Item.Name _%>_Live_Reset();

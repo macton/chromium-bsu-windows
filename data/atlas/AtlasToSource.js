@@ -28,16 +28,16 @@ let cpp_text = `
 #include <cstdlib>
 #include <cmath>
 
-#include "compatibility.h"
+#include "../src/compatibility.h"
 
 #if defined(HAVE_APPLE_OPENGL_FRAMEWORK) || defined(HAVE_OPENGL_GL_H)
 #include <OpenGL/gl.h>
 #else
 #include <GL/gl.h>
 #endif
-#include "define.h"
+#include "../src/define.h"
 
-#include "Atlas.h"
+#include "Atlas.hpp"
 
 float g_ImageTexCoords[][4] = {
 IMAGE_TEX_COORDS
@@ -83,5 +83,5 @@ cpp_text = cpp_text.replace("IMAGE_TEX_COORDS", image_names.map( name => {
   `  { ${u0.toFixed(8)}, ${v0.toFixed(8)}, ${u1.toFixed(8)}, ${v1.toFixed(8)} }`;
 }).join(",\n"));
 
-fs.writeFileSync("../../generated_src/Atlas.h",hpp_text);
+fs.writeFileSync("../../generated_src/Atlas.hpp",hpp_text);
 fs.writeFileSync("../../generated_src/Atlas.cpp",cpp_text);

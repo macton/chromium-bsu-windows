@@ -1,9 +1,9 @@
 #include <float.h>
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "../src/vec2.h"
 #include "../src/compatibility.h"
-#include <stdio.h>
 
 // Read Buffers
 #include "../src/Simulation.h"
@@ -34,6 +34,7 @@ Simulation_EnemyAircraft_Straight_Live_CreateNew_Level_0()
   const int       live_max_count          = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
   const vec2      simulation_rect         = kSimulation_PlayArea;
   const float     simulation_rect_left    = -simulation_rect.x;
+  const float     simulation_rect_hwidth  = simulation_rect.x;
   const float     simulation_rect_width   = 2.0f * simulation_rect.x;
   const float     simulation_rect_top     = simulation_rect.y;
   const float     simulation_rect_bottom  = -simulation_rect.y;
@@ -63,13 +64,11 @@ Simulation_EnemyAircraft_Straight_Live_CreateNew_Level_0()
       const float width    = 0.80f;
       const float repeat   = 4.00f;
       const float length   = 239.50f;
-      const float entry    = sinf((repeat * time * M_PI * 2.0)/length);
-      const float offset_x = 0.5f * ((1.0f - width) * simulation_rect_width);
-      const float entry_x  = simulation_rect_left + offset_x + (entry * width * simulation_rect_width);
+      const float entry    = width * sinf((repeat * time * M_PI * 2.0)/length);
+      const float entry_x  = entry * simulation_rect_hwidth;
       const float entry_y  = simulation_rect_top;
       const int   live_ndx = live_count % live_max_count;
 
-      printf("create enemy %d\n", live_ndx);
       live_pos[live_ndx] = vec2( entry_x, entry_y );
       live_age[live_ndx] = FLT_MIN;
       live_count++;
@@ -89,9 +88,8 @@ Simulation_EnemyAircraft_Straight_Live_CreateNew_Level_0()
       const float width    = -0.80f;
       const float repeat   = 3.00f;
       const float length   = 180.00f;
-      const float entry    = sinf((repeat * time * M_PI * 2.0)/length);
-      const float offset_x = 0.5f * ((1.0f - width) * simulation_rect_width);
-      const float entry_x  = simulation_rect_left + offset_x + (entry * width * simulation_rect_width);
+      const float entry    = width * sinf((repeat * time * M_PI * 2.0)/length);
+      const float entry_x  = entry * simulation_rect_hwidth;
       const float entry_y  = simulation_rect_top;
       const int   live_ndx = live_count % live_max_count;
 
@@ -137,7 +135,7 @@ Simulation_EnemyAircraft_Straight_Live_UpdateExisting()
   const vec2   base_vel                = kSimulation_EnemyAircraft_Straight_Live_BaseVelocity;
   const int    live_count              = g_Simulation_EnemyAircraft_Straight_Live_Count;
   const int    live_max_count          = kSimulation_EnemyAircraft_Straight_Live_MaxCount;
-  const int    update_count            = min( live_count, live_max_count );
+  const int    update_count            = min(live_count, live_max_count);
 
   // Write Buffer
   vec2*        live_pos                = g_Simulation_EnemyAircraft_Straight_Live_Pos;
@@ -145,15 +143,21 @@ Simulation_EnemyAircraft_Straight_Live_UpdateExisting()
 
   for (int live_ndx = 0; live_ndx < update_count; live_ndx++)
   {
-    float prev_age = live_age[live_ndx];
+    float age = live_age[live_ndx];
 
-    if (prev_age > 0.0f)
+    if (age > 0.0f)
     {
-      vec2  next_pos = live_pos[live_ndx] + base_vel;
-      float next_age = (next_pos.y < simulation_rect_bottom) ? 0.0f : (prev_age + simulation_time_step);
+      vec2 pos = live_pos[live_ndx] + base_vel;
 
-      live_pos[live_ndx] = next_pos;
-      live_age[live_ndx] = next_age;
+      if (pos.y < simulation_rect_bottom)
+      {
+          printf("Kill Straight age:%f\n", age);
+
+      }
+      age = (pos.y < simulation_rect_bottom) ? 0.0f : (age + simulation_time_step);
+
+      live_pos[live_ndx] = pos;
+      live_age[live_ndx] = age;
     }
   }
 }

@@ -33,6 +33,7 @@ Simulation_PowerUp_Shields_Live_CreateNew_Level_0()
   const int       live_max_count          = kSimulation_PowerUp_Shields_Live_MaxCount;
   const vec2      simulation_rect         = kSimulation_PlayArea;
   const float     simulation_rect_left    = -simulation_rect.x;
+  const float     simulation_rect_hwidth  = simulation_rect.x;
   const float     simulation_rect_width   = 2.0f * simulation_rect.x;
   const float     simulation_rect_top     = simulation_rect.y;
   const float     simulation_rect_bottom  = -simulation_rect.y;
@@ -62,9 +63,8 @@ Simulation_PowerUp_Shields_Live_CreateNew_Level_0()
       const float width    = 0.80f;
       const float repeat   = 1.00f;
       const float length   = 286.50f;
-      const float entry    = sinf((repeat * time * M_PI * 2.0)/length);
-      const float offset_x = 0.5f * ((1.0f - width) * simulation_rect_width);
-      const float entry_x  = simulation_rect_left + offset_x + (entry * width * simulation_rect_width);
+      const float entry    = width * sinf((repeat * time * M_PI * 2.0)/length);
+      const float entry_x  = entry * simulation_rect_hwidth;
       const float entry_y  = simulation_rect_top;
       const int   live_ndx = live_count % live_max_count;
 
@@ -110,7 +110,7 @@ Simulation_PowerUp_Shields_Live_UpdateExisting()
   const vec2   base_vel                = kSimulation_PowerUp_Shields_Live_BaseVelocity;
   const int    live_count              = g_Simulation_PowerUp_Shields_Live_Count;
   const int    live_max_count          = kSimulation_PowerUp_Shields_Live_MaxCount;
-  const int    update_count            = live_count % live_max_count;
+  const int    update_count            = min(live_count, live_max_count);
 
   // Write Buffer
   vec2*        live_pos                = g_Simulation_PowerUp_Shields_Live_Pos;

@@ -51,7 +51,7 @@ Simulation_EnemyAircraft_RayGun_Live_UpdateExisting()
   const vec2   base_vel                = kSimulation_EnemyAircraft_RayGun_Live_BaseVelocity;
   const int    live_count              = g_Simulation_EnemyAircraft_RayGun_Live_Count;
   const int    live_max_count          = kSimulation_EnemyAircraft_RayGun_Live_MaxCount;
-  const int    update_count            = live_count % live_max_count;
+  const int    update_count            = min(live_count, live_max_count);
 
   // Write Buffer
   vec2*        live_pos                = g_Simulation_EnemyAircraft_RayGun_Live_Pos;

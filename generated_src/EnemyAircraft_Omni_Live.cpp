@@ -28,11 +28,12 @@ Simulation_EnemyAircraft_Omni_Live_CreateNew_Level_0()
 {
   // Read Buffers
   const float     time                    = g_Simulation_Time;
-  const float     time_step               = 1.00f;
+  const float     time_step               = 0.50f;
   const vec2      base_vel                = kSimulation_EnemyAircraft_Omni_Live_BaseVelocity;
   const int       live_max_count          = kSimulation_EnemyAircraft_Omni_Live_MaxCount;
   const vec2      simulation_rect         = kSimulation_PlayArea;
   const float     simulation_rect_left    = -simulation_rect.x;
+  const float     simulation_rect_hwidth  = simulation_rect.x;
   const float     simulation_rect_width   = 2.0f * simulation_rect.x;
   const float     simulation_rect_top     = simulation_rect.y;
   const float     simulation_rect_bottom  = -simulation_rect.y;
@@ -62,9 +63,8 @@ Simulation_EnemyAircraft_Omni_Live_CreateNew_Level_0()
       const float width    = 0.80f;
       const float repeat   = 1.00f;
       const float length   = 284.00f;
-      const float entry    = sinf((repeat * time * M_PI * 2.0)/length);
-      const float offset_x = 0.5f * ((1.0f - width) * simulation_rect_width);
-      const float entry_x  = simulation_rect_left + offset_x + (entry * width * simulation_rect_width);
+      const float entry    = width * sinf((repeat * time * M_PI * 2.0)/length);
+      const float entry_x  = entry * simulation_rect_hwidth;
       const float entry_y  = simulation_rect_top;
       const int   live_ndx = live_count % live_max_count;
 
@@ -80,8 +80,39 @@ Simulation_EnemyAircraft_Omni_Live_CreateNew_Level_0()
   
   // Formation
   {
+    float time_start     = 1.00f;
+    float time_stop      = time_start + 8.50f;
+    int   in_time_window = (time >= time_start) && (time < time_stop);
+    if ( in_time_window )
+    {
+      int      formation_offset = kSpawnFormation_Form1_Offset;
+      int      formation_count  = kSpawnFormation_Form1_Count;
+      int      formation_index  = (int)floorf((time-time_start)/time_step);
+      uint32_t pattern          = spawn_formation[ formation_offset + formation_index ];
+
+      for (int i=0;i<20;i++)
+      {
+        if (pattern & (1<<i))
+        {
+          const float entry_x  = simulation_rect_left + (((float)i) * (1.0f/20.0f) * simulation_rect_width);
+          const float entry_y  = simulation_rect_top;
+          const int   live_ndx = live_count % live_max_count;
+    
+          live_pos[live_ndx] = vec2( entry_x, entry_y );
+          live_age[live_ndx] = FLT_MIN;
+          live_count++;
+        }
+      }
+    }
+  }
+  
+  
+  
+  
+  // Formation
+  {
     float time_start     = 30.00f;
-    float time_stop      = time_start + 17.00f;
+    float time_stop      = time_start + 8.50f;
     int   in_time_window = (time >= time_start) && (time < time_stop);
     if ( in_time_window )
     {
@@ -112,7 +143,7 @@ Simulation_EnemyAircraft_Omni_Live_CreateNew_Level_0()
   // Formation
   {
     float time_start     = 90.00f;
-    float time_stop      = time_start + 17.00f;
+    float time_stop      = time_start + 8.50f;
     int   in_time_window = (time >= time_start) && (time < time_stop);
     if ( in_time_window )
     {
@@ -143,7 +174,7 @@ Simulation_EnemyAircraft_Omni_Live_CreateNew_Level_0()
   // Formation
   {
     float time_start     = 150.00f;
-    float time_stop      = time_start + 17.00f;
+    float time_stop      = time_start + 8.50f;
     int   in_time_window = (time >= time_start) && (time < time_stop);
     if ( in_time_window )
     {
@@ -174,7 +205,7 @@ Simulation_EnemyAircraft_Omni_Live_CreateNew_Level_0()
   // Formation
   {
     float time_start     = 210.00f;
-    float time_stop      = time_start + 17.00f;
+    float time_stop      = time_start + 8.50f;
     int   in_time_window = (time >= time_start) && (time < time_stop);
     if ( in_time_window )
     {
@@ -234,7 +265,7 @@ Simulation_EnemyAircraft_Omni_Live_UpdateExisting()
   const vec2   base_vel                = kSimulation_EnemyAircraft_Omni_Live_BaseVelocity;
   const int    live_count              = g_Simulation_EnemyAircraft_Omni_Live_Count;
   const int    live_max_count          = kSimulation_EnemyAircraft_Omni_Live_MaxCount;
-  const int    update_count            = live_count % live_max_count;
+  const int    update_count            = min(live_count, live_max_count);
 
   // Write Buffer
   vec2*        live_pos                = g_Simulation_EnemyAircraft_Omni_Live_Pos;

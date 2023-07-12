@@ -18,6 +18,7 @@
 Other notes:
 - Looking at approx grid size based on vel, size
 - See: HeroAmmo::checkForHits -> EnemyAircraft::checkHit (HeroAmmo size?)
+- age + pos (which would you rather have for free? age+age or age+pos)
 
 
 ---

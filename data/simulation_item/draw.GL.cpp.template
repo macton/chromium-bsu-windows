@@ -3,7 +3,7 @@
 #include "../src/vec2.h"
 
 // Read Buffers
-#include "Atlas.h"
+#include "Atlas.hpp"
 #include "../src/Simulation.h"
 #include "<%= Item.Name %>_Live.hpp"
 

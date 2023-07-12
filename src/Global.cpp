@@ -19,8 +19,17 @@
 
 #include "Input.h"
 #include "Simulation.h"
-#include "Simulation_EnemyAircraft_Straight.h"
-#include "Simulation_EnemyAmmo00.h"
+#include "../generated_src/EnemyAircraft_Straight_Live.hpp"
+#include "../generated_src/EnemyAircraft_Omni_Live.hpp"
+#include "../generated_src/EnemyAircraft_Gnat_Live.hpp"
+#include "../generated_src/EnemyAircraft_Tank_Live.hpp"
+#include "../generated_src/EnemyAircraft_RayGun_Live.hpp"
+#include "../generated_src/EnemyAircraft_Boss00_Live.hpp"
+#include "../generated_src/EnemyAircraft_Boss01_Live.hpp"
+#include "../generated_src/PowerUp_HeroAmmo00_Live.hpp"
+#include "../generated_src/PowerUp_HeroAmmo01_Live.hpp"
+#include "../generated_src/PowerUp_Shields_Live.hpp"
+#include "../generated_src/EnemyAmmo00_Live.hpp"
 
 Text	*Global::text	= 0;
 
@@ -176,6 +185,16 @@ void Global::newGame()
 	Input_Reset();
 	Simulation_Reset();
 	Simulation_EnemyAircraft_Straight_Live_Reset();
+	Simulation_EnemyAircraft_Omni_Live_Reset();
+	Simulation_EnemyAircraft_Gnat_Live_Reset();
+	Simulation_EnemyAircraft_Tank_Live_Reset();
+	Simulation_EnemyAircraft_RayGun_Live_Reset();
+	Simulation_EnemyAircraft_Boss00_Live_Reset();
+	Simulation_EnemyAircraft_Boss01_Live_Reset();
+	Simulation_PowerUp_HeroAmmo00_Live_Reset();
+	Simulation_PowerUp_HeroAmmo01_Live_Reset();
+	Simulation_PowerUp_Shields_Live_Reset();
+
 	Simulation_EnemyAmmo00_Live_Reset();
 }
 

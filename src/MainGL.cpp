@@ -68,9 +68,19 @@
 
 #include "Simulation.h"
 #include "Draw.h"
-#include "Simulation_EnemyAircraft_Straight.h"
-#include "Simulation_EnemyAmmo00.h"
 #include "Simulation_Hero.h"
+#include "../generated_src/EnemyAircraft_Straight_Live.hpp"
+#include "../generated_src/EnemyAircraft_Omni_Live.hpp"
+#include "../generated_src/EnemyAircraft_Gnat_Live.hpp"
+#include "../generated_src/EnemyAircraft_Tank_Live.hpp"
+#include "../generated_src/EnemyAircraft_RayGun_Live.hpp"
+#include "../generated_src/EnemyAircraft_Boss00_Live.hpp"
+#include "../generated_src/EnemyAircraft_Boss01_Live.hpp"
+#include "../generated_src/PowerUp_HeroAmmo00_Live.hpp"
+#include "../generated_src/PowerUp_HeroAmmo01_Live.hpp"
+#include "../generated_src/PowerUp_Shields_Live.hpp"
+#include "../generated_src/EnemyAmmo00_Live.hpp"
+
 
 GLuint g_AtlasTexture;
 
@@ -233,6 +243,16 @@ void MainGL::drawGameGL()
 	}
 
 	Simulation_EnemyAircraft_Straight_Live_Update();
+	Simulation_EnemyAircraft_Omni_Live_Update();
+	Simulation_EnemyAircraft_Gnat_Live_Update();
+	Simulation_EnemyAircraft_Tank_Live_Update();
+	Simulation_EnemyAircraft_RayGun_Live_Update();
+	Simulation_EnemyAircraft_Boss00_Live_Update();
+	Simulation_EnemyAircraft_Boss01_Live_Update();
+	Simulation_PowerUp_HeroAmmo00_Live_Update();
+	Simulation_PowerUp_HeroAmmo01_Live_Update();
+	Simulation_PowerUp_Shields_Live_Update();
+
 	Simulation_EnemyAmmo00_Live_Update();
 	Simulation_Hero_Update();
 
@@ -263,6 +283,16 @@ void MainGL::drawGameGL()
 	game->statusDisplay->drawGL(game->hero);
 
 	Draw_EnemyAircraft_Straight();
+	Draw_EnemyAircraft_Omni();
+	Draw_EnemyAircraft_Gnat();
+	Draw_EnemyAircraft_Tank();
+	Draw_EnemyAircraft_RayGun();
+	Draw_EnemyAircraft_Boss00();
+	Draw_EnemyAircraft_Boss01();
+	Draw_PowerUp_HeroAmmo00();
+	Draw_PowerUp_HeroAmmo01();
+	Draw_PowerUp_Shields();
+
 	Draw_EnemyAmmo00();
 	Draw_Hero();
 
@@ -300,15 +330,24 @@ void MainGL::drawDeadGL()
 //	game->hero->update();
 	game->gameFrame++;
 
-
 	Simulation_EnemyAircraft_Straight_Live_Update();
+	Simulation_EnemyAircraft_Omni_Live_Update();
+	Simulation_EnemyAircraft_Gnat_Live_Update();
+	Simulation_EnemyAircraft_Tank_Live_Update();
+	Simulation_EnemyAircraft_RayGun_Live_Update();
+	Simulation_EnemyAircraft_Boss00_Live_Update();
+	Simulation_EnemyAircraft_Boss01_Live_Update();
+	Simulation_PowerUp_HeroAmmo00_Live_Update();
+	Simulation_PowerUp_HeroAmmo01_Live_Update();
+	Simulation_PowerUp_Shields_Live_Update();
+
 	Simulation_EnemyAmmo00_Live_Update();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	//-- Draw background
-	game->ground->drawGL();
+	// game->ground->drawGL();
 	//-- Draw actors
 	game->enemyFleet->drawGL();
 
@@ -325,8 +364,17 @@ void MainGL::drawDeadGL()
 	//-- Draw stats
 	game->statusDisplay->drawGL(game->hero);
 
-
 	Draw_EnemyAircraft_Straight();
+	Draw_EnemyAircraft_Omni();
+	Draw_EnemyAircraft_Gnat();
+	Draw_EnemyAircraft_Tank();
+	Draw_EnemyAircraft_RayGun();
+	Draw_EnemyAircraft_Boss00();
+	Draw_EnemyAircraft_Boss01();
+	Draw_PowerUp_HeroAmmo00();
+	Draw_PowerUp_HeroAmmo01();
+	Draw_PowerUp_Shields();
+
 	Draw_EnemyAmmo00();
 	Draw_Hero();
 
@@ -389,7 +437,7 @@ void MainGL::drawSuccessGL()
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//-- Draw background
-	game->ground->drawGL();
+	// game->ground->drawGL();
 	//-- Draw actors
 //	game->hero->drawGL();
 

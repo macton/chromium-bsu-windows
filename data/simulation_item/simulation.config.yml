@@ -1,15 +1,27 @@
-Item:
+EnemyAmmo:
+  EnemyAmmo00:
+    MaxCount:     128
+    BaseSize:     [ 0.25, 0.25 ]
+    BaseVelocity: [ 0.00, -0.2 ]
+    Spawn:
+      - Name: 'EnemyAircraft_Straight'
+        TimeStep: 1.00
+        Pattern: '********************************'
+        OffsetX: 0.0
+        OffsetY: -0.9
+      - Name: 'EnemyAircraft_Omni'
+        TimeStep: 0.1
+        Pattern: '********--------********--------'
+        OffsetX: 0.0
+        OffsetY: -0.9
+
+Enemy:
   EnemyAircraft_Straight:
     MaxCount:     8
     BaseSize:     [ 0.75, 1.02 ]
     BaseVelocity: [ 0.00, -0.05 ]
-    Weapons:
-      - Ammo:        Ammo00
-        Pos:         [ 0.0, 0.9 ]
-        FireRate:    0.1
-        FirePattern: ---------*---------*---------*
   EnemyAircraft_Omni:
-    MaxCount:     8
+    MaxCount:     16
     BaseSize:     [ 0.7, 0.7 ]
     BaseVelocity: [ 0.00, -0.09 ]
   EnemyAircraft_RayGun:
@@ -32,6 +44,8 @@ Item:
     MaxCount:     8
     BaseSize:     [ 2.6, 2.3 ]
     BaseVelocity: [ 0.00, -0.02 ]
+
+PowerUp:
   PowerUp_HeroAmmo00:
     MaxCount:     1
     BaseSize:     [ 0.6, 0.6 ]

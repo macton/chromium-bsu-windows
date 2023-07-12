@@ -204,7 +204,7 @@ void MenuGL::drawGL()
 	glColor4f(1.0, 1.0, 1.0, 1.0);
 
 	//-- Draw background
-	game->ground->drawGL();
+	//game->ground->drawGL();
 
 	//-- Update audio
 	game->audio->update();

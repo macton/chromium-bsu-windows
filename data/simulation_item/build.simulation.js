@@ -27,19 +27,15 @@ const stringReplaceAll = ( string, search_text, replace_text ) => {
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const RenderItemTemplates = (template_filename, config, output_dir, output_extension ) => {
+const RenderItemTemplates = ( item_type, template_filename, config, output_dir, output_extension ) => {
   const template = fs.readFileSync( template_filename, 'utf8' );
-  const item_names   = Object.keys(config.Item);
+  const item_names   = Object.keys(config[item_type]);
   item_names.forEach( item_name => {
     const filename_out = output_dir + '/' + item_name + output_extension;
-    const item    = config.Item[item_name];
+    const item    = config[item_type][item_name];
+    item.Name = item_name;
     const context = {
-      Item: {
-        Name:         item_name,
-        MaxCount:     item.MaxCount,
-        BaseSize:     { x: item.BaseSize[0].toFixed(4), y: item.BaseSize[1].toFixed(4) },
-        BaseVelocity: { x: item.BaseVelocity[0].toFixed(4), y: item.BaseVelocity[1].toFixed(4) },
-      },
+      Item: item,
       Levels: config.Levels,
       SpawnExpression: config.SpawnExpression,
       SpawnFormation: config.SpawnFormation,
@@ -73,6 +69,10 @@ const config       = yaml.load( fs.readFileSync( filename_in, 'utf8' ) );
 
 RenderConfigTemplate( 'formation.cpp.template', config, '../../generated_src', 'Formation.cpp' );
 RenderConfigTemplate( 'formation.hpp.template', config, '../../generated_src', 'Formation.hpp' );
-RenderItemTemplates( 'live.cpp.template', config, '../../generated_src', '_Live.cpp' );
-RenderItemTemplates( 'live.hpp.template', config, '../../generated_src', '_Live.hpp' );
+RenderItemTemplates( 'Enemy', 'live.cpp.template', config, '../../generated_src', '_Live.cpp' );
+RenderItemTemplates( 'Enemy', 'live.hpp.template', config, '../../generated_src', '_Live.hpp' );
+RenderItemTemplates( 'PowerUp', 'live.cpp.template', config, '../../generated_src', '_Live.cpp' );
+RenderItemTemplates( 'PowerUp', 'live.hpp.template', config, '../../generated_src', '_Live.hpp' );
+RenderItemTemplates( 'EnemyAmmo', 'enemy.ammo.cpp.template', config, '../../generated_src', '_Live.cpp' );
+RenderItemTemplates( 'EnemyAmmo', 'live.hpp.template', config, '../../generated_src', '_Live.hpp' );
 

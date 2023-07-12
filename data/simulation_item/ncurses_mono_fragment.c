@@ -4,12 +4,62 @@
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include <float.h>
 
 typedef struct timespec timespec;
+
+int offset_x = 0;
+int offset_y = 0;
 
 int sdCircle( int x, int y, int r )
 {
   return sqrt((x*x)+(y*y)) - r;
+}
+
+float clampf( float a, float low, float high )
+{
+  return fmax(fmin(a,high),low);
+}
+
+float signf( float a )
+{
+  return (a<0)?-1.0f:1.0f;
+}
+
+float sdPentagon( float px, float py, float r )
+{
+  float kx = 0.809016994f;
+  float ky = 0.587785252f;
+  float kz = 0.726542528f;
+
+  px  = fabs(px);
+
+  float d0   = 2.0f * fminf( (px*-kx)+(py*ky) , 0.0f );
+  float k1x  = d0 * -kx;
+  float k1y  = d0 * ky;
+
+  px -= k1x;
+  py -= k1y;
+
+  float d1   = 2.0f * fminf( (px*kx)+(py*ky) , 0.0f );
+  float k3x  = d1 * kx;
+  float k3y  = d1 * ky;
+
+  px -= k3x;
+  py -= k3y;
+
+  float dx   = clampf(px,-r*kz,r*kz);
+  float dy   = r;
+
+  px -= dx;
+  py -= dy;
+
+  return sqrtf( (px*px)+(py*py) ) * signf(py);
+}
+
+int opOnion( int d, int r )
+{
+  return abs(d)-r;
 }
 
 timespec timespec_sub(timespec start, timespec end)
@@ -74,6 +124,9 @@ int main(void)
   initscr();
   cbreak();
   noecho();
+  nodelay(stdscr, TRUE);
+  keypad(stdscr, TRUE);
+  set_escdelay(0);
   
   clear();
 
@@ -90,6 +143,25 @@ int main(void)
   {
     timespec start_time;
     clock_gettime(CLOCK_REALTIME, &start_time);
+
+    int ch;
+    ch = getch();
+    if (ch == KEY_LEFT)
+    {
+      offset_x -= 10;
+    }
+    if (ch == KEY_RIGHT)
+    {
+      offset_x += 10;
+    }
+    if (ch == KEY_UP)
+    {
+      offset_y -= 10;
+    }
+    if (ch == KEY_DOWN)
+    {
+      offset_y += 10;
+    }
 
     for (int y=0;y<iHeight;y+=4)
     {
@@ -146,12 +218,16 @@ int mono_fragment( int u, int v )
   int result = 0;
 
   {
-    int cx = iHalfWidth;
-    int cy = iHalfHeight;
+    int cx = iHalfWidth + offset_x;
+    int cy = iHalfHeight + offset_y;
     int x  = u-cx;
     int y  = v-cy;
-    int r  = 20 + abs((iFrameCounter % 80)-40);
-    result |= sdCircle( x, y, r ) <= 0;
+    int r  = 8; 
+    if (( abs(x) <= (2*r) ) && ( abs(y) <= (2*r) ))
+    {
+      int d  = (int)sdPentagon( (float)x, (float)y, r );
+      result |= d <= 0;
+    }
   }
 
   {
@@ -165,7 +241,10 @@ int mono_fragment( int u, int v )
     int   x    = u - cx;
     int   y    = v - cy;
     int   r    = 10;
-    result |= sdCircle( x, y, r ) <= 0;
+    if ( (abs(x) <= r) && (abs(y) <= r) )
+    {
+      result |= sdCircle( x, y, r ) <= 0;
+    }
   }
 
   result |= ((u%64)==0);
