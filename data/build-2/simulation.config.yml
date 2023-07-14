@@ -99,107 +99,100 @@ Formation:
     - '*.........*'
 
 Spawn:
-  - Asset:      EnemyAmmo00
-    AtEach:     EnemyAircraft_Straight
-    TimeStep:   1.00
-    Offset:     [ 0.0, -0.9 ]
-    Pattern:    '********************************'
-  - Asset:      EnemyAmmo00
-    AtEach:     EnemyAircraft_Omni
-    TimeStep:   0.1
-    Offset:     [ 0.0, -0.9 ]
-    Pattern:    '********--------********--------'
-  - Asset:      EnemyAircraft_Straight
-    AtGroup:    SpawnPoint
-    TimeStep:   3.50
-    TimeStart:  0.50
-    TimeStop:   240
-    Expression: Sin
-    Width:      0.8
-    Repeat:     4.0
-  - Asset:      EnemyAircraft_Straight
-    AtGroup:    SpawnPoint
-    TimeStep:   3.50
-    TimeStart:  60.0
-    TimeStop:   240
-    Expression: Sin
-    Width:      -0.8
-    Repeat:     3.0
-  - Asset:      EnemyAircraft_Omni
-    AtGroup:    SpawnPoint
-    TimeStep:   0.5
-    TimeStart:  16.0
-    TimeStop:   300
-    Expression: Sin
-    Width:      0.8
-    Repeat:     1.0
-  - Asset:      EnemyAircraft_Omni
-    AtGroup:    SpawnPoint
-    Offset:     [ 0.00, 0.00 ]
-    TimeStep:   0.5
-    Formation:  Form1
-    TimeStart:  1.0
-  - Asset:      EnemyAircraft_Omni
-    AtGroup:    SpawnPoint
-    Offset:     [ -8.00, 0.00 ]
-    TimeStep:   0.5
-    Formation:  Form1
-    TimeStart:  30
-  - Asset:      EnemyAircraft_Omni
-    AtGroup:    SpawnPoint
-    Offset:     [  8.00, 0.00 ]
-    TimeStep:   0.5
-    Formation:  Form1
-    TimeStart:  90
-  - Asset:      EnemyAircraft_Omni
-    AtGroup:    SpawnPoint
-    Offset:     [ -2.00, 0.00 ]
-    TimeStep:   0.5
-    Formation:  Form1
-    TimeStart:  150
-  - Asset:      EnemyAircraft_Omni
-    AtGroup:    SpawnPoint
-    Offset:     [  2.00, 0.00 ]
-    TimeStep:   0.5
-    Formation:  Form1
-    TimeStart:  210
-  - Asset:      PowerUp_HeroAmmo00
-    AtGroup:    SpawnPoint
-    TimeStep:   30.00
-    TimeStart:  2.0
-    TimeStop:   300
-    Expression: Sin
-    Width:      0.8
-    Repeat:     0.5
-  - Asset:      PowerUp_HeroAmmo01
-    AtGroup:    SpawnPoint
-    TimeStep:   30.00
-    TimeStart:  4.0
-    TimeStop:   300
-    Expression: Sin
-    Width:      0.8
-    Repeat:     0.5
-  - Asset:      PowerUp_HeroAmmo02
-    AtGroup:    SpawnPoint
-    TimeStep:   30.00
-    TimeStart:  6.0
-    TimeStop:   300
-    Expression: Sin
-    Width:      0.8
-    Repeat:     0.5
-  - Asset:      PowerUp_Shields
-    AtGroup:    SpawnPoint
-    TimeStep:   30.00
-    TimeStart:  8.0
-    TimeStop:   300
-    Expression: Sin
-    Width:      0.8
-    Repeat:     0.5
-  - Asset:      PowerUp_Repair
-    AtGroup:    SpawnPoint
-    TimeStep:   30.00
-    TimeStart:  10.0
-    TimeStop:   300
-    Expression: Sin
-    Width:      0.8
-    Repeat:     0.5
+  EnemyAmmo00:
+    - AtEach:     EnemyAircraft_Straight
+      TimeStep:   1.00
+      Offset:     [ 0.0, -0.9 ]
+      Pattern:    '********************************'
+    - AtEach:     EnemyAircraft_Omni
+      TimeStep:   0.1
+      Offset:     [ 0.0, -0.9 ]
+      Pattern:    '********--------********--------'
+  EnemyAircraft_Straight:
+    - AtGroup:    SpawnPoint
+      TimeStep:   3.50
+      TimeStart:  0.50
+      TimeStop:   240
+      Expression: Sin
+      Width:      0.8
+      Repeat:     4.0
+    - AtGroup:    SpawnPoint
+      TimeStep:   3.50
+      TimeStart:  60.0
+      TimeStop:   240
+      Expression: Sin
+      Width:      -0.8
+      Repeat:     3.0
+  EnemyAircraft_Omni:
+    - AtGroup:    SpawnPoint
+      TimeStep:   0.5
+      TimeStart:  16.0
+      TimeStop:   300
+      Expression: Sin
+      Width:      0.8
+      Repeat:     1.0
+    - AtGroup:    SpawnPoint
+      Offset:     [ 0.00, 0.00 ]
+      TimeStep:   0.5
+      Formation:  Form1
+      TimeStart:  1.0
+    - AtGroup:    SpawnPoint
+      Offset:     [ -8.00, 0.00 ]
+      TimeStep:   0.5
+      Formation:  Form1
+      TimeStart:  30
+    - AtGroup:    SpawnPoint
+      Offset:     [  8.00, 0.00 ]
+      TimeStep:   0.5
+      Formation:  Form1
+      TimeStart:  90
+    - AtGroup:    SpawnPoint
+      Offset:     [ -2.00, 0.00 ]
+      TimeStep:   0.5
+      Formation:  Form1
+      TimeStart:  150
+    - AtGroup:    SpawnPoint
+      Offset:     [  2.00, 0.00 ]
+      TimeStep:   0.5
+      Formation:  Form1
+      TimeStart:  210
+  PowerUp_HeroAmmo00:
+    - AtGroup:    SpawnPoint
+      TimeStep:   30.00
+      TimeStart:  2.0
+      TimeStop:   300
+      Expression: Sin
+      Width:      0.8
+      Repeat:     0.5
+  PowerUp_HeroAmmo01:
+    - AtGroup:    SpawnPoint
+      TimeStep:   30.00
+      TimeStart:  4.0
+      TimeStop:   300
+      Expression: Sin
+      Width:      0.8
+      Repeat:     0.5
+  PowerUp_HeroAmmo02:
+    - AtGroup:    SpawnPoint
+      TimeStep:   30.00
+      TimeStart:  6.0
+      TimeStop:   300
+      Expression: Sin
+      Width:      0.8
+      Repeat:     0.5
+  PowerUp_Shields:
+    - AtGroup:    SpawnPoint
+      TimeStep:   30.00
+      TimeStart:  8.0
+      TimeStop:   300
+      Expression: Sin
+      Width:      0.8
+      Repeat:     0.5
+  PowerUp_Repair:
+    - AtGroup:    SpawnPoint
+      TimeStep:   30.00
+      TimeStart:  10.0
+      TimeStop:   300
+      Expression: Sin
+      Width:      0.8
+      Repeat:     0.5
