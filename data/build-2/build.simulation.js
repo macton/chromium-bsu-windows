@@ -3,6 +3,18 @@ const vm   = require('vm');
 const yaml = require('js-yaml');
 const ejs  = require('ejs');
 const path = require('path');
+const textEncoder = new TextEncoder();
+
+const write_path_string_buffer = new ArrayBuffer(256);
+const write_path_string_u8     = new Uint8Array(write_path_string_buffer);
+const write_name_string_buffer = new ArrayBuffer(64);
+const write_name_string_u8     = new Uint8Array(write_name_string_buffer);
+const write_u32_buffer         = new ArrayBuffer(4);
+const write_u32                = new Uint8Array(write_u32_buffer);
+const write_u8_buffer          = new ArrayBuffer(1);
+const write_u8                 = new Uint8Array(write_u8_buffer);
+const write_float32_buffer     = new ArrayBuffer(4);
+const write_float32            = new Float32Array(write_float32_buffer);
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
@@ -309,21 +321,128 @@ const PreProcess = ( config_in ) => {
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const WriteBinaryConfig_References = ( config, file_out ) => {
-  const text_encoder     = new TextEncoder();
-  const string_buffer     = new ArrayBuffer(256);
-  const string_u8         = new Uint8Array(string_buffer);
+const WritePathStringUTF8 = ( string, file ) => {
+  write_path_string_u8.fill(0);
+  textEncoder.encodeInto( string, write_path_string_u8 );
+  fs.writeSync( file, write_path_string_u8 );
+  return write_path_string_buffer.byteLength;
+}
+
+const WriteNameStringUTF8 = ( string, file, position ) => {
+  write_name_string_u8.fill(0);
+  textEncoder.encodeInto( string, write_name_string_u8 );
+  fs.writeSync( file, write_name_string_u8, 0, write_name_string_u8.byteLength, position );
+  return write_name_string_buffer.byteLength;
+}
+
+const WriteU32 = ( u32, file, position ) => {
+  write_u32[0] = (u32 >>> 0);
+  fs.writeSync( file, write_u32, 0, write_u32.byteLength, position );
+  return write_u32.byteLength;
+}
+
+const WriteFloat32 = ( float32, file, position ) => {
+  write_float32[0] = float32;
+  fs.writeSync( file, write_float32, 0, write_float32.byteLength, position );
+  return write_float32.byteLength;
+}
+
+const WriteFill = ( count, file ) => {
+  write_u8[0] = 0;
+  for (let i=0;i<count;i++) {
+    fs.writeSync( file, write_u8 );
+  }
+  return count;
+}
+
+const WriteBinaryConfig_References = ( config, file ) => {
+  let size = 0;
   config.References.forEach( reference_name => {
-    string_u8.fill(0);
-    text_encoder.encodeInto( reference_name, string_u8 );
-    fs.writeSync( file_out, string_u8 );
+    size += WriteNameStringUTF8( reference_name, file );
   });
+  return size;
+}
+
+const WriteBinaryConfig_PlayArea = ( config, file ) => {
+  let size = 0;
+  size += WriteFloat32( config.PlayArea[0], file );
+  size += WriteFloat32( config.PlayArea[1], file );
+  return size;
+}
+
+const WriteBinaryConfig_MaxLocationCount = ( config, file ) => {
+  let size = 0;
+  config.References.forEach( reference_name => {
+    let max_location_count = config.MaxLocationCount.hasOwnProperty(reference_name)?config.MaxLocationCount[reference_name]:0;
+    size += WriteU32( max_location_count, file );
+  });
+  return size;
+}
+
+const WriteBinaryConfig_TOC = ( toc, config, file ) => {
+  let size = 0;
+
+  size += WriteNameStringUTF8( "CHROMIUM.BSU.2023", file, size );
+  size += WriteU32( toc.References, file, size );
+  size += WriteU32( toc.PlayArea, file, size );
+  size += WriteU32( toc.MaxLocationCount, file, size );
+  size += WriteU32( toc.Location, file, size );
+  size += WriteU32( toc.BaseSize, file, size );
+  size += WriteU32( toc.BaseSpeed, file, size );
+  size += WriteU32( toc.Spawn, file, size );
+  size += WriteU32( toc.DataU8, file, size );
+  size += WriteU32( toc.DataU32, file, size );
+  size += WriteU32( toc.DataAtEach, file, size );
+  size += WriteU32( toc.DataAtGroup, file, size );
+
+  return size;
 }
 
 const WriteBinaryConfig = ( config, filename_out ) => {
   const file = fs.openSync( filename_out, "w" );
-  WriteBinaryConfig_References( config, file );
+  const toc = {
+    References: 0,
+    PlayArea: 0,
+    MaxLocationCount: 0,
+    Location: 0,
+    BaseSize: 0,
+    BaseSpeed: 0,
+    Spawn: 0,
+    DataU8: 0,
+    DataU32: 0,
+    DataAtEach: 1024,
+    DataAtGroup: 512,
+  };
+  let size = 0;
+  let offset = 0;
+
+  size  += WriteBinaryConfig_TOC( toc, config, file );
+  offset = (((size + 3)/4)|0)*4;
+  WriteFill( offset-size );
+  toc.References = offset;
+console.log('References: ' + offset );
+
+  size += WriteBinaryConfig_References( config, file );
+  offset = (((size + 3)/4)|0)*4;
+  WriteFill( offset-size );
+  toc.PlayArea = offset;
+console.log('PlayArea: ' + offset );
+
+  size += WriteBinaryConfig_PlayArea( config, file );
+  offset = (((size + 3)/4)|0)*4;
+  WriteFill( offset-size );
+  toc.MaxLocationCount = offset;
+console.log('MaxLocationCount: ' + offset );
+
+  size += WriteBinaryConfig_MaxLocationCount( config, file );
+  offset = (((size + 3)/4)|0)*4;
+  WriteFill( offset-size );
+  toc.Location = offset;
+console.log('Location: ' + offset );
+
+  WriteBinaryConfig_TOC( toc, config, file );
   fs.closeSync(file);
+
 }
 
 // -----------------------------------------------------------------------------
