@@ -10,11 +10,13 @@ const write_path_string_u8     = new Uint8Array(write_path_string_buffer);
 const write_name_string_buffer = new ArrayBuffer(64);
 const write_name_string_u8     = new Uint8Array(write_name_string_buffer);
 const write_u32_buffer         = new ArrayBuffer(4);
-const write_u32                = new Uint8Array(write_u32_buffer);
+const write_u32                = new Uint32Array(write_u32_buffer);
 const write_u8_buffer          = new ArrayBuffer(1);
 const write_u8                 = new Uint8Array(write_u8_buffer);
 const write_float32_buffer     = new ArrayBuffer(4);
 const write_float32            = new Float32Array(write_float32_buffer);
+const write_vec2_buffer        = new ArrayBuffer(8);
+const write_vec2               = new Float32Array(write_vec2_buffer);
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
@@ -65,7 +67,7 @@ const PreProcess_Spawn_AtEach = ( spawn_in, config_in ) => {
   };
 }
  
-const GetGroupLocationCount = (group_name, config_in) => {
+const GetGroupMaxLocationCount = (group_name, config_in) => {
   if ( config_in.hasOwnProperty('MaxLocationCount') && config_in.MaxLocationCount.hasOwnProperty(group_name) ) {
     return config_in.MaxLocationCount[group_name];
   }
@@ -76,7 +78,7 @@ const GetGroupLocationCount = (group_name, config_in) => {
 }
 
 const PreProcess_Spawn_AtGroup_Expression = ( spawn_in, config_in ) => {
-  const location_count  = GetGroupLocationCount( spawn_in.AtGroup, config_in );
+  const location_count  = GetGroupMaxLocationCount( spawn_in.AtGroup, config_in );
   const code            = 'result = ' + config_in.Expression[ spawn_in.Expression ];
   const context = {
     M_PI:    M_PI,
@@ -229,7 +231,8 @@ const PreProcess = ( config_in ) => {
   let data_u32     = [];
   let data_atgroup = [];
   let data_ateach  = [];
-
+  let data_vec2    = [];
+ 
   if ( config_out.hasOwnProperty('Spawn') ) {
     Object.keys(config_out.Spawn).forEach( spawn_asset_name => {
       config_out.Spawn[spawn_asset_name].forEach( spawn => {
@@ -302,6 +305,32 @@ const PreProcess = ( config_in ) => {
     });
   }
 
+  if ( config_out.hasOwnProperty('Location') || config_out.hasOwnProperty('MaxLocationCount') ) {
+
+    config_out.References.forEach( asset_name => {
+      let vec2_offset = data_vec2.length;
+      let vec2_count  = GetGroupMaxLocationCount( asset_name, config_out );
+      let used_count  = 0;
+      
+      if ( config_out.Location.hasOwnProperty( asset_name ) ) {
+        config_out.Location[asset_name].forEach( location => {
+          data_vec2.push( [...location] );
+        });
+        used_count = config_out.Location[asset_name].length;
+      } else {
+        for (let i=0;i<vec2_count;i++) {
+          data_vec2.push( [0.0,0.0] );
+        }
+      }
+      config_out.Location[ asset_name ] = { 
+        Vec2Offset: vec2_offset,
+        MaxCount:   vec2_count,
+        Count:      used_count,
+      };
+    }); 
+    delete config_out.MaxLocationCount;
+  }
+
   if ( data_u8.length > 0 )  {
     config_out.DataU8 = data_u8;
   }
@@ -313,6 +342,10 @@ const PreProcess = ( config_in ) => {
   }
   if (data_atgroup.length > 0 ) {
     config_out.DataAtGroup = data_atgroup;
+  }
+
+  if (data_vec2.length > 0 ) {
+    config_out.DataVec2 = data_vec2;
   }
 
   return config_out;
@@ -331,14 +364,20 @@ const WritePathStringUTF8 = ( string, file ) => {
 const WriteNameStringUTF8 = ( string, file, position ) => {
   write_name_string_u8.fill(0);
   textEncoder.encodeInto( string, write_name_string_u8 );
-  fs.writeSync( file, write_name_string_u8, 0, write_name_string_u8.byteLength, position );
+  const write_len = fs.writeSync( file, write_name_string_u8, 0, write_name_string_u8.byteLength, position );
   return write_name_string_buffer.byteLength;
 }
 
 const WriteU32 = ( u32, file, position ) => {
   write_u32[0] = (u32 >>> 0);
-  fs.writeSync( file, write_u32, 0, write_u32.byteLength, position );
+  const write_len = fs.writeSync( file, write_u32, 0, write_u32.byteLength, position );
   return write_u32.byteLength;
+}
+
+const WriteU8 = ( u8, file, position ) => {
+  write_u8[0] = (u8 >>> 0);
+  const write_len = fs.writeSync( file, write_u8, 0, write_u8.byteLength, position );
+  return write_u8.byteLength;
 }
 
 const WriteFloat32 = ( float32, file, position ) => {
@@ -347,7 +386,17 @@ const WriteFloat32 = ( float32, file, position ) => {
   return write_float32.byteLength;
 }
 
-const WriteFill = ( count, file ) => {
+const WriteVec2 = ( vec2, file, position ) => {
+  write_vec2[0] = vec2[0];
+  write_vec2[1] = vec2[1];
+  fs.writeSync( file, write_vec2, 0, write_vec2.byteLength, position );
+  return write_vec2.byteLength;
+}
+
+const WriteFill = ( size, file ) => {
+  const aligned_size = (((size + 3)/4)|0)*4;
+  const count        = aligned_size-size;
+
   write_u8[0] = 0;
   for (let i=0;i<count;i++) {
     fs.writeSync( file, write_u8 );
@@ -357,6 +406,7 @@ const WriteFill = ( count, file ) => {
 
 const WriteBinaryConfig_References = ( config, file ) => {
   let size = 0;
+  size += WriteU32( config.References.length, file );
   config.References.forEach( reference_name => {
     size += WriteNameStringUTF8( reference_name, file );
   });
@@ -365,17 +415,133 @@ const WriteBinaryConfig_References = ( config, file ) => {
 
 const WriteBinaryConfig_PlayArea = ( config, file ) => {
   let size = 0;
-  size += WriteFloat32( config.PlayArea[0], file );
-  size += WriteFloat32( config.PlayArea[1], file );
+  size += WriteVec2( config.PlayArea.Size, file );
   return size;
 }
 
-const WriteBinaryConfig_MaxLocationCount = ( config, file ) => {
+const WriteBinaryConfig_Location = ( config, file ) => {
   let size = 0;
   config.References.forEach( reference_name => {
-    let max_location_count = config.MaxLocationCount.hasOwnProperty(reference_name)?config.MaxLocationCount[reference_name]:0;
-    size += WriteU32( max_location_count, file );
+    const location = config.Location[reference_name];
+    size += WriteU32( location.Vec2Offset, file );
+    size += WriteU32( location.MaxCount, file );
+    size += WriteU32( location.Count, file );
   });
+  return size;
+}
+
+const WriteBinaryConfig_BaseSize = ( config, file ) => {
+  let size = 0;
+  config.References.forEach( reference_name => {
+    if (config.BaseSize.hasOwnProperty(reference_name)) {
+      size += WriteVec2( config.BaseSize[reference_name], file );
+    } else {
+      size += WriteVec2( [0.0,0.0], file );
+    }
+  });
+  return size;
+}
+
+const WriteBinaryConfig_BaseSpeed = ( config, file ) => {
+  let size = 0;
+  config.References.forEach( reference_name => {
+    if (config.BaseSpeed.hasOwnProperty(reference_name)) {
+      size += WriteFloat32( config.BaseSpeed[reference_name], file );
+    } else {
+      size += WriteFloat32( 0.0, file );
+    }
+  });
+  return size;
+}
+
+const WriteBinaryConfig_Spawn = ( config, file ) => {
+  let size = 0;
+  config.References.forEach( reference_name => {
+    if (!config.Spawn.hasOwnProperty(reference_name)) {
+      size += WriteU32( 0, file );
+      size += WriteU32( 0, file );
+      size += WriteU32( 0, file );
+      size += WriteU32( 0, file );
+    } else {
+      const spawn = config.Spawn[reference_name];
+      size += WriteU32( spawn.AtEachOffset, file );
+      size += WriteU32( spawn.AtEachCount, file );
+      size += WriteU32( spawn.AtGroupOffset, file );
+      size += WriteU32( spawn.AtGroupCount, file );
+    }
+  });
+  return size;
+}
+
+const WriteBinaryConfig_DataU8 = ( config, file ) => {
+  let size = 0;
+  size += WriteU32( config.DataU8.length, file );
+  config.DataU8.forEach( u8 => {
+    size += WriteU8( u8, file );
+  });
+  return size;
+}
+
+const WriteBinaryConfig_DataU32 = ( config, file ) => {
+  let size = 0;
+  size += WriteU32( config.DataU32.length, file );
+  config.DataU32.forEach( u32 => {
+    size += WriteU32( u32, file );
+  });
+  return size;
+}
+
+const WriteBinaryConfig_DataVec2 = ( config, file ) => {
+  let size = 0;
+  size += WriteU32( config.DataVec2.length, file );
+  config.DataVec2.forEach( vec2 => {
+    size += WriteVec2( vec2, file );
+  });
+  return size;
+}
+
+const WriteBinaryConfig_DataAtEach = ( config, file ) => {
+  let size = 0;
+  size += WriteU32( config.DataAtEach.length, file );
+  config.DataAtEach.forEach( at_each => {
+    size += WriteFloat32( at_each.TimeStep, file );
+    size += WriteVec2( at_each.Offset, file );
+    size += WriteU32( at_each.PatternWidth, file );
+    size += WriteU32( at_each.PatternDataU32Offset, file );
+  });
+  return size;
+}
+
+const WriteBinaryConfig_DataAtGroup = ( config, file ) => {
+  let size = 0;
+  size += WriteU32( config.DataAtGroup.length, file );
+  config.DataAtGroup.forEach( at_group => {
+    size += WriteFloat32( at_group.TimeStep, file );
+    size += WriteFloat32( at_group.TimeStart, file );
+    size += WriteFloat32( at_group.TimeStop, file );
+    size += WriteVec2( at_group.Offset, file );
+    size += WriteU32( at_group.PatternLength, file );
+    size += WriteU32( at_group.PatternDataU8Offset, file );
+  });
+  return size;
+}
+
+const WriteBinaryConfig_TOC_Fill = ( toc, config, file ) => {
+  let size = 0;
+
+  size += WriteNameStringUTF8( "CHROMIUM.BSU.2023", file );
+  size += WriteU32( toc.References, file );
+  size += WriteU32( toc.PlayArea, file );
+  size += WriteU32( toc.Location, file );
+  size += WriteU32( toc.BaseSize, file );
+  size += WriteU32( toc.BaseSpeed, file );
+  size += WriteU32( toc.Spawn, file );
+  size += WriteU32( toc.DataU8, file);
+  size += WriteU32( toc.DataU32, file);
+  size += WriteU32( toc.DataAtEach, file);
+  size += WriteU32( toc.DataAtGroup, file);
+  size += WriteU32( toc.DataVec2, file);
+
   return size;
 }
 
@@ -385,7 +551,6 @@ const WriteBinaryConfig_TOC = ( toc, config, file ) => {
   size += WriteNameStringUTF8( "CHROMIUM.BSU.2023", file, size );
   size += WriteU32( toc.References, file, size );
   size += WriteU32( toc.PlayArea, file, size );
-  size += WriteU32( toc.MaxLocationCount, file, size );
   size += WriteU32( toc.Location, file, size );
   size += WriteU32( toc.BaseSize, file, size );
   size += WriteU32( toc.BaseSpeed, file, size );
@@ -394,6 +559,7 @@ const WriteBinaryConfig_TOC = ( toc, config, file ) => {
   size += WriteU32( toc.DataU32, file, size );
   size += WriteU32( toc.DataAtEach, file, size );
   size += WriteU32( toc.DataAtGroup, file, size );
+  size += WriteU32( toc.DataVec2, file, size );
 
   return size;
 }
@@ -403,46 +569,67 @@ const WriteBinaryConfig = ( config, filename_out ) => {
   const toc = {
     References: 0,
     PlayArea: 0,
-    MaxLocationCount: 0,
     Location: 0,
     BaseSize: 0,
     BaseSpeed: 0,
     Spawn: 0,
     DataU8: 0,
     DataU32: 0,
-    DataAtEach: 1024,
-    DataAtGroup: 512,
+    DataAtEach: 0,
+    DataAtGroup: 0,
+    DataVec2: 0,
   };
+
   let size = 0;
-  let offset = 0;
+  size += WriteBinaryConfig_TOC_Fill( toc, config, file );
+  size += WriteFill( size, file );
 
-  size  += WriteBinaryConfig_TOC( toc, config, file );
-  offset = (((size + 3)/4)|0)*4;
-  WriteFill( offset-size );
-  toc.References = offset;
-console.log('References: ' + offset );
-
+  toc.References = size;
   size += WriteBinaryConfig_References( config, file );
-  offset = (((size + 3)/4)|0)*4;
-  WriteFill( offset-size );
-  toc.PlayArea = offset;
-console.log('PlayArea: ' + offset );
+  size += WriteFill( size, file );
 
+  toc.PlayArea = size;
   size += WriteBinaryConfig_PlayArea( config, file );
-  offset = (((size + 3)/4)|0)*4;
-  WriteFill( offset-size );
-  toc.MaxLocationCount = offset;
-console.log('MaxLocationCount: ' + offset );
+  size += WriteFill( size, file );
 
-  size += WriteBinaryConfig_MaxLocationCount( config, file );
-  offset = (((size + 3)/4)|0)*4;
-  WriteFill( offset-size );
-  toc.Location = offset;
-console.log('Location: ' + offset );
+  toc.Location = size;
+  size += WriteBinaryConfig_Location( config, file );
+  size += WriteFill( size, file );
+
+  toc.BaseSize = size;
+  size += WriteBinaryConfig_BaseSize( config, file );
+  size += WriteFill( size, file );
+
+  toc.BaseSpeed = size;
+  size += WriteBinaryConfig_BaseSpeed( config, file );
+  size += WriteFill( size, file );
+
+  toc.Spawn = size;
+  size += WriteBinaryConfig_Spawn( config, file );
+  size += WriteFill( size, file );
+
+  toc.DataU8 = size;
+  size += WriteBinaryConfig_DataU8( config, file );
+  size += WriteFill( size, file );
+
+  toc.DataU32 = size;
+  size += WriteBinaryConfig_DataU32( config, file );
+  size += WriteFill( size, file );
+
+  toc.DataAtEach = size;
+  size += WriteBinaryConfig_DataAtEach( config, file );
+  size += WriteFill( size, file );
+
+  toc.DataAtGroup = size;
+  size += WriteBinaryConfig_DataAtGroup( config, file );
+  size += WriteFill( size, file );
+
+  toc.DataVec2 = size;
+  size += WriteBinaryConfig_DataVec2( config, file );
+  size += WriteFill( size, file );
 
   WriteBinaryConfig_TOC( toc, config, file );
   fs.closeSync(file);
-
 }
 
 // -----------------------------------------------------------------------------
