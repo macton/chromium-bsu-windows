@@ -24,6 +24,10 @@ types:
     seq:
       - id: reference_offset
         type: u4
+      - id: max_instance_count_offset
+        type: u4
+      - id: instance_count_offset
+        type: u4
       - id: playarea_offset
         type: u4
       - id: location_offset
@@ -33,6 +37,8 @@ types:
       - id: base_speed_offset
         type: u4
       - id: spawn_offset
+        type: u4
+      - id: age_offset
         type: u4
       - id: data_u8_offset
         type: u4
@@ -44,6 +50,8 @@ types:
         type: u4
       - id: data_vec2_offset
         type: u4
+      - id: data_f32_offset
+        type: u4
 
   toc:
     seq:
@@ -53,6 +61,12 @@ types:
       references:
         pos: offsets.reference_offset
         type: references
+      max_instance_count:
+        pos: offsets.max_instance_count_offset
+        type: max_instance_count
+      instance_count:
+        pos: offsets.instance_count_offset
+        type: instance_count
       playarea:
         pos: offsets.playarea_offset
         type: playarea
@@ -68,6 +82,9 @@ types:
       spawn:
         pos: offsets.spawn_offset
         type: spawn
+      age:
+        pos: offsets.age_offset
+        type: age
       data_u8:
         pos: offsets.data_u8_offset
         type: data_u8
@@ -83,6 +100,9 @@ types:
       data_vec2:
         pos: offsets.data_vec2_offset
         type: data_vec2
+      data_f32:
+        pos: offsets.data_f32_offset
+        type: data_f32
 
   vec2:
     seq:
@@ -105,22 +125,61 @@ types:
         repeat: expr
         repeat-expr: count
 
-  location:
+  max_instance_count:
     seq:
       - id: value
-        type: location_struct
+        type: u4
         repeat: expr
         repeat-expr: _root.toc.references.count
 
+  instance_count:
+    seq:
+      - id: value
+        type: u4
+        repeat: expr
+        repeat-expr: _root.toc.references.count
+
+  location:
+    seq:
+      - id: value
+        type: location_struct(_index)
+        repeat: expr
+        repeat-expr: _root.toc.references.count
+
+  location_by_index:
+    params:
+      - id: index
+        type: u4
+      - id: data_vec2_offset
+        type: u4
+    instances:
+      value:
+        value: _root.toc.data_vec2.value[data_vec2_offset + index]
+
   location_struct:
+    params:
+     - id: reference_index
+       type: u4 
     seq:
       - id: data_vec2_offset
         type: u4 
-      - id: max_count
-        type: u4 
-      - id: count
-        type: u4 
     instances:
+      max_count:
+        value: _root.toc.max_instance_count.value[reference_index]
+      value:
+        type: location_by_index(_index, data_vec2_offset)
+        repeat: expr
+        repeat-expr: max_count
+
+  location_by_reference_index:
+    params:
+      - id: reference_index
+        type: u4
+    instances:
+      max_count:
+        value: _root.toc.max_instance_count.value[reference_index]
+      data_vec2_offset:
+        value: _root.toc.location.value[reference_index].data_vec2_offset
       value:
         type: location_by_index(_index, data_vec2_offset)
         repeat: expr
@@ -140,12 +199,65 @@ types:
         repeat: expr
         repeat-expr: _root.toc.references.count
 
+  age:
+    seq:
+      - id: value
+        type: age_struct(_index)
+        repeat: expr
+        repeat-expr: _root.toc.references.count
+
+  age_by_index:
+    params:
+      - id: index
+        type: u4
+      - id: data_f32_offset
+        type: u4
+    instances:
+      value:
+        value: _root.toc.data_f32.value[data_f32_offset + index]
+
+  age_struct:
+    params:
+     - id: reference_index
+       type: u4 
+    seq:
+      - id: data_f32_offset
+        type: u4 
+    instances:
+      max_count:
+        value: _root.toc.max_instance_count.value[reference_index]
+      value:
+        type: age_by_index(_index, data_f32_offset)
+        repeat: expr
+        repeat-expr: max_count
+
+  age_by_reference_index:
+    params:
+      - id: reference_index
+        type: u4
+    instances:
+      max_count:
+        value: _root.toc.max_instance_count.value[reference_index]
+      data_f32_offset:
+        value: _root.toc.age.value[reference_index].data_f32_offset
+      value:
+        type: age_by_index(_index, data_f32_offset)
+        repeat: expr
+        repeat-expr: max_count
+
   spawn:
     seq:
       - id: value
         type: spawn_struct
         repeat: expr
         repeat-expr: _root.toc.references.count
+
+  spawn_struct:
+    seq:
+      - id: at_each
+        type: at_each_array
+      - id: at_group
+        type: at_group_array
 
   at_each_array:
     seq:
@@ -171,13 +283,6 @@ types:
         repeat: expr
         repeat-expr: count
     
-  spawn_struct:
-    seq:
-      - id: at_each
-        type: at_each_array
-      - id: at_group
-        type: at_group_array
-
   data_u8:
     seq:
       - id: count
@@ -216,6 +321,25 @@ types:
       value:
         value: _root.toc.data_u32.value[u32_offset + index]
 
+  data_f32:
+    seq:
+      - id: count
+        type: u4
+      - id: value
+        type: f4
+        repeat: expr
+        repeat-expr: count
+
+  data_f32_by_index:
+    params:
+      - id: index
+        type: u4
+      - id: f32_offset
+        type: u4
+    instances:
+      value:
+        value: _root.toc.data_f32.value[f32_offset + index]
+
   pattern_u32:
     seq:
       - id: width
@@ -232,6 +356,8 @@ types:
 
   data_at_each_struct:
     seq:
+      - id: next_spawn_time
+        type: f4
       - id: time_step
         type: f4
       - id: offset
@@ -262,6 +388,8 @@ types:
 
   data_at_group_struct:
     seq:
+      - id: next_spawn_time
+        type: f4
       - id: time_step
         type: f4
       - id: time_start
@@ -291,16 +419,6 @@ types:
         repeat: expr
         repeat-expr: count
 
-  location_by_index:
-    params:
-      - id: index
-        type: u4
-      - id: data_vec2_offset
-        type: u4
-    instances:
-      value:
-        value: _root.toc.data_vec2.value[data_vec2_offset + index]
-
   spawn_at_each_by_index:
     params:
       - id: index
@@ -321,22 +439,6 @@ types:
       value:
         value: _root.toc.data_at_group.value[data_at_group_offset + index]
 
-  location_by_reference_index:
-    params:
-      - id: reference_index
-        type: u4
-    instances:
-      count:
-        value: _root.toc.location.value[reference_index].count
-      max_count:
-        value: _root.toc.location.value[reference_index].max_count
-      data_vec2_offset:
-        value: _root.toc.location.value[reference_index].data_vec2_offset
-      value:
-        type: location_by_index(_index, data_vec2_offset)
-        repeat: expr
-        repeat-expr: max_count
-
   by_reference_struct:
     params:
       - id: reference_index
@@ -344,8 +446,14 @@ types:
     instances:
       name:
         value: _root.toc.references.value[reference_index]
+      max_instance_count:
+        value: _root.toc.max_instance_count.value[reference_index]
+      instance_count:
+        value: _root.toc.instance_count.value[reference_index]
       location:
         type: location_by_reference_index(reference_index)
+      age:
+        type: age_by_reference_index(reference_index)
       base_speed:
         value: _root.toc.base_speed.value[reference_index]
       base_size:

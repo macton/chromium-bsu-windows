@@ -1,7 +1,7 @@
 PlayArea:
   Size: [ 15, 15 ]
 
-MaxLocationCount:
+MaxInstanceCount:
   EnemyAmmo00:             128
   EnemyAircraft_Straight:    8
   EnemyAircraft_Omni:       16
@@ -12,7 +12,9 @@ MaxLocationCount:
   EnemyAircraft_Boss01:      1
   PowerUp_HeroAmmo00:        2
   PowerUp_HeroAmmo01:        2
+  PowerUp_HeroAmmo02:        2
   PowerUp_Shields:           2
+  PowerUp_Repair:            2
 
 Location:
   SpawnPoint: [
@@ -60,7 +62,9 @@ BaseSize:
   EnemyAircraft_Boss01:   [ 2.60, 2.30 ]
   PowerUp_HeroAmmo00:     [ 0.60, 0.60 ]
   PowerUp_HeroAmmo01:     [ 0.60, 0.60 ]
+  PowerUp_HeroAmmo02:     [ 0.60, 0.60 ]
   PowerUp_Shields:        [ 0.60, 0.60 ]
+  PowerUp_Repair:         [ 0.60, 0.60 ]
   
 BaseSpeed:
   EnemyAmmo00:            16.00
@@ -73,7 +77,9 @@ BaseSpeed:
   EnemyAircraft_Boss01:    1.60
   PowerUp_HeroAmmo00:      4.00
   PowerUp_HeroAmmo01:      4.00
+  PowerUp_HeroAmmo02:      4.00
   PowerUp_Shields:         4.00
+  PowerUp_Repair:          4.00
 
 Expression:
   Sin: Width * sin((Repeat * Time * M_PI * 2.0)/(TimeStop-TimeStart))

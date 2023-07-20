@@ -9,71 +9,58 @@ References:
   - EnemyAircraft_Boss01
   - PowerUp_HeroAmmo00
   - PowerUp_HeroAmmo01
-  - PowerUp_Shields
-  - SpawnPoint
   - PowerUp_HeroAmmo02
+  - PowerUp_Shields
   - PowerUp_Repair
+  - SpawnPoint
 PlayArea:
   Size:
     - 15
     - 15
+MaxInstanceCount:
+  EnemyAmmo00: 128
+  EnemyAircraft_Straight: 8
+  EnemyAircraft_Omni: 16
+  EnemyAircraft_RayGun: 2
+  EnemyAircraft_Tank: 2
+  EnemyAircraft_Gnat: 32
+  EnemyAircraft_Boss00: 1
+  EnemyAircraft_Boss01: 1
+  PowerUp_HeroAmmo00: 2
+  PowerUp_HeroAmmo01: 2
+  PowerUp_HeroAmmo02: 2
+  PowerUp_Shields: 2
+  PowerUp_Repair: 2
+  SpawnPoint: 31
 Location:
   SpawnPoint:
-    Vec2Offset: 196
-    MaxCount: 31
-    Count: 31
+    Vec2Offset: 200
   EnemyAmmo00:
     Vec2Offset: 0
-    MaxCount: 128
-    Count: 0
   EnemyAircraft_Straight:
     Vec2Offset: 128
-    MaxCount: 8
-    Count: 0
   EnemyAircraft_Omni:
     Vec2Offset: 136
-    MaxCount: 16
-    Count: 0
   EnemyAircraft_RayGun:
     Vec2Offset: 152
-    MaxCount: 2
-    Count: 0
   EnemyAircraft_Tank:
     Vec2Offset: 154
-    MaxCount: 2
-    Count: 0
   EnemyAircraft_Gnat:
     Vec2Offset: 156
-    MaxCount: 32
-    Count: 0
   EnemyAircraft_Boss00:
     Vec2Offset: 188
-    MaxCount: 1
-    Count: 0
   EnemyAircraft_Boss01:
     Vec2Offset: 189
-    MaxCount: 1
-    Count: 0
   PowerUp_HeroAmmo00:
     Vec2Offset: 190
-    MaxCount: 2
-    Count: 0
   PowerUp_HeroAmmo01:
     Vec2Offset: 192
-    MaxCount: 2
-    Count: 0
-  PowerUp_Shields:
-    Vec2Offset: 194
-    MaxCount: 2
-    Count: 0
   PowerUp_HeroAmmo02:
-    Vec2Offset: 227
-    MaxCount: 0
-    Count: 0
+    Vec2Offset: 194
+  PowerUp_Shields:
+    Vec2Offset: 196
   PowerUp_Repair:
-    Vec2Offset: 227
-    MaxCount: 0
-    Count: 0
+    Vec2Offset: 198
 BaseSize:
   EnemyAmmo00:
     - 0.25
@@ -105,7 +92,13 @@ BaseSize:
   PowerUp_HeroAmmo01:
     - 0.6
     - 0.6
+  PowerUp_HeroAmmo02:
+    - 0.6
+    - 0.6
   PowerUp_Shields:
+    - 0.6
+    - 0.6
+  PowerUp_Repair:
     - 0.6
     - 0.6
 BaseSpeed:
@@ -119,7 +112,9 @@ BaseSpeed:
   EnemyAircraft_Boss01: 1.6
   PowerUp_HeroAmmo00: 4
   PowerUp_HeroAmmo01: 4
+  PowerUp_HeroAmmo02: 4
   PowerUp_Shields: 4
+  PowerUp_Repair: 4
 Spawn:
   EnemyAmmo00:
     AtEachOffset: 0
@@ -161,6 +156,50 @@ Spawn:
     AtEachCount: 0
     AtGroupOffset: 2
     AtGroupCount: 1
+InstanceCount:
+  EnemyAmmo00: 0
+  EnemyAircraft_Straight: 0
+  EnemyAircraft_Omni: 0
+  EnemyAircraft_RayGun: 0
+  EnemyAircraft_Tank: 0
+  EnemyAircraft_Gnat: 0
+  EnemyAircraft_Boss00: 0
+  EnemyAircraft_Boss01: 0
+  PowerUp_HeroAmmo00: 0
+  PowerUp_HeroAmmo01: 0
+  PowerUp_HeroAmmo02: 0
+  PowerUp_Shields: 0
+  PowerUp_Repair: 0
+  SpawnPoint: 31
+Age:
+  EnemyAmmo00:
+    F32Offset: 0
+  EnemyAircraft_Straight:
+    F32Offset: 128
+  EnemyAircraft_Omni:
+    F32Offset: 136
+  EnemyAircraft_RayGun:
+    F32Offset: 152
+  EnemyAircraft_Tank:
+    F32Offset: 154
+  EnemyAircraft_Gnat:
+    F32Offset: 156
+  EnemyAircraft_Boss00:
+    F32Offset: 188
+  EnemyAircraft_Boss01:
+    F32Offset: 189
+  PowerUp_HeroAmmo00:
+    F32Offset: 190
+  PowerUp_HeroAmmo01:
+    F32Offset: 192
+  PowerUp_HeroAmmo02:
+    F32Offset: 194
+  PowerUp_Shields:
+    F32Offset: 196
+  PowerUp_Repair:
+    F32Offset: 198
+  SpawnPoint:
+    F32Offset: 200
 DataU8:
   - '0x10'
   - '0x14'
@@ -1500,6 +1539,14 @@ DataVec2:
     - 0
   - - 0
     - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
   - - -15
     - 17
   - - -14
@@ -1562,3 +1609,235 @@ DataVec2:
     - 17
   - - 15
     - 17
+DataF32:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
