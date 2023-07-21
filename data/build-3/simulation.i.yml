@@ -1,0 +1,1843 @@
+References:
+  - EnemyAmmo00
+  - EnemyAircraft_Straight
+  - EnemyAircraft_Omni
+  - EnemyAircraft_RayGun
+  - EnemyAircraft_Tank
+  - EnemyAircraft_Gnat
+  - EnemyAircraft_Boss00
+  - EnemyAircraft_Boss01
+  - PowerUp_HeroAmmo00
+  - PowerUp_HeroAmmo01
+  - PowerUp_HeroAmmo02
+  - PowerUp_Shields
+  - PowerUp_Repair
+  - SpawnPoint
+PlayArea:
+  Size:
+    - 15
+    - 15
+MaxInstanceCount:
+  EnemyAmmo00: 128
+  EnemyAircraft_Straight: 8
+  EnemyAircraft_Omni: 16
+  EnemyAircraft_RayGun: 2
+  EnemyAircraft_Tank: 2
+  EnemyAircraft_Gnat: 32
+  EnemyAircraft_Boss00: 1
+  EnemyAircraft_Boss01: 1
+  PowerUp_HeroAmmo00: 2
+  PowerUp_HeroAmmo01: 2
+  PowerUp_HeroAmmo02: 2
+  PowerUp_Shields: 2
+  PowerUp_Repair: 2
+  SpawnPoint: 31
+Location:
+  SpawnPoint:
+    Vec2Offset: 200
+  EnemyAmmo00:
+    Vec2Offset: 0
+  EnemyAircraft_Straight:
+    Vec2Offset: 128
+  EnemyAircraft_Omni:
+    Vec2Offset: 136
+  EnemyAircraft_RayGun:
+    Vec2Offset: 152
+  EnemyAircraft_Tank:
+    Vec2Offset: 154
+  EnemyAircraft_Gnat:
+    Vec2Offset: 156
+  EnemyAircraft_Boss00:
+    Vec2Offset: 188
+  EnemyAircraft_Boss01:
+    Vec2Offset: 189
+  PowerUp_HeroAmmo00:
+    Vec2Offset: 190
+  PowerUp_HeroAmmo01:
+    Vec2Offset: 192
+  PowerUp_HeroAmmo02:
+    Vec2Offset: 194
+  PowerUp_Shields:
+    Vec2Offset: 196
+  PowerUp_Repair:
+    Vec2Offset: 198
+BaseSize:
+  EnemyAmmo00:
+    - 0.25
+    - 0.25
+  EnemyAircraft_Straight:
+    - 0.75
+    - 1.02
+  EnemyAircraft_Omni:
+    - 0.7
+    - 0.7
+  EnemyAircraft_RayGun:
+    - 1.2
+    - 1.2
+  EnemyAircraft_Tank:
+    - 1.9
+    - 2.1
+  EnemyAircraft_Gnat:
+    - 0.45
+    - 0.45
+  EnemyAircraft_Boss00:
+    - 3.5
+    - 2.75
+  EnemyAircraft_Boss01:
+    - 2.6
+    - 2.3
+  PowerUp_HeroAmmo00:
+    - 0.6
+    - 0.6
+  PowerUp_HeroAmmo01:
+    - 0.6
+    - 0.6
+  PowerUp_HeroAmmo02:
+    - 0.6
+    - 0.6
+  PowerUp_Shields:
+    - 0.6
+    - 0.6
+  PowerUp_Repair:
+    - 0.6
+    - 0.6
+BaseSpeed:
+  EnemyAmmo00: 16
+  EnemyAircraft_Straight: 4
+  EnemyAircraft_Omni: 7
+  EnemyAircraft_RayGun: 2.5
+  EnemyAircraft_Tank: 2.5
+  EnemyAircraft_Gnat: 1.6
+  EnemyAircraft_Boss00: 1.6
+  EnemyAircraft_Boss01: 1.6
+  PowerUp_HeroAmmo00: 4
+  PowerUp_HeroAmmo01: 4
+  PowerUp_HeroAmmo02: 4
+  PowerUp_Shields: 4
+  PowerUp_Repair: 4
+Spawn:
+  EnemyAmmo00:
+    AtEachOffset: 0
+    AtEachCount: 2
+    AtGroupOffset: 0
+    AtGroupCount: 0
+  EnemyAircraft_Straight:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 0
+    AtGroupCount: 2
+  EnemyAircraft_Omni:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 2
+    AtGroupCount: 11
+  PowerUp_HeroAmmo00:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 13
+    AtGroupCount: 1
+  PowerUp_HeroAmmo01:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 14
+    AtGroupCount: 1
+  PowerUp_HeroAmmo02:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 15
+    AtGroupCount: 1
+  PowerUp_Shields:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 16
+    AtGroupCount: 1
+  PowerUp_Repair:
+    AtEachOffset: 2
+    AtEachCount: 0
+    AtGroupOffset: 17
+    AtGroupCount: 1
+InstanceCount:
+  EnemyAmmo00: 0
+  EnemyAircraft_Straight: 0
+  EnemyAircraft_Omni: 0
+  EnemyAircraft_RayGun: 0
+  EnemyAircraft_Tank: 0
+  EnemyAircraft_Gnat: 0
+  EnemyAircraft_Boss00: 0
+  EnemyAircraft_Boss01: 0
+  PowerUp_HeroAmmo00: 0
+  PowerUp_HeroAmmo01: 0
+  PowerUp_HeroAmmo02: 0
+  PowerUp_Shields: 0
+  PowerUp_Repair: 0
+  SpawnPoint: 31
+Age:
+  EnemyAmmo00:
+    F32Offset: 0
+  EnemyAircraft_Straight:
+    F32Offset: 128
+  EnemyAircraft_Omni:
+    F32Offset: 136
+  EnemyAircraft_RayGun:
+    F32Offset: 152
+  EnemyAircraft_Tank:
+    F32Offset: 154
+  EnemyAircraft_Gnat:
+    F32Offset: 156
+  EnemyAircraft_Boss00:
+    F32Offset: 188
+  EnemyAircraft_Boss01:
+    F32Offset: 189
+  PowerUp_HeroAmmo00:
+    F32Offset: 190
+  PowerUp_HeroAmmo01:
+    F32Offset: 192
+  PowerUp_HeroAmmo02:
+    F32Offset: 194
+  PowerUp_Shields:
+    F32Offset: 196
+  PowerUp_Repair:
+    F32Offset: 198
+  SpawnPoint:
+    F32Offset: 200
+DataU8:
+  - '0x10'
+  - '0x14'
+  - '0x18'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x19'
+  - '0x15'
+  - '0x11'
+  - '0x0c'
+  - '0x08'
+  - '0x05'
+  - '0x03'
+  - '0x03'
+  - '0x04'
+  - '0x07'
+  - '0x0b'
+  - '0x0f'
+  - '0x14'
+  - '0x17'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x19'
+  - '0x16'
+  - '0x11'
+  - '0x0d'
+  - '0x09'
+  - '0x05'
+  - '0x03'
+  - '0x03'
+  - '0x04'
+  - '0x06'
+  - '0x0a'
+  - '0x0f'
+  - '0x13'
+  - '0x17'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x19'
+  - '0x16'
+  - '0x12'
+  - '0x0d'
+  - '0x09'
+  - '0x06'
+  - '0x03'
+  - '0x03'
+  - '0x04'
+  - '0x06'
+  - '0x0a'
+  - '0x0e'
+  - '0x13'
+  - '0x17'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x19'
+  - '0x16'
+  - '0x12'
+  - '0x0e'
+  - '0x09'
+  - '0x06'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x06'
+  - '0x09'
+  - '0x0e'
+  - '0x0f'
+  - '0x0b'
+  - '0x07'
+  - '0x04'
+  - '0x03'
+  - '0x03'
+  - '0x05'
+  - '0x08'
+  - '0x0c'
+  - '0x11'
+  - '0x15'
+  - '0x19'
+  - '0x1b'
+  - '0x1b'
+  - '0x1a'
+  - '0x18'
+  - '0x14'
+  - '0x10'
+  - '0x0b'
+  - '0x07'
+  - '0x04'
+  - '0x03'
+  - '0x03'
+  - '0x05'
+  - '0x08'
+  - '0x0c'
+  - '0x10'
+  - '0x15'
+  - '0x18'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x18'
+  - '0x15'
+  - '0x10'
+  - '0x0c'
+  - '0x08'
+  - '0x05'
+  - '0x03'
+  - '0x03'
+  - '0x04'
+  - '0x07'
+  - '0x0b'
+  - '0x10'
+  - '0x14'
+  - '0x18'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x19'
+  - '0x15'
+  - '0x11'
+  - '0x13'
+  - '0x13'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x03'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x04'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x05'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x06'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x07'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x08'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x09'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0a'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0b'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0c'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0d'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0e'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x05'
+  - '0x04'
+  - '0x03'
+  - '0x02'
+  - '0x01'
+  - '0x05'
+  - '0x04'
+  - '0x03'
+  - '0x05'
+  - '0x02'
+  - '0x04'
+  - '0x05'
+  - '0x04'
+  - '0x03'
+  - '0x02'
+  - '0x01'
+  - '0x00'
+  - '0xff'
+  - '0x06'
+  - '0x07'
+  - '0x08'
+  - '0x09'
+  - '0xff'
+  - '0x06'
+  - '0x07'
+  - '0xff'
+  - '0x08'
+  - '0x06'
+  - '0xff'
+  - '0x06'
+  - '0x07'
+  - '0x08'
+  - '0x09'
+  - '0x0a'
+  - '0x0f'
+  - '0x13'
+  - '0x17'
+  - '0x19'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x19'
+  - '0x16'
+  - '0x12'
+  - '0x10'
+  - '0x13'
+  - '0x17'
+  - '0x19'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x18'
+  - '0x16'
+  - '0x12'
+  - '0x10'
+  - '0x14'
+  - '0x17'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x1a'
+  - '0x18'
+  - '0x15'
+  - '0x11'
+  - '0x10'
+  - '0x14'
+  - '0x18'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x1a'
+  - '0x18'
+  - '0x14'
+  - '0x10'
+DataU32:
+  - '0xffffffff'
+  - '0x00ff00ff'
+DataAtEach:
+  - AtEach: EnemyAircraft_Straight
+    TimeStep: 1
+    Offset:
+      - 0
+      - -0.9
+    PatternWidth: 32
+    PatternDataU32Offset: 0
+  - AtEach: EnemyAircraft_Omni
+    TimeStep: 0.1
+    Offset:
+      - 0
+      - -0.9
+    PatternWidth: 32
+    PatternDataU32Offset: 1
+DataAtGroup:
+  - AtGroup: SpawnPoint
+    TimeStep: 3.5
+    TimeStart: 0.5
+    TimeStop: 240
+    Offset:
+      - 0
+      - 0
+    PatternLength: 69
+    PatternDataU8Offset: 0
+  - AtGroup: SpawnPoint
+    TimeStep: 3.5
+    TimeStart: 60
+    TimeStop: 240
+    Offset:
+      - 0
+      - 0
+    PatternLength: 52
+    PatternDataU8Offset: 69
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 16
+    TimeStop: 300
+    Offset:
+      - 0
+      - 0
+    PatternLength: 569
+    PatternDataU8Offset: 121
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 1
+    TimeStop: 9.5
+    Offset:
+      - 0
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 690
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 1
+    TimeStop: 9.5
+    Offset:
+      - 0
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 707
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 30
+    TimeStop: 38.5
+    Offset:
+      - -8
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 690
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 30
+    TimeStop: 38.5
+    Offset:
+      - -8
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 707
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 90
+    TimeStop: 98.5
+    Offset:
+      - 8
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 690
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 90
+    TimeStop: 98.5
+    Offset:
+      - 8
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 707
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 150
+    TimeStop: 158.5
+    Offset:
+      - -2
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 690
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 150
+    TimeStop: 158.5
+    Offset:
+      - -2
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 707
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 210
+    TimeStop: 218.5
+    Offset:
+      - 2
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 690
+  - AtGroup: SpawnPoint
+    TimeStep: 0.5
+    TimeStart: 210
+    TimeStop: 218.5
+    Offset:
+      - 2
+      - 0
+    PatternLength: 17
+    PatternDataU8Offset: 707
+  - AtGroup: SpawnPoint
+    TimeStep: 30
+    TimeStart: 2
+    TimeStop: 300
+    Offset:
+      - 0
+      - 0
+    PatternLength: 10
+    PatternDataU8Offset: 724
+  - AtGroup: SpawnPoint
+    TimeStep: 30
+    TimeStart: 4
+    TimeStop: 300
+    Offset:
+      - 0
+      - 0
+    PatternLength: 10
+    PatternDataU8Offset: 734
+  - AtGroup: SpawnPoint
+    TimeStep: 30
+    TimeStart: 6
+    TimeStop: 300
+    Offset:
+      - 0
+      - 0
+    PatternLength: 10
+    PatternDataU8Offset: 744
+  - AtGroup: SpawnPoint
+    TimeStep: 30
+    TimeStart: 8
+    TimeStop: 300
+    Offset:
+      - 0
+      - 0
+    PatternLength: 10
+    PatternDataU8Offset: 744
+  - AtGroup: SpawnPoint
+    TimeStep: 30
+    TimeStart: 10
+    TimeStop: 300
+    Offset:
+      - 0
+      - 0
+    PatternLength: 10
+    PatternDataU8Offset: 754
+DataVec2:
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - -15
+    - 17
+  - - -14
+    - 17
+  - - -13
+    - 17
+  - - -12
+    - 17
+  - - -11
+    - 17
+  - - -10
+    - 17
+  - - -9
+    - 17
+  - - -8
+    - 17
+  - - -7
+    - 17
+  - - -6
+    - 17
+  - - -5
+    - 17
+  - - -4
+    - 17
+  - - -3
+    - 17
+  - - -2
+    - 17
+  - - -1
+    - 17
+  - - 0
+    - 17
+  - - 1
+    - 17
+  - - 2
+    - 17
+  - - 3
+    - 17
+  - - 4
+    - 17
+  - - 5
+    - 17
+  - - 6
+    - 17
+  - - 7
+    - 17
+  - - 8
+    - 17
+  - - 9
+    - 17
+  - - 10
+    - 17
+  - - 11
+    - 17
+  - - 12
+    - 17
+  - - 13
+    - 17
+  - - 14
+    - 17
+  - - 15
+    - 17
+DataF32:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
