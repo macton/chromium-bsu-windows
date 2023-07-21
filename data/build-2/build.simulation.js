@@ -280,11 +280,12 @@ const PreProcess = ( config_in ) => {
   if ( config_out.hasOwnProperty('Spawn') ) {
     Object.keys(config_out.Spawn).forEach( spawn_asset_name => {
       let ateach_offset  = data_ateach.length;
-      let atgroup_offset = data_ateach.length;
+      let atgroup_offset = data_atgroup.length;
       let ateach_count   = 0;
       let atgroup_count  = 0;
 
       config_out.Spawn[spawn_asset_name].forEach( spawn => {
+console.log(spawn);
         if ( spawn.hasOwnProperty('AtGroup') ) {
           data_atgroup.push( spawn );
           atgroup_count++;

@@ -124,7 +124,7 @@ Spawn:
   EnemyAircraft_Straight:
     AtEachOffset: 2
     AtEachCount: 0
-    AtGroupOffset: 2
+    AtGroupOffset: 0
     AtGroupCount: 2
   EnemyAircraft_Omni:
     AtEachOffset: 2
@@ -134,27 +134,27 @@ Spawn:
   PowerUp_HeroAmmo00:
     AtEachOffset: 2
     AtEachCount: 0
-    AtGroupOffset: 2
+    AtGroupOffset: 13
     AtGroupCount: 1
   PowerUp_HeroAmmo01:
     AtEachOffset: 2
     AtEachCount: 0
-    AtGroupOffset: 2
+    AtGroupOffset: 14
     AtGroupCount: 1
   PowerUp_HeroAmmo02:
     AtEachOffset: 2
     AtEachCount: 0
-    AtGroupOffset: 2
+    AtGroupOffset: 15
     AtGroupCount: 1
   PowerUp_Shields:
     AtEachOffset: 2
     AtEachCount: 0
-    AtGroupOffset: 2
+    AtGroupOffset: 16
     AtGroupCount: 1
   PowerUp_Repair:
     AtEachOffset: 2
     AtEachCount: 0
-    AtGroupOffset: 2
+    AtGroupOffset: 17
     AtGroupCount: 1
 InstanceCount:
   EnemyAmmo00: 0

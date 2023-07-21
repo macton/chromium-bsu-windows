@@ -366,7 +366,7 @@ const map_instance_age_static_array = ( config ) => {
 
 const map_instance_location_static_array_element_struct_array_vec2_value_static_array_element = ( reference_name, config ) => {
   return (index) => {
-    const vec2_offset = config.Age[reference_name].Vec2Offset;
+    const vec2_offset = config.Location[reference_name].Vec2Offset;
     const vec2        = config.DataVec2[vec2_offset + index];
     return map_vec2( vec2 );  
   };
@@ -426,7 +426,7 @@ const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_ele
 const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_element = ( reference_name, config ) => {
   return (index) => {
     const at_each_index = config.Spawn[reference_name].AtEachOffset;
-    const at_each       = config.DataAtEach[ at_each_index ];
+    const at_each       = config.DataAtEach[ at_each_index + index ];
 
     return map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_element_struct_at_each( at_each, config );
   };
@@ -463,8 +463,8 @@ const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_el
 
 const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_element = ( reference_name, config ) => {
   return (index) => {
-    const at_group_index = config.Spawn[reference_name].AtEachOffset;
-    const at_group       = config.DataAtGroup[ at_group_index ];
+    const at_group_index = config.Spawn[reference_name].AtGroupOffset;
+    const at_group       = config.DataAtGroup[ at_group_index + index ];
 
     return map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_element_struct_at_group( at_group, config );
   };
@@ -473,7 +473,7 @@ const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_el
 const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array = ( reference_name, config ) => {
   return ( id ) => {
     if ( id == "count" ) {
-      return config.Spawn.hasOwnProperty(reference_name) ? config.Spawn[reference_name].AtEachCount : 0;
+      return config.Spawn.hasOwnProperty(reference_name) ? config.Spawn[reference_name].AtGroupCount : 0;
     }
     else if ( id == "array" ) {
       return map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_element( reference_name, config );

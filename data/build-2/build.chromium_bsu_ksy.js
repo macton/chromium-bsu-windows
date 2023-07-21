@@ -29,48 +29,120 @@ const stringReplaceAll = ( string, search_text, replace_text ) => {
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const WriteMagic = ( schema, file ) => {
-  const seq = `
-  - id: magic
-    type: str
-    encoding: UTF-8
-    size: 64
-`;
-  fs.writeSync( file, seq );
+const WriteMagicSeq = ( ksy, schema ) => {
+  ksy.seq.push( { id: 'magic', type: 'str', encoding: 'UTF-8', size: 64 } );
 }
 
-const WriteSections = ( schema, file ) => {
+const WriteSectionsSeq = ( ksy, schema ) => {
   schema.sections.forEach( section => {
-    const section_gid    = section.id;
-    const seq = `
-  - id: ${section_gid}_offset
-    type: u4
-`;
-    fs.writeSync( file, seq );
+    const section_gid       = section.id;
+    const section_offset_id = `${section_gid}_offset`;
+    ksy.seq.push( { id: section_offset_id, type: 'u4' } );
+  });
+}
+
+const WriteStaticArray = ( ksy, element_id, schema ) => {
+  const static_array_ksy_id = `static_array_${element_id}`;
+  if ( ksy.types.hasOwnProperty(static_array_ksy_id) ) {
+    return;
+  }
+  if ( element_id == 'utf8' ) {
+    element_id = 'string_utf8';
+  }
+  const static_array_ksy = { 
+    seq: [ 
+      { id: 'offset', type: 'u4' }, 
+      { id: 'count', type: 'u4' } 
+    ],
+    instances: {
+      value: {
+        type: element_id,
+        pos: 'offset',
+        repeat: 'expr',
+        'repeat-expr': 'count',
+      }
+    } 
+  };
+
+  ksy.types[static_array_ksy_id] = static_array_ksy;
+
+  if ( element_id == 'string_utf8' ) {
+    if (!ksy.types.hasOwnProperty('string_utf9')) {
+      const string_utf8_ksy = {
+        seq: [
+          { id: 'offset', type: 'u4' }
+        ],
+        instances: {
+          value: {
+            type: 'str',
+            encoding: 'UTF-8',
+            pos: 'offset',
+            terminator: 0,
+          } 
+        }
+      };
+      ksy.types['string_utf8'] = string_utf8_ksy;
+    }
+  }
+}
+
+const ConvertStep = ( ksy, step ) => {
+    let instance = { };
+    const step_type = step.type;
+    let step_ksy_type = step_type;
+    if (step_type == 'u32') {
+      step_ksy_type = 'u4';
+    } else if (step_type == 'f32') {
+      step_ksy_type = 'f4';
+    } else if (step_type == 'u8') {
+      step_ksy_type = 'u1';
+    }
+
+    if ( step.container == 'static_array' ) {
+      const static_array_ksy_type = `static_array_${step_ksy_type}`;
+      instance['type'] = static_array_ksy_type;
+      WriteStaticArray( ksy, step_ksy_type, schema );
+    } else {
+      instance['type'] = step_ksy_type;
+    }
+  return instance;
+}
+
+const WriteSectionsInstances = ( ksy, schema ) => {
+  schema.sections.forEach( section => {
+    const section_gid        = section.id;
+    const section_offset_id = `${section_gid}_offset`;
+    ksy.instances[section_gid] = { pos: section_offset_id, ...ConvertStep(ksy, section) };
+  });
+}
+
+const WriteTypes = ( ksy, schema ) => {
+  Object.keys(schema.types).forEach( type_id => {
+    const type_seq = schema.types[type_id];
+    const type_ksy = {seq:[]};
+    type_seq.forEach( step => {
+      console.log('convert: ' + step);
+      console.log( ConvertStep(ksy,step) );
+      type_ksy.seq.push( { id: step.id, ...ConvertStep(ksy, step) } );
+    });
+    ksy.types[type_id] = type_ksy;
   });
 }
 
 const WriteKsy = ( schema, ksy_filename_out ) => {
-  const file = fs.openSync( ksy_filename_out, "w" );
-  let   size = 0;
+  const ksy  = {};
 
-  const meta =  `
-meta:
-  id: bsu_file
-  endian: le
-`;
-  const seq_start = `
-seq:
-`;
+  ksy['meta'] = { id: 'bsu_file', endian: 'le' };
+  ksy['seq']  = [];
+  ksy['instances'] = {};
+  ksy['types'] = {};
 
-  fs.writeSync( file, meta );
-  fs.writeSync( file, seq_start );
-  
+  WriteMagicSeq( ksy, schema );
+  WriteSectionsSeq( ksy, schema );
+  WriteSectionsInstances( ksy, schema );
+  WriteTypes( ksy, schema );
 
-  size += WriteMagic( schema, file );
-  size += WriteSections( schema, file );
-
-  fs.closeSync(file);
+  fs.writeFileSync( ksy_filename_out, yaml.dump(ksy) );
 }
 
 // -----------------------------------------------------------------------------
