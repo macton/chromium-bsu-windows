@@ -14,13 +14,13 @@ simulation.i.yml: simulation.yml spp.js
 	node spp.js simulation.yml simulation.i.yml
 
 # Create binary from preprocessed yml
-simulation.bsu: simulation.i.yml bsu.js
+simulation.bsu: simulation.i.yml bsu.js bsu.schema.yml
 	node bsu.js simulation.i.yml bsu.schema.yml simulation.bsu
 
 # Create ksy from binary schema
-bsu.ksy: bsu.schema.yml bsu.ksy.js
+bsu.ksy: bsu.schema.yml bsu.ksy.js bsu.schema.yml
 	node bsu.ksy.js bsu.schema.yml bsu.ksy
 
 # Create c header from binary schema
-bsu.h: bsu.schema.yml bsu.hpp.js
+bsu.h: bsu.schema.yml bsu.hpp.js bsu.schema.yml
 	node bsu.hpp.js bsu.schema.yml bsu.h

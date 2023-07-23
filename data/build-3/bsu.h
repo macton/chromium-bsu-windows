@@ -22,8 +22,8 @@ typedef struct static_array         static_array;
 
 struct struct_vec2
 {
-  float                x;
-  float                y;
+  uint16_t             x;
+  uint16_t             y;
 };
 
 struct struct_play_area
@@ -39,20 +39,22 @@ struct struct_spawn
 
 struct struct_at_each
 {
-  float                time_step;
+  uint16_t             target;
+  uint16_t             time_step;
   struct_vec2          offset;
-  uint32_t             pattern_width;
-  uint32_t             pattern_u32_index;
+  uint16_t             pattern_width;
+  uint16_t             pattern_u32_index;
 };
 
 struct struct_at_group
 {
-  float                time_step;
-  float                time_start;
-  float                time_stop;
+  uint16_t             target;
+  uint16_t             time_step;
+  uint16_t             time_start;
+  uint16_t             time_stop;
   struct_vec2          offset;
-  uint32_t             pattern_count;
-  uint32_t             pattern_u8_index;
+  uint16_t             pattern_count;
+  uint16_t             pattern_u8_index;
 };
 
 struct static_array

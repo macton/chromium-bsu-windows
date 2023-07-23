@@ -38,6 +38,15 @@ const WriteU32 = ( u32, file ) => {
   return write_u32.byteLength;
 }
 
+const WriteU16 = ( u16, file ) => {
+  const write_u16_buffer         = new ArrayBuffer(2);
+  const write_u16                = new Uint16Array(write_u16_buffer);
+
+  write_u16[0] = (u16 >>> 0);
+  const write_len = fs.writeSync( file, write_u16, 0, write_u16.byteLength );
+  return write_u16.byteLength;
+}
+
 const WriteF32 = ( f32, file ) => {
   const write_f32_buffer         = new ArrayBuffer(4);
   const write_f32                = new Float32Array(write_f32_buffer);
@@ -115,7 +124,7 @@ const WriteBlock = ( gid, value, block, schema, data_section, file ) => {
     const count        = value("count");
     const array_value  = value("array");
     const array_gid    = gid + '.static_array';
-    const array_offset = data_section.offsets[array_gid] || 0;
+    const array_offset = ( count > 0 ) ? ( data_section.offsets[array_gid] || 0 ) : 0;
 
     size += WriteU32( array_offset, file );
     size += WriteU32( count, file );
@@ -137,6 +146,8 @@ const WriteBlock = ( gid, value, block, schema, data_section, file ) => {
     size += WriteU32( value, file );
   } else if ( type_id == "u8" ) {
     size += WriteU8( value, file );
+  } else if ( type_id == "u16" ) {
+    size += WriteU16( value, file );
   } else if ( type_id == "f32" ) {
     size += WriteF32( value, file );
   } else if ( type_id == "utf8" ) {
@@ -185,11 +196,12 @@ const WriteBSUFile = ( get_value, schema, data_section, bsu_filename_out ) => {
       const next_gid   = next_block.gid; 
       const next_write = next_block.write;
       data_section.offsets[next_gid] = size;
-      size += next_write();
+      const next_block_size = next_write();
+      const next_block_offset = size;
+      size += next_block_size;
       next_block = data_section.block.shift(); 
     }
   }
-
   fs.closeSync(file);
 }
 
@@ -209,14 +221,14 @@ const map_vec2 = ( config_vec2 ) => {
   if ( config_vec2 ) {
     return ( id ) => {
       if ( id == "x" ) {
-        return config_vec2[0];
+        return ((config_vec2[0] + 32) * 1024)|0; // fixed 6:10
       } else if ( id == "y" ) {
-        return config_vec2[1];
+        return ((config_vec2[1] + 32) * 1024)|0; // fixed 6:10
       }
     }
   } else {
     return () => {
-      return 0.0;
+      return (32*1024)|0; // fixed 6:10
     }
   }
 }
@@ -233,7 +245,9 @@ const map_asset_base_speed_static_array_element = ( config ) => {
   return (index) => {
     const reference_name = config.References[index];
     const has_base_speed = config.BaseSpeed.hasOwnProperty(reference_name);
-    return has_base_speed ? config.BaseSpeed[reference_name] : 0.0;
+    const base_speed_f32 = has_base_speed ? config.BaseSpeed[reference_name] : 0.0;
+    const base_speed_u16 = ((base_speed_f32+32)*1024)|0;
+    return base_speed_u16;
   };
 }
 
@@ -411,14 +425,16 @@ const map_instance_location_static_array = ( config ) => {
 
 const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_element_struct_at_each = ( at_each, config ) => {
   return (id) => {
-    if (id == "time_step") {
-      return at_each.TimeStep;
+    if (id == "target") {
+      return config.References.indexOf( at_each.AtEach );
+    } else if (id == "time_step") {
+      return (at_each.TimeStep * 60 * 60)|0;
     } else if (id == "offset") {
       return map_vec2( at_each.Offset );
     } else if (id == "pattern_width") {
       return at_each.PatternWidth;
     } else if (id == "pattern_u32_index") {
-      return at_each.PatternDataU32Offset;
+      return (at_each.PatternWidth > 0) ? at_each.PatternDataU32Offset : 0;
     }
    };
 }
@@ -445,18 +461,20 @@ const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array = (
 
 const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_element_struct_at_group = ( at_group, config ) => {
   return (id) => {
-    if (id == "time_step") {
-      return at_group.TimeStep;
+    if (id == "target") {
+      return config.References.indexOf( at_group.AtGroup );
+    } else if (id == "time_step") {
+      return (at_group.TimeStep * 60 * 60)|0;
     } else if (id == "time_stop") {
-      return at_group.TimeStop;
+      return (at_group.TimeStop * 60 * 60)|0;
     } else if (id == "time_start") {
-      return at_group.TimeStart;
+      return (at_group.TimeStart * 60 * 60)|0;
     } else if (id == "offset") {
       return map_vec2( at_group.Offset );
     } else if (id == "pattern_count") {
       return at_group.PatternLength;
     } else if (id == "pattern_u8_index") {
-      return at_group.PatternDataU8Offset;
+      return (at_group.PatternLength > 0) ? at_group.PatternDataU8Offset : 0;
     }
    };
 }

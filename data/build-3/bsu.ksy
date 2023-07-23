@@ -20,22 +20,22 @@ instances:
     type: static_array_struct_vec2
   asset_base_speed:
     pos: _root.toc.asset_base_speed_offset
-    type: static_array_f4
+    type: static_array_u2
   asset_spawn:
     pos: _root.toc.asset_spawn_offset
     type: static_array_struct_spawn
   max_instance_count:
     pos: _root.toc.max_instance_count_offset
-    type: static_array_u4
+    type: static_array_u1
   instance_count:
     pos: _root.toc.instance_count_offset
-    type: static_array_u4
+    type: static_array_u1
   instance_location:
     pos: _root.toc.instance_location_offset
     type: static_array_struct_array_vec2
   instance_age:
     pos: _root.toc.instance_age_offset
-    type: static_array_struct_array_f32
+    type: static_array_struct_array_u16
   pattern_u32:
     pos: _root.toc.pattern_u32_offset
     type: static_array_u4
@@ -101,7 +101,7 @@ types:
         pos: offset
         repeat: expr
         repeat-expr: count
-  static_array_f4:
+  static_array_u2:
     seq:
       - id: offset
         type: u4
@@ -109,7 +109,7 @@ types:
         type: u4
     instances:
       value:
-        type: f4
+        type: u2
         pos: offset
         repeat: expr
         repeat-expr: count
@@ -125,7 +125,7 @@ types:
         pos: offset
         repeat: expr
         repeat-expr: count
-  static_array_u4:
+  static_array_u1:
     seq:
       - id: offset
         type: u4
@@ -133,7 +133,7 @@ types:
         type: u4
     instances:
       value:
-        type: u4
+        type: u1
         pos: offset
         repeat: expr
         repeat-expr: count
@@ -149,7 +149,7 @@ types:
         pos: offset
         repeat: expr
         repeat-expr: count
-  static_array_struct_array_f32:
+  static_array_struct_array_u16:
     seq:
       - id: offset
         type: u4
@@ -157,11 +157,11 @@ types:
         type: u4
     instances:
       value:
-        type: struct_array_f32
+        type: struct_array_u16
         pos: offset
         repeat: expr
         repeat-expr: count
-  static_array_u1:
+  static_array_u4:
     seq:
       - id: offset
         type: u4
@@ -169,20 +169,20 @@ types:
         type: u4
     instances:
       value:
-        type: u1
+        type: u4
         pos: offset
         repeat: expr
         repeat-expr: count
   struct_vec2:
     seq:
       - id: x
-        type: f4
+        type: u2
       - id: 'y'
-        type: f4
-  struct_array_f32:
+        type: u2
+  struct_array_u16:
     seq:
       - id: value
-        type: static_array_f4
+        type: static_array_u2
   struct_array_vec2:
     seq:
       - id: value
@@ -223,25 +223,29 @@ types:
         type: static_array_struct_at_group
   struct_at_each:
     seq:
+      - id: target
+        type: u2
       - id: time_step
-        type: f4
+        type: u2
       - id: offset
         type: struct_vec2
       - id: pattern_width
-        type: u4
+        type: u2
       - id: pattern_u32_index
-        type: u4
+        type: u2
   struct_at_group:
     seq:
+      - id: target
+        type: u2
       - id: time_step
-        type: f4
+        type: u2
       - id: time_start
-        type: f4
+        type: u2
       - id: time_stop
-        type: f4
+        type: u2
       - id: offset
         type: struct_vec2
       - id: pattern_count
-        type: u4
+        type: u2
       - id: pattern_u8_index
-        type: u4
+        type: u2

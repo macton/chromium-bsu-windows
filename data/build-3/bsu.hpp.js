@@ -117,6 +117,8 @@ const WriteTypes = ( hpp, schema ) => {
           field_type = 'static_array'; 
         } else if ( step.type == 'u32' ) {
           field_type = 'uint32_t'; 
+        } else if ( step.type == 'u16' ) {
+          field_type = 'uint16_t'; 
         } else if ( step.type == 'f32' ) {
           field_type = 'float'; 
         } else if ( step.type == 'f32' ) {

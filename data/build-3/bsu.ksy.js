@@ -99,6 +99,8 @@ const ConvertStep = ( ksy, step ) => {
       step_ksy_type = 'f4';
     } else if (step_type == 'u8') {
       step_ksy_type = 'u1';
+    } else if (step_type == 'u16') {
+      step_ksy_type = 'u2';
     }
 
     if ( step.container == 'static_array' ) {

@@ -16,7 +16,7 @@ sections:
 
   - id: asset_base_speed
     container: static_array
-    type: f32
+    type: u16
 
   - id: asset_spawn
     container: static_array
@@ -24,11 +24,11 @@ sections:
 
   - id: max_instance_count
     container: static_array
-    type: u32
+    type: u8
 
   - id: instance_count
     container: static_array
-    type: u32
+    type: u8
 
   - id: instance_location
     container: static_array
@@ -36,7 +36,7 @@ sections:
 
   - id: instance_age
     container: static_array
-    type: struct_array_f32
+    type: struct_array_u16
 
   - id: pattern_u32
     container: static_array
@@ -49,14 +49,14 @@ sections:
 types:
   struct_vec2:
     - id: x
-      type: f32
+      type: u16
     - id: y
-      type: f32
+      type: u16
 
-  struct_array_f32:
+  struct_array_u16:
     - id: value
       container: static_array
-      type: f32
+      type: u16
 
   struct_array_vec2:
     - id: value
@@ -76,25 +76,29 @@ types:
       type: struct_at_group
      
   struct_at_each:
+    - id: target
+      type: u16
     - id: time_step
-      type: f32
+      type: u16
     - id: offset
       type: struct_vec2
     - id: pattern_width
-      type: u32
+      type: u16
     - id: pattern_u32_index
-      type: u32
+      type: u16
 
   struct_at_group:
+    - id: target
+      type: u16
     - id: time_step
-      type: f32
+      type: u16
     - id: time_start
-      type: f32
+      type: u16
     - id: time_stop
-      type: f32
+      type: u16
     - id: offset
       type: struct_vec2
     - id: pattern_count
-      type: u32
+      type: u16
     - id: pattern_u8_index
-      type: u32
+      type: u16
