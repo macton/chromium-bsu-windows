@@ -16,7 +16,7 @@ sections:
 
   - id: asset_base_speed
     container: static_array
-    type: u16
+    type: f32
 
   - id: asset_spawn
     container: static_array
@@ -24,19 +24,23 @@ sections:
 
   - id: max_instance_count
     container: static_array
-    type: u8
+    type: u32
 
   - id: instance_count
     container: static_array
-    type: u8
+    type: u32
 
   - id: instance_location
     container: static_array
     type: struct_array_vec2
 
+  - id: instance_velocity
+    container: static_array
+    type: struct_array_vec2
+
   - id: instance_age
     container: static_array
-    type: struct_array_u16
+    type: struct_array_f32
 
   - id: pattern_u32
     container: static_array
@@ -49,14 +53,14 @@ sections:
 types:
   struct_vec2:
     - id: x
-      type: u16
+      type: f32
     - id: y
-      type: u16
+      type: f32
 
-  struct_array_u16:
+  struct_array_f32:
     - id: value
       container: static_array
-      type: u16
+      type: f32 
 
   struct_array_vec2:
     - id: value
@@ -76,29 +80,35 @@ types:
       type: struct_at_group
      
   struct_at_each:
-    - id: target
-      type: u16
+    - id: target_index
+      type: u32
+      doc: '16:14:2 _pad:target_index:initial_velocity_type (0=none, 1=down, 2=target hero)'
     - id: time_step
-      type: u16
-    - id: offset
+      type: f32
+    - id: time_next
+      type: f32
+    - id: location_offset
       type: struct_vec2
     - id: pattern_width
-      type: u16
+      type: u32
     - id: pattern_u32_index
-      type: u16
+      type: u32
 
   struct_at_group:
-    - id: target
-      type: u16
+    - id: target_index
+      type: u32
+      doc: '16:14:2 _pad:target_index:initial_velocity_type (0=none, 1=down, 2=target hero)'
     - id: time_step
-      type: u16
+      type: f32
     - id: time_start
-      type: u16
+      type: f32
     - id: time_stop
-      type: u16
-    - id: offset
+      type: f32
+    - id: time_next
+      type: f32
+    - id: location_offset
       type: struct_vec2
     - id: pattern_count
-      type: u16
+      type: u32
     - id: pattern_u8_index
-      type: u16
+      type: u32

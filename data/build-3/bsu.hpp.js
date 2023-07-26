@@ -129,10 +129,6 @@ const WriteTypes = ( hpp, schema ) => {
       hpp.types[ type_id ] = type;
     } 
   });
-  hpp.types[ 'static_array' ] = [
-    { type: 'uint32_t', name: 'offset' },
-    { type: 'uint32_t', name: 'count' },
-  ];
 }
 
 const WriteHpp = ( schema, hpp_filename_out ) => {
@@ -155,11 +151,17 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
     fs.writeSync(file,`#define ${constant_name.padEnd(30,' ')} ${constant_value}\n`);
   });
   fs.writeSync(file,'\n');
+    fs.writeSync(file,`typedef struct ${'static_array'.padEnd(20,' ')} static_array;\n`);
   Object.keys(hpp.types).forEach( struct_name => {
     const struct = hpp.types[struct_name];
     fs.writeSync(file,`typedef struct ${struct_name.padEnd(20,' ')} ${struct_name};\n`);
   });
-  fs.writeSync(file,'\n');
+  fs.writeSync(file,`
+struct static_array
+{
+  uint32_t             offset;
+  uint32_t             count;
+};\n\n`);
   Object.keys(hpp.types).forEach( struct_name => {
     const struct = hpp.types[struct_name];
     fs.writeSync(file,`struct ${struct_name}\n`);

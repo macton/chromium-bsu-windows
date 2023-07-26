@@ -67,8 +67,8 @@ BaseSize:
   PowerUp_Repair:         [ 0.60, 0.60 ]
   
 BaseSpeed:
-  EnemyAmmo00:            16.00
-  EnemyAircraft_Straight:  4.00
+  EnemyAmmo00:            20.00
+  EnemyAircraft_Straight:  5.00
   EnemyAircraft_Omni:      7.00
   EnemyAircraft_RayGun:    2.50
   EnemyAircraft_Tank:      2.50
@@ -110,10 +110,12 @@ Spawn:
       TimeStep:   1.00
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '********************************'
-    - AtEach:     EnemyAircraft_Omni
+      InitialDirection: Down
+    - xxxAtEach:     EnemyAircraft_Omni
       TimeStep:   0.1
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '********--------********--------'
+      InitialDirection: Hero
   EnemyAircraft_Straight:
     - AtGroup:    SpawnPoint
       TimeStep:   3.50

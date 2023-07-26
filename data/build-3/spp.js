@@ -47,9 +47,10 @@ const PreProcess_Spawn_AtEach_Pattern = ( pattern_in ) => {
 
 const PreProcess_Spawn_AtEach = ( spawn_in, config_in ) => {
   return {
-    AtEach:   spawn_in.AtEach,
-    TimeStep: spawn_in.TimeStep,
-    Offset:   spawn_in.Offset,
+    AtEach:             spawn_in.AtEach,
+    TimeStep:           spawn_in.TimeStep,
+    Offset:             spawn_in.Offset,
+    InitialDirection:   spawn_in.InitialDirection || "Down",
     ...PreProcess_Spawn_AtEach_Pattern( spawn_in.Pattern ),
   };
 }
@@ -93,12 +94,13 @@ const PreProcess_Spawn_AtGroup_Expression = ( spawn_in, config_in ) => {
     pattern.push( '0x' + (index >>> 0).toString(16).padStart(2,'0') );
   }
   return { 
-    AtGroup:   spawn_in.AtGroup,
-    TimeStep:  spawn_in.TimeStep,
-    TimeStart: spawn_in.TimeStart,
-    TimeStop:  spawn_in.TimeStop,
-    Offset:    [...spawn_in.Offset],
-    Pattern:   [...pattern],
+    AtGroup:           spawn_in.AtGroup,
+    TimeStep:          spawn_in.TimeStep,
+    TimeStart:         spawn_in.TimeStart,
+    TimeStop:          spawn_in.TimeStop,
+    InitialDirection:  spawn_in.InitialDirection || "Down",
+    Offset:            [...spawn_in.Offset],
+    Pattern:           [...pattern],
   };
 }
 
@@ -143,12 +145,13 @@ const PreProcess_Spawn_AtGroup_Formation = ( spawn_in, config_in ) => {
 
     if (found_formation_slice) {
       slices.push( { 
-        AtGroup:   spawn_in.AtGroup,
-        TimeStep:  spawn_in.TimeStep,
-        TimeStart: spawn_in.TimeStart,
-        TimeStop:  spawn_in.TimeStop,
-        Offset:    [...spawn_in.Offset],
-        Pattern:   [...slice_pattern],
+        AtGroup:           spawn_in.AtGroup,
+        TimeStep:          spawn_in.TimeStep,
+        TimeStart:         spawn_in.TimeStart,
+        TimeStop:          spawn_in.TimeStop,
+        InitialDirection:  spawn_in.InitialDirection || "Down",
+        Offset:            [...spawn_in.Offset],
+        Pattern:           [...slice_pattern],
       });
     }
 

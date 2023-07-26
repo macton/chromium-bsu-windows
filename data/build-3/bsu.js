@@ -221,14 +221,14 @@ const map_vec2 = ( config_vec2 ) => {
   if ( config_vec2 ) {
     return ( id ) => {
       if ( id == "x" ) {
-        return ((config_vec2[0] + 32) * 1024)|0; // fixed 6:10
+        return config_vec2[0];
       } else if ( id == "y" ) {
-        return ((config_vec2[1] + 32) * 1024)|0; // fixed 6:10
+        return config_vec2[1];
       }
     }
   } else {
     return () => {
-      return (32*1024)|0; // fixed 6:10
+      return 0;
     }
   }
 }
@@ -246,8 +246,7 @@ const map_asset_base_speed_static_array_element = ( config ) => {
     const reference_name = config.References[index];
     const has_base_speed = config.BaseSpeed.hasOwnProperty(reference_name);
     const base_speed_f32 = has_base_speed ? config.BaseSpeed[reference_name] : 0.0;
-    const base_speed_u16 = ((base_speed_f32+32)*1024)|0;
-    return base_speed_u16;
+    return base_speed_f32;
   };
 }
 
@@ -423,13 +422,73 @@ const map_instance_location_static_array = ( config ) => {
   };
 }
 
+const map_instance_velocity_static_array_element_struct_array_vec2_value_static_array_element = ( reference_name, config ) => {
+  return (index) => {
+    return map_vec2( [ 0, 0 ] );  
+  };
+}
+
+const map_instance_velocity_static_array_element_struct_array_vec2_value_static_array = ( reference_name, config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.MaxInstanceCount[reference_name] || 0;
+    }
+    else if ( id == "array" ) {
+      return map_instance_velocity_static_array_element_struct_array_vec2_value_static_array_element( reference_name, config );
+    }
+  };
+}
+
+const map_instance_velocity_static_array_element_struct_array_vec2 = ( reference_name, config ) => {
+  return (field_name) => {
+    if ( field_name == "value" ) {
+      return map_instance_velocity_static_array_element_struct_array_vec2_value_static_array( reference_name, config );
+    }
+  };
+}
+
+const map_instance_velocity_static_array_element = ( config ) => {
+  return (index) => {
+    const reference_name = config.References[index];
+    return map_instance_velocity_static_array_element_struct_array_vec2( reference_name, config );
+  };
+}
+
+const map_instance_velocity_static_array = ( config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.References.length;
+    }
+    else if ( id == "array" ) {
+      return map_instance_velocity_static_array_element( config );
+    }
+  };
+}
+
 const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_element_struct_at_each = ( at_each, config ) => {
   return (id) => {
-    if (id == "target") {
-      return config.References.indexOf( at_each.AtEach );
+    if (id == "target_index") {
+      const target_index = config.References.indexOf(at_each.AtEach);
+      let result = 0;
+      switch (at_each.InitialDirection) { 
+        case "Down":
+        break;
+        case "Hero":
+          result = 1;
+        break;
+        case "None":
+          result = 2;
+        case "AlongOffset":
+          result = 3;
+        break;
+      }
+      result = result | ( target_index << 2 );
+      return result; 
     } else if (id == "time_step") {
-      return (at_each.TimeStep * 60 * 60)|0;
-    } else if (id == "offset") {
+      return at_each.TimeStep;
+    } else if (id == "time_next") {
+      return 0;
+    } else if (id == "location_offset") {
       return map_vec2( at_each.Offset );
     } else if (id == "pattern_width") {
       return at_each.PatternWidth;
@@ -461,15 +520,32 @@ const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array = (
 
 const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_element_struct_at_group = ( at_group, config ) => {
   return (id) => {
-    if (id == "target") {
-      return config.References.indexOf( at_group.AtGroup );
+    if (id == "target_index") {
+      const target_index = config.References.indexOf( at_group.AtGroup );
+      let result = 0;
+      switch (at_group.InitialDirection) { 
+        case "Down":
+        break;
+        case "Hero":
+          result = 1;
+        break;
+        case "None":
+          result = 2;
+        case "AlongOffset":
+          result = 3;
+        break;
+      }
+      result = result | ( target_index << 2 );
+      return result; 
     } else if (id == "time_step") {
-      return (at_group.TimeStep * 60 * 60)|0;
+      return at_group.TimeStep;
     } else if (id == "time_stop") {
-      return (at_group.TimeStop * 60 * 60)|0;
+      return at_group.TimeStop;
     } else if (id == "time_start") {
-      return (at_group.TimeStart * 60 * 60)|0;
-    } else if (id == "offset") {
+      return at_group.TimeStart;
+    } else if (id == "time_next") {
+      return 0;
+    } else if (id == "location_offset") {
       return map_vec2( at_group.Offset );
     } else if (id == "pattern_count") {
       return at_group.PatternLength;
@@ -582,6 +658,8 @@ const map_bsu = ( config ) => {
       return map_instance_age_static_array( config );
     } else if ( id == "instance_location" ) {
       return map_instance_location_static_array( config );
+    } else if ( id == "instance_velocity" ) {
+      return map_instance_velocity_static_array( config );
     } else if ( id == "asset_spawn" ) {
       return map_asset_spawn_static_array( config );
     } else if ( id == "pattern_u32" ) {

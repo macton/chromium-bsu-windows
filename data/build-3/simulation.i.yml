@@ -102,8 +102,8 @@ BaseSize:
     - 0.6
     - 0.6
 BaseSpeed:
-  EnemyAmmo00: 16
-  EnemyAircraft_Straight: 4
+  EnemyAmmo00: 20
+  EnemyAircraft_Straight: 5
   EnemyAircraft_Omni: 7
   EnemyAircraft_RayGun: 2.5
   EnemyAircraft_Tank: 2.5
@@ -118,41 +118,41 @@ BaseSpeed:
 Spawn:
   EnemyAmmo00:
     AtEachOffset: 0
-    AtEachCount: 2
+    AtEachCount: 1
     AtGroupOffset: 0
     AtGroupCount: 0
   EnemyAircraft_Straight:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 0
     AtGroupCount: 2
   EnemyAircraft_Omni:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 2
     AtGroupCount: 11
   PowerUp_HeroAmmo00:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 13
     AtGroupCount: 1
   PowerUp_HeroAmmo01:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 14
     AtGroupCount: 1
   PowerUp_HeroAmmo02:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 15
     AtGroupCount: 1
   PowerUp_Shields:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 16
     AtGroupCount: 1
   PowerUp_Repair:
-    AtEachOffset: 2
+    AtEachOffset: 1
     AtEachCount: 0
     AtGroupOffset: 17
     AtGroupCount: 1
@@ -967,27 +967,21 @@ DataU8:
   - '0x10'
 DataU32:
   - '0xffffffff'
-  - '0x00ff00ff'
 DataAtEach:
   - AtEach: EnemyAircraft_Straight
     TimeStep: 1
     Offset:
       - 0
       - -0.9
+    InitialDirection: Down
     PatternWidth: 32
     PatternDataU32Offset: 0
-  - AtEach: EnemyAircraft_Omni
-    TimeStep: 0.1
-    Offset:
-      - 0
-      - -0.9
-    PatternWidth: 32
-    PatternDataU32Offset: 1
 DataAtGroup:
   - AtGroup: SpawnPoint
     TimeStep: 3.5
     TimeStart: 0.5
     TimeStop: 240
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -997,6 +991,7 @@ DataAtGroup:
     TimeStep: 3.5
     TimeStart: 60
     TimeStop: 240
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1006,6 +1001,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 16
     TimeStop: 300
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1015,6 +1011,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 1
     TimeStop: 9.5
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1024,6 +1021,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 1
     TimeStop: 9.5
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1033,6 +1031,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 30
     TimeStop: 38.5
+    InitialDirection: Down
     Offset:
       - -8
       - 0
@@ -1042,6 +1041,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 30
     TimeStop: 38.5
+    InitialDirection: Down
     Offset:
       - -8
       - 0
@@ -1051,6 +1051,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 90
     TimeStop: 98.5
+    InitialDirection: Down
     Offset:
       - 8
       - 0
@@ -1060,6 +1061,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 90
     TimeStop: 98.5
+    InitialDirection: Down
     Offset:
       - 8
       - 0
@@ -1069,6 +1071,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 150
     TimeStop: 158.5
+    InitialDirection: Down
     Offset:
       - -2
       - 0
@@ -1078,6 +1081,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 150
     TimeStop: 158.5
+    InitialDirection: Down
     Offset:
       - -2
       - 0
@@ -1087,6 +1091,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 210
     TimeStop: 218.5
+    InitialDirection: Down
     Offset:
       - 2
       - 0
@@ -1096,6 +1101,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 210
     TimeStop: 218.5
+    InitialDirection: Down
     Offset:
       - 2
       - 0
@@ -1105,6 +1111,7 @@ DataAtGroup:
     TimeStep: 30
     TimeStart: 2
     TimeStop: 300
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1114,6 +1121,7 @@ DataAtGroup:
     TimeStep: 30
     TimeStart: 4
     TimeStop: 300
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1123,6 +1131,7 @@ DataAtGroup:
     TimeStep: 30
     TimeStart: 6
     TimeStop: 300
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1132,6 +1141,7 @@ DataAtGroup:
     TimeStep: 30
     TimeStart: 8
     TimeStop: 300
+    InitialDirection: Down
     Offset:
       - 0
       - 0
@@ -1141,6 +1151,7 @@ DataAtGroup:
     TimeStep: 30
     TimeStart: 10
     TimeStop: 300
+    InitialDirection: Down
     Offset:
       - 0
       - 0
