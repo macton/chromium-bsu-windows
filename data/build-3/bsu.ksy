@@ -21,6 +21,9 @@ instances:
   asset_base_speed:
     pos: _root.toc.asset_base_speed_offset
     type: static_array_f4
+  asset_base_health:
+    pos: _root.toc.asset_base_health_offset
+    type: static_array_f4
   asset_spawn:
     pos: _root.toc.asset_spawn_offset
     type: static_array_struct_spawn
@@ -39,12 +42,18 @@ instances:
   instance_age:
     pos: _root.toc.instance_age_offset
     type: static_array_struct_array_f32
+  instance_health:
+    pos: _root.toc.instance_health_offset
+    type: static_array_struct_array_f32
   pattern_u32:
     pos: _root.toc.pattern_u32_offset
     type: static_array_u4
   pattern_u8:
     pos: _root.toc.pattern_u8_offset
     type: static_array_u1
+  distance_tracker:
+    pos: _root.toc.distance_tracker_offset
+    type: static_array_struct_distance_tracker
 types:
   struct_toc:
     seq:
@@ -55,6 +64,8 @@ types:
       - id: asset_base_size_offset
         type: u4
       - id: asset_base_speed_offset
+        type: u4
+      - id: asset_base_health_offset
         type: u4
       - id: asset_spawn_offset
         type: u4
@@ -68,9 +79,13 @@ types:
         type: u4
       - id: instance_age_offset
         type: u4
+      - id: instance_health_offset
+        type: u4
       - id: pattern_u32_offset
         type: u4
       - id: pattern_u8_offset
+        type: u4
+      - id: distance_tracker_offset
         type: u4
   static_array_utf8:
     seq:
@@ -178,6 +193,18 @@ types:
         pos: offset
         repeat: expr
         repeat-expr: count
+  static_array_struct_distance_tracker:
+    seq:
+      - id: offset
+        type: u4
+      - id: count
+        type: u4
+    instances:
+      value:
+        type: struct_distance_tracker
+        pos: offset
+        repeat: expr
+        repeat-expr: count
   struct_vec2:
     seq:
       - id: x
@@ -258,3 +285,27 @@ types:
         type: u4
       - id: pattern_u8_index
         type: u4
+  struct_distance:
+    seq:
+      - id: target_asset_index
+        type: u4
+      - id: distance
+        type: f4
+  static_array_struct_distance:
+    seq:
+      - id: offset
+        type: u4
+      - id: count
+        type: u4
+    instances:
+      value:
+        type: struct_distance
+        pos: offset
+        repeat: expr
+        repeat-expr: count
+  struct_distance_tracker:
+    seq:
+      - id: source_asset_index
+        type: u4
+      - id: targets
+        type: static_array_struct_distance

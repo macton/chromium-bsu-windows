@@ -51,6 +51,7 @@ const PreProcess_Spawn_AtEach = ( spawn_in, config_in ) => {
     TimeStep:           spawn_in.TimeStep,
     Offset:             spawn_in.Offset,
     InitialDirection:   spawn_in.InitialDirection || "Down",
+    OnFlag:             spawn_in.OnFlag || "None",
     ...PreProcess_Spawn_AtEach_Pattern( spawn_in.Pattern ),
   };
 }
@@ -99,6 +100,7 @@ const PreProcess_Spawn_AtGroup_Expression = ( spawn_in, config_in ) => {
     TimeStart:         spawn_in.TimeStart,
     TimeStop:          spawn_in.TimeStop,
     InitialDirection:  spawn_in.InitialDirection || "Down",
+    OnFlag:             spawn_in.OnFlag || "None",
     Offset:            [...spawn_in.Offset],
     Pattern:           [...pattern],
   };
@@ -149,6 +151,7 @@ const PreProcess_Spawn_AtGroup_Formation = ( spawn_in, config_in ) => {
         TimeStep:          spawn_in.TimeStep,
         TimeStart:         spawn_in.TimeStart,
         TimeStop:          spawn_in.TimeStop,
+        OnFlag:            spawn_in.OnFlag || "None",
         InitialDirection:  spawn_in.InitialDirection || "Down",
         Offset:            [...spawn_in.Offset],
         Pattern:           [...slice_pattern],
@@ -200,6 +203,8 @@ const PreProcess = ( config_in ) => {
     Location:         value => { return { Location: value } },  
     BaseSize:         value => { return { BaseSize: value } }, 
     BaseSpeed:        value => { return { BaseSpeed: value } }, 
+    BaseHealth:       value => { return { BaseHealth: value } }, 
+    DistanceTracker:  value => { return { DistanceTracker: value } }, 
     Spawn:            PreProcess_Spawn,
   };
   config_out = {

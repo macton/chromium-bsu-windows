@@ -261,6 +261,26 @@ const map_asset_base_speed_static_array = ( config ) => {
   };
 }
 
+const map_asset_base_health_static_array_element = ( config ) => {
+  return (index) => {
+    const reference_name = config.References[index];
+    const has_base_health = config.BaseHealth.hasOwnProperty(reference_name);
+    const base_health_f32 = has_base_health ? config.BaseHealth[reference_name] : 0.0;
+    return base_health_f32;
+  };
+}
+
+const map_asset_base_health_static_array = ( config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.References.length;
+    }
+    else if ( id == "array" ) {
+      return map_asset_base_health_static_array_element( config );
+    }
+  };
+}
+
 const map_asset_base_size_static_array_element = ( config ) => {
   return (index) => {
     const reference_name = config.References[index];
@@ -377,6 +397,49 @@ const map_instance_age_static_array = ( config ) => {
   };
 }
 
+const map_instance_health_static_array_element_struct_array_f32_value_static_array_element = ( reference_name, config ) => {
+  return (index) => {
+    return 0;
+  };
+}
+
+const map_instance_health_static_array_element_struct_array_f32_value_static_array = ( reference_name, config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.MaxInstanceCount[reference_name] || 0;
+    }
+    else if ( id == "array" ) {
+      return map_instance_health_static_array_element_struct_array_f32_value_static_array_element( reference_name, config );
+    }
+  };
+}
+
+const map_instance_health_static_array_element_struct_array_f32 = ( reference_name, config ) => {
+  return (field_name) => {
+    if ( field_name == "value" ) {
+      return map_instance_health_static_array_element_struct_array_f32_value_static_array( reference_name, config );
+    }
+  };
+}
+
+const map_instance_health_static_array_element = ( config ) => {
+  return (index) => {
+    const reference_name = config.References[index];
+    return map_instance_health_static_array_element_struct_array_f32( reference_name, config );
+  };
+}
+
+const map_instance_health_static_array = ( config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.References.length;
+    }
+    else if ( id == "array" ) {
+      return map_instance_health_static_array_element( config );
+    }
+  };
+}
+
 const map_instance_location_static_array_element_struct_array_vec2_value_static_array_element = ( reference_name, config ) => {
   return (index) => {
     const vec2_offset = config.Location[reference_name].Vec2Offset;
@@ -468,21 +531,27 @@ const map_instance_velocity_static_array = ( config ) => {
 const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_element_struct_at_each = ( at_each, config ) => {
   return (id) => {
     if (id == "target_index") {
-      const target_index = config.References.indexOf(at_each.AtEach);
-      let result = 0;
+      const target_index = config.References.indexOf( at_each.AtEach );
+      let result    = 0;
+      let direction = 0;
+      let on_flag   = 0;
       switch (at_each.InitialDirection) { 
         case "Down":
+          direction = 0;
         break;
         case "Hero":
-          result = 1;
+          direction = 1;
         break;
-        case "None":
-          result = 2;
-        case "AlongOffset":
-          result = 3;
+        case "Up":
+          direction = 2;
         break;
       }
-      result = result | ( target_index << 2 );
+      switch (at_each.OnFlag) { 
+        case "HeroTrigger0":
+          on_flag = 1;
+        break;
+      }
+      result = direction | ( on_flag << 2) | ( target_index << 4 );
       return result; 
     } else if (id == "time_step") {
       return at_each.TimeStep;
@@ -522,20 +591,26 @@ const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_el
   return (id) => {
     if (id == "target_index") {
       const target_index = config.References.indexOf( at_group.AtGroup );
-      let result = 0;
+      let result    = 0;
+      let direction = 0;
+      let on_flag   = 0;
       switch (at_group.InitialDirection) { 
         case "Down":
+          direction = 0;
         break;
         case "Hero":
-          result = 1;
+          direction = 1;
         break;
-        case "None":
-          result = 2;
-        case "AlongOffset":
-          result = 3;
+        case "Up":
+          direction = 2;
         break;
       }
-      result = result | ( target_index << 2 );
+      switch (at_group.OnFlag) { 
+        case "HeroTrigger0":
+          on_flag = 1;
+        break;
+      }
+      result = direction | ( on_flag << 2) | ( target_index << 4 );
       return result; 
     } else if (id == "time_step") {
       return at_group.TimeStep;
@@ -639,6 +714,63 @@ const map_pattern_u8_static_array = ( config ) => {
   };
 }
 
+const map_distance_tracker_static_array_element_struct_distance_tracker_targets_static_array_element = ( source_asset_name, config ) => {
+  return (index) => {
+    return (id) => {
+      if ( id == "target_asset_index" ) {
+        const target_asset_name  = config.DistanceTracker[source_asset_name][index];
+        const target_asset_index = config.References.indexOf( target_asset_name );
+        return target_asset_index;
+      }
+      else if ( id == "distance" ) {
+        return 0;
+      }
+    };
+  };
+}
+
+const map_distance_tracker_static_array_element_struct_distance_tracker_targets = ( source_asset_name, config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.DistanceTracker[source_asset_name].length;
+    }
+    else if ( id == "array" ) {
+      return map_distance_tracker_static_array_element_struct_distance_tracker_targets_static_array_element( source_asset_name, config );
+    }
+  };
+}
+
+const map_distance_tracker_static_array_element_struct_distance_tracker = ( index, config ) => {
+  return ( id ) => {
+    if ( id == "source_asset_index" ) {
+      const source_asset_name  = Object.keys(config.DistanceTracker)[ index ];
+      const source_asset_index = config.References.indexOf( source_asset_name );
+      return source_asset_index;
+    }
+    else if ( id == "targets" ) {
+      const source_asset_name  = Object.keys(config.DistanceTracker)[ index ];
+      return map_distance_tracker_static_array_element_struct_distance_tracker_targets( source_asset_name, config );
+    }
+  };
+}
+
+const map_distance_tracker_static_array_element = ( config ) => {
+  return (index) => {
+    return map_distance_tracker_static_array_element_struct_distance_tracker( index, config );
+  };
+}
+
+const map_distance_tracker_static_array = ( config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.DistanceTracker ? Object.keys(config.DistanceTracker).length : 0;
+    }
+    else if ( id == "array" ) {
+      return map_distance_tracker_static_array_element( config );
+    }
+  };
+}
+
 const map_bsu = ( config ) => {
   const get_value = id => {
 
@@ -648,6 +780,8 @@ const map_bsu = ( config ) => {
       return map_asset_base_size_static_array( config );
     } else if ( id == "asset_base_speed" ) {
       return map_asset_base_speed_static_array( config );
+    } else if ( id == "asset_base_health" ) {
+      return map_asset_base_health_static_array( config );
     } else if ( id == "instance_count" ) {
       return map_instance_count_static_array( config );
     } else if ( id == "max_instance_count" ) {
@@ -656,6 +790,8 @@ const map_bsu = ( config ) => {
       return map_play_area( config );
     } else if ( id == "instance_age" ) {
       return map_instance_age_static_array( config );
+    } else if ( id == "instance_health" ) {
+      return map_instance_health_static_array( config );
     } else if ( id == "instance_location" ) {
       return map_instance_location_static_array( config );
     } else if ( id == "instance_velocity" ) {
@@ -666,6 +802,8 @@ const map_bsu = ( config ) => {
       return map_pattern_u32_static_array( config );
     } else if ( id == "pattern_u8" ) {
       return map_pattern_u8_static_array( config );
+    } else if ( id == "distance_tracker" ) {
+      return map_distance_tracker_static_array( config );
     } else {
       return get_value;  
     }

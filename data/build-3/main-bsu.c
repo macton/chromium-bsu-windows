@@ -9,6 +9,8 @@
 #include <sys/ioctl.h>
 #include "bsu.h"
 
+#include <unistd.h> // usleep
+
 #define imin(x,y) ((x)<(y))?(x):(y)
 #define imax(x,y) ((x)>(y))?(x):(y)
 
@@ -18,19 +20,20 @@ extern char _binary_simulation_bsu_start[];
 extern char _binary_simulation_bsu_size[];
 
 void bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start );
+void bsu_simulation_write_health( uintptr_t bsu_start );
 int  bsu_draw( uintptr_t bsu_start, int u, int v );
-
-#define kBsuInitialDirectionDown 0
-#define kBsuInitialDirectionHero 1
-#define kBsuInitialDirectionNone 2
-#define kBsuInitialDirectionAlongOffset 3
 
 // ---------------------------------------------------------------------------------------
 
 typedef struct timespec timespec;
 
-int offset_x = 0;
-int offset_y = 0;
+int hero_location_x = 0;
+int hero_location_y = 0;
+float hero_x = 0;
+float hero_y = 0;
+uint32_t hero_flags = 0;
+
+#define kHeroFlagTrigger0 1
 
 int debug_a = 0;
 int debug_b = 0;
@@ -139,7 +142,7 @@ int   mouse_x = 0;
 int   mouse_y = 0;
 int   mouse_bstate = 0;
 
-int mono_fragment( int x, int y );
+int fragment_main( int x, int y );
 
 int main(void)
 {
@@ -151,6 +154,7 @@ int main(void)
   nodelay(stdscr, TRUE);
   keypad(stdscr, TRUE);
   set_escdelay(0);
+  // start_color();
 
   // Don't mask any mouse events
   mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
@@ -164,12 +168,77 @@ int main(void)
   iHalfWidth  = iWidth / 2;
   iHalfHeight = iHeight / 2;
 
+
+#if 0
+  int offset = 0;
+  do
+  {
+    int color_id = 0;
+    
+    for (int y=0;y<16;y++) 
+    {
+      for (int x=0;x<16;x++) 
+      {
+        int r = 250+(x*750)/16;
+        int b = 250+(y*750)/16;
+        int g = imin(r,b);
+
+if (color_id == 0)
+{
+  r = 0;
+  g = 0;
+  b = 0;
+}
+
+
+        init_color(color_id, r, g, b);
+        init_pair(color_id, color_id, COLOR_BLACK);
+        attron( COLOR_PAIR(color_id) );
+        mvprintw(y,x,"*");
+        attroff( COLOR_PAIR(color_id) );
+       
+
+        color_id++;
+      }
+    }
+
+    refresh();
+    offset = (offset+1)%1000;
+    usleep(10000 );
+  }
+  while (getch() != ' ');
+#endif
+
+
+
+
+
+
+
+
+
+
+
   timespec frame_time;
   timespec sleep_time;
   timespec remaining_time;
   timespec target_time = { 0, 16666666 }; 
 
   uintptr_t bsu_start = (uintptr_t)_binary_simulation_bsu_start;
+
+  // enable hero
+  {
+    static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
+    uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
+    static_array*  instance_age_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceAgeOffset));
+    static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
+    static_array*  age_array                 = instance_age_data + 0;
+    float*         age_data                  = (float*)(bsu_start + age_array->offset );
+
+    instance_count_data[0] = 1;
+    age_data[0] = FLT_MIN;
+  }
+
 
   while (1)
   {
@@ -183,16 +252,16 @@ int main(void)
       switch (event_key)
       {
         case KEY_LEFT:
-          offset_x -= 10;
+          hero_location_x -= 10;
         break;
         case KEY_RIGHT:
-          offset_x += 10;
+          hero_location_x += 10;
         break;
         case KEY_UP:
-          offset_y -= 10;
+          hero_location_y -= 10;
         break;
         case KEY_DOWN:
-          offset_y += 10;
+          hero_location_y += 10;
         break;
         case 'q':
           goto quit;
@@ -206,8 +275,20 @@ int main(void)
             mouse_y      = event.y;
             mouse_bstate = event.bstate;
     
-            offset_x = mouse_x * 2;
-            offset_y = mouse_y * 4;
+            hero_location_x = mouse_x * 2;
+            hero_location_y = mouse_y * 4;
+            hero_x = 2.0f * 15.0f * (((float)hero_location_x / (float)iWidth) - 0.5f);
+            hero_y = -2.0f * 15.0f * (((float)hero_location_y / (float)iHeight) - 0.5f);
+
+            if ( event.bstate & BUTTON1_RELEASED )
+            {
+              hero_flags &= ~(1 << kHeroFlagTrigger0);
+            }
+            if ( event.bstate & BUTTON1_PRESSED )
+            {
+              hero_flags |= 1 << kHeroFlagTrigger0;
+            }
+
           }
         }
         break;
@@ -228,14 +309,14 @@ int main(void)
       {
         int ch = 0;
   
-        ch |= mono_fragment(x+0,y+0)  ?  1 : 0;
-        ch |= mono_fragment(x+1,y+0) ?   8 : 0;
-        ch |= mono_fragment(x+0,y+1) ?   2 : 0;
-        ch |= mono_fragment(x+1,y+1) ?  16 : 0;
-        ch |= mono_fragment(x+0,y+2) ?   4 : 0;
-        ch |= mono_fragment(x+1,y+2) ?  32 : 0;
-        ch |= mono_fragment(x+0,y+3) ?  64 : 0;
-        ch |= mono_fragment(x+1,y+3) ? 128 : 0;
+        ch |= fragment_main(x+0,y+0)  ?  1 : 0;
+        ch |= fragment_main(x+1,y+0) ?   8 : 0;
+        ch |= fragment_main(x+0,y+1) ?   2 : 0;
+        ch |= fragment_main(x+1,y+1) ?  16 : 0;
+        ch |= fragment_main(x+0,y+2) ?   4 : 0;
+        ch |= fragment_main(x+1,y+2) ?  32 : 0;
+        ch |= fragment_main(x+0,y+3) ?  64 : 0;
+        ch |= fragment_main(x+1,y+3) ? 128 : 0;
   
         mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
       }
@@ -266,7 +347,33 @@ int main(void)
     mvprintw(line++,0,          "mouse            x:%d y:%d bstate:%d", mouse_x, mouse_y, mouse_bstate);
     mvprintw(line++,0,          "debug %d,%d,%d,%d",debug_a,debug_b,debug_c,debug_d);
 
-    bsu_simulation_write_count_age_location_velocity( bsu_start );
+
+    mvprintw(line++,0,          "hero_location  %d,%d",hero_location_x,hero_location_y);
+    mvprintw(line++,0,          "hero  %f,%f",hero_x,hero_y);
+
+    {
+      static_array*  instance_health_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceHealthOffset));
+      static_array*  instance_health_data         = (static_array*)(bsu_start + instance_health_array->offset);
+      static_array*  health_array                 = instance_health_data + 0;
+      float*         health_data                  = (float*)(bsu_start + health_array->offset );
+      float          hero_health                  = health_data[0];
+
+      mvprintw(line++,0,          "hero_health:  %f",hero_health);
+    }
+
+    {
+      timespec start_time;
+      timespec end_time;
+      timespec run_time;
+      float    run_sec;
+
+      clock_gettime(CLOCK_REALTIME, &start_time);
+      bsu_simulation_write_count_age_location_velocity( bsu_start );
+      bsu_simulation_write_health( bsu_start );
+      clock_gettime(CLOCK_REALTIME, &end_time);
+      run_time = timespec_sub( start_time, end_time );
+      mvprint_timespec( line++,0, "sim_time:      ", run_time);
+    }
 
     iFrameCounter++;
     refresh();
@@ -294,31 +401,34 @@ quit:
   exit(0);
 }
 
-int mono_fragment( int u, int v )
+int fragment_main( int u, int v )
 {
   int result = 0;
 
+/*
   {
-    int cx = offset_x;
-    int cy = offset_y;
+    int cx = hero_location_x;
+    int cy = hero_location_y;
     int x  = u-cx;
     int y  = v-cy;
-    int r  = 8; 
+    int r  = 6; 
     if (( abs(x) <= (2*r) ) && ( abs(y) <= (2*r) ))
     {
       int d  = (int)sdPentagon( (float)x, (float)y, r );
       result |= d <= 0;
     }
   }
+*/
 
+#if 0
   {
     float t  = iTime * 5.0f;
     float vx = cosf(t)+sinf(t);
     float vy = -sinf(t)+cosf(t);
     float dx = vx * 20.0f;
     float dy = vy * 20.0f;
-    int   cx   = (int)dx + offset_x;
-    int   cy   = (int)dy + offset_y;
+    int   cx   = (int)dx + hero_location_x;
+    int   cy   = (int)dy + hero_location_y;
     int   x    = u - cx;
     int   y    = v - cy;
     int   r    = 5;
@@ -334,14 +444,34 @@ int mono_fragment( int u, int v )
     float vy = -sinf(t)+cosf(t);
     float dx = vx * 20.0f;
     float dy = vy * 20.0f;
-    int   cx   = (int)dx + offset_x;
-    int   cy   = (int)dy + offset_y;
+    int   cx   = (int)dx + hero_location_x;
+    int   cy   = (int)dy + hero_location_y;
     int   x    = u - cx;
     int   y    = v - cy;
     int   r    = 4;
     if ( (abs(x) <= r) && (abs(y) <= r) )
     {
       result |= sdCircle( x, y, r ) <= 0;
+    }
+  }
+#endif
+  {
+    float t    = iTime * 5.0f;
+    int   cx   = hero_location_x;
+    int   cy   = hero_location_y;
+    int   x    = u - cx;
+    int   y    = v - cy;
+    int   r    = 20;
+
+    if ( (abs(x) <= r) && (abs(y) <= r) )
+    {
+      int d = sdCircle( x, y, r );
+      if ( d < 0 )
+      {
+         float a = sinf( t + (float)d * 14.0f /r );
+         result |= a > 0.5f;
+ 
+      }
     }
   }
 
@@ -366,6 +496,8 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
 {
   static_array*  asset_spawn_array         = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kAssetSpawnOffset));
   struct_spawn*  asset_spawn_data          = (struct_spawn*)(bsu_start + asset_spawn_array->offset);
+  static_array*  asset_base_size_array    = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kAssetBaseSizeOffset));
+  struct_vec2*   asset_base_size_data     = (struct_vec2*)(bsu_start + asset_base_size_array->offset);
   static_array*  instance_location_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceLocationOffset));
   static_array*  instance_location_data    = (static_array*)(bsu_start + instance_location_array->offset);
   static_array*  instance_velocity_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceVelocityOffset));
@@ -378,10 +510,10 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
   uint32_t*      max_instance_count_data   = (uint32_t*)(bsu_start + max_instance_count_array->offset);
   int            asset_count               = asset_spawn_array->count;
   int            result                    = 0;
-  int  line = 8;
  
   for (int asset_index=0;asset_index<asset_count;asset_index++)
   {
+    struct_vec2*     base_size           = asset_base_size_data + asset_index;
     static_array*    location_array      = instance_location_data + asset_index;
     struct_vec2*     location_data       = (struct_vec2*)(bsu_start + location_array->offset);
     static_array*    age_array           = instance_age_data + asset_index;
@@ -390,7 +522,6 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
     uint32_t         max_instance_count  = max_instance_count_data[asset_index];
     uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
 
-    // mvprintw(line++,0,"asset:%d count:%d",asset_index,live_instance_count);
     for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
     {
       float*    live_instance_age = age_data + live_instance_index;
@@ -398,14 +529,14 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
       {
         struct_vec2* live_location     = location_data + live_instance_index;
   
-        float lx = live_location->x / 15.0f;
-        float ly = live_location->y / 15.0f;
+        float lx = (live_location->x) / 15.0f;
+        float ly = (live_location->y) / 15.0f;
         int   cx = (int)(lx * iHalfWidth);
         int   cy = (int)(ly * iHalfHeight);
         int   x = u-cx;
         int   y = v-cy;
 
-        int   r    = 5;
+        int   r    = ((base_size->x / 15.0) * iHalfWidth);
         if ( (abs(x) <= r) && (abs(y) <= r) )
         {
           result |= sdCircle( x, y, r ) <= 0;
@@ -442,8 +573,38 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
   uint32_t*      pattern_u32_data          = (uint32_t*)(bsu_start + pattern_u32_array->offset);
   int            asset_count               = asset_spawn_array->count;
   float          t                         = iTime;
- 
+
+  // Hero Asset (0)
+  {
+    static_array*    location_array      = instance_location_data + 0;
+    struct_vec2*     location_data       = (struct_vec2*)(bsu_start + location_array->offset);
+
+    location_data->x = hero_x;
+    location_data->y = hero_y;
+  }
+
+  // ---------------------------------------
+  // Update instance age
+  // ---------------------------------------
   for (int asset_index=0;asset_index<asset_count;asset_index++)
+  {
+    static_array*    age_array           = instance_age_data + asset_index;
+    float*           age_data            = (float*)(bsu_start + age_array->offset );
+    uint32_t         instance_count      = instance_count_data[asset_index];
+    uint32_t         max_instance_count  = max_instance_count_data[asset_index];
+    uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
+
+    for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
+    {
+      float*  live_instance_age = age_data + live_instance_index;
+      if ( *live_instance_age > 0 ) 
+      {
+        *live_instance_age += iTimeDelta;
+      }
+    }
+  }
+ 
+  for (int asset_index=1;asset_index<asset_count;asset_index++)
   {
     struct_spawn*    spawn               = asset_spawn_data + asset_index;
     static_array*    at_each_array       = &spawn->at_each;
@@ -479,7 +640,9 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
         live_location->x += live_velocity->x * iTimeDelta;
         live_location->y += live_velocity->y * iTimeDelta;
 
-        *live_instance_age += iTimeDelta;
+        int out_band = 0;
+        out_band = ((live_location->x < -17.0f) || (live_location->x > 17.0f) || (live_location->y < -17.0f) || (live_location->y > 17.0f));
+        *live_instance_age = (out_band)?0.0f:(*live_instance_age + iTimeDelta);
       }
     }
 
@@ -494,13 +657,22 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
       float            time_step                    = at_each->time_step;
       struct_vec2*     location_offset              = &at_each->location_offset;
       uint32_t         target_asset_index_direction = at_each->target_index;
-      uint32_t         target_asset_index           = target_asset_index_direction >> 2;
+      uint32_t         target_asset_index           = target_asset_index_direction >> 4;
       uint32_t         initial_direction            = target_asset_index_direction & 0x03;
+      uint32_t         on_flag                      = (target_asset_index_direction >> 2) & 0x03;
       uint32_t         target_instance_count        = instance_count_data[target_asset_index];
       uint32_t         target_max_instance_count    = max_instance_count_data[target_asset_index];
       uint32_t         target_live_instance_count   = ( target_instance_count > target_max_instance_count ) ? target_max_instance_count : target_instance_count;
       static_array*    target_age_array             = instance_age_data + target_asset_index;
       float*           target_age_data              = (float*)(bsu_start + target_age_array->offset);
+
+      if ( on_flag == kBsuOnFlagHeroTrigger0 )
+      {
+        if ( (hero_flags & (1 << kHeroFlagTrigger0)) == 0) 
+        {
+          continue;
+        }
+      }
 
       if (t >= time_next)
       {
@@ -524,8 +696,8 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
             float*         target_age = target_age_data + target_instance_index;
             if ( *target_age > 0.0f )
             {
-              struct_vec2*   target_instance_location  = target_location_data + target_instance_index;
-              uint32_t       next_instance_index       = instance_count % max_instance_count;
+              struct_vec2*   target_instance_location  = target_location_data + target_instance_index; 
+              uint32_t       next_instance_index       = instance_count % max_instance_count; 
               struct_vec2*   next_instance_location    = location_data + next_instance_index;
               struct_vec2*   next_instance_velocity    = velocity_data + next_instance_index;
               float*         next_age                  = age_data + next_instance_index;
@@ -540,11 +712,17 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
                 case kBsuInitialDirectionDown:
                   dir_y = -1.0f;
                 break;
-    
+                case kBsuInitialDirectionUp:
+                  dir_y = 1.0f;
+                break;
                 case kBsuInitialDirectionHero:
-                case kBsuInitialDirectionAlongOffset:
-                case kBsuInitialDirectionNone:
-                default:
+                {
+                  float dx = hero_x - next_instance_location->x;
+                  float dy = hero_y - next_instance_location->y;
+                  float len = sqrtf( (dx*dx)+(dy*dy) );
+                  dir_x = dx/len;
+                  dir_y = dy/len;
+                }
                 break;
               }
       
@@ -559,9 +737,7 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
 
         at_each->time_next = t + time_step;
       }
-
     }
-
 
     // ---------------------------------------------------------------------------------
     // at_group: Spawn an instance given an instance index of a target asset type
@@ -569,16 +745,24 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
 
     for (int at_group_index=0;at_group_index<at_group_count;at_group_index++)
     {
-      struct_at_group* at_group               = at_group_data + at_group_index;
-      float            time_next              = at_group->time_next;
-      float            time_start             = at_group->time_start;
-      float            time_stop              = at_group->time_stop;
-      float            time_step              = at_group->time_step;
+      struct_at_group* at_group                     = at_group_data + at_group_index;
+      float            time_next                    = at_group->time_next;
+      float            time_start                   = at_group->time_start;
+      float            time_stop                    = at_group->time_stop;
+      float            time_step                    = at_group->time_step;
+      struct_vec2*     location_offset              = &at_group->location_offset;
       uint32_t         target_asset_index_direction = at_group->target_index;
-      uint32_t         target_asset_index           = target_asset_index_direction >> 2;
-      uint32_t         initial_direction      = target_asset_index_direction & 0x03;
+      uint32_t         target_asset_index           = target_asset_index_direction >> 4;
+      uint32_t         initial_direction            = target_asset_index_direction & 0x03;
+      uint32_t         on_flag                      = (target_asset_index_direction >> 2) & 0x03;
 
-      struct_vec2*     location_offset = &at_group->location_offset;
+      if ( on_flag == kBsuOnFlagHeroTrigger0 )
+      {
+        if ( (hero_flags & (1 << kHeroFlagTrigger0)) == 0) 
+        {
+          continue;
+        }
+      }
 
       if ((t >= time_next) && (t >= time_start) && (t <= time_stop))
       {
@@ -608,11 +792,18 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
             case kBsuInitialDirectionDown:
               dir_y = -1.0f;
             break;
-
+            case kBsuInitialDirectionUp:
+              dir_y = 1.0f;
+            break;
             case kBsuInitialDirectionHero:
-            case kBsuInitialDirectionAlongOffset:
-            case kBsuInitialDirectionNone:
-            default:
+            {
+              float dx = hero_x - next_instance_location->x;
+              float dy = hero_y - next_instance_location->y;
+              float len = sqrtf( (dx*dx)+(dy*dy) );
+
+              dir_x = dx/len;
+              dir_y = dy/len;
+            }
             break;
           }
   
@@ -625,7 +816,6 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
 
         at_group->time_next = t + time_step;
       }
-
     }
 
   
@@ -634,5 +824,60 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
     // ---------------------------------------------------------------------------------
 
     instance_count_data[asset_index] = instance_count;
+  }
+}
+
+void
+bsu_simulation_write_health( uintptr_t bsu_start )
+{
+  static_array*  asset_base_health_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kAssetBaseHealthOffset));
+  float*         asset_base_health_data    = (float*)(bsu_start + asset_base_health_array->offset);
+  int            asset_count               = asset_base_health_array->count;
+  static_array*  instance_location_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceLocationOffset));
+  static_array*  instance_location_data    = (static_array*)(bsu_start + instance_location_array->offset);
+  static_array*  instance_velocity_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceVelocityOffset));
+  static_array*  instance_velocity_data    = (static_array*)(bsu_start + instance_velocity_array->offset);
+  static_array*  instance_age_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceAgeOffset));
+  static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
+  static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
+  uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
+  static_array*  instance_health_array     = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceHealthOffset));
+  static_array*  instance_health_data      = (static_array*)(bsu_start + instance_health_array->offset);
+  static_array*  max_instance_count_array  = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kMaxInstanceCountOffset));
+  uint32_t*      max_instance_count_data   = (uint32_t*)(bsu_start + max_instance_count_array->offset);
+  float          t                         = iTime;
+
+  for (int asset_index=0;asset_index<asset_count;asset_index++)
+  {
+    float            base_health         = asset_base_health_data[ asset_index ];
+    static_array*    health_array        = instance_health_data + asset_index;
+    float*           health_data         = (float*)(bsu_start + health_array->offset);
+    static_array*    location_array      = instance_location_data + asset_index;
+    struct_vec2*     location_data       = (struct_vec2*)(bsu_start + location_array->offset);
+    static_array*    velocity_array      = instance_velocity_data + asset_index;
+    struct_vec2*     velocity_data       = (struct_vec2*)(bsu_start + velocity_array->offset);
+    static_array*    age_array           = instance_age_data + asset_index;
+    float*           age_data            = (float*)(bsu_start + age_array->offset );
+    uint32_t         instance_count      = instance_count_data[asset_index];
+    uint32_t         max_instance_count  = max_instance_count_data[asset_index];
+    uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
+
+    // ---------------------------------------------------------------------------------
+    // initialize instance health
+    // ---------------------------------------------------------------------------------
+   
+    for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
+    {
+      float*  live_instance_age = age_data + live_instance_index;
+      if ( *live_instance_age == FLT_MIN )
+      {
+        float* live_health = health_data + live_instance_index;
+        *live_health = base_health;
+if ( asset_index == 0 ) {
+debug_a++;
+debug_b = base_health;
+}
+      }
+    }
   }
 }

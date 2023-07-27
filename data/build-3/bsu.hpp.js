@@ -156,6 +156,13 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
     const struct = hpp.types[struct_name];
     fs.writeSync(file,`typedef struct ${struct_name.padEnd(20,' ')} ${struct_name};\n`);
   });
+  fs.writeSync(file,`\n`);
+
+  fs.writeSync(file,`#define kBsuInitialDirectionDown 0\n`);
+  fs.writeSync(file,`#define kBsuInitialDirectionHero 1\n`);
+  fs.writeSync(file,`#define kBsuInitialDirectionUp   2\n`);
+  fs.writeSync(file,`#define kBsuOnFlagHeroTrigger0   1\n`);
+
   fs.writeSync(file,`
 struct static_array
 {

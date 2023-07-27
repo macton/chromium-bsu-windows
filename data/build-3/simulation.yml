@@ -2,7 +2,9 @@ PlayArea:
   Size: [ 15, 15 ]
 
 MaxInstanceCount:
+  Hero:                      1
   EnemyAmmo00:             128
+  HeroAmmo00:               32
   EnemyAircraft_Straight:    8
   EnemyAircraft_Omni:       16
   EnemyAircraft_RayGun:      2
@@ -52,7 +54,9 @@ Location:
   ]
 
 BaseSize:
+  Hero:                   [ 0.50, 0.50 ]
   EnemyAmmo00:            [ 0.25, 0.25 ]
+  HeroAmmo00:             [ 0.25, 0.25 ]
   EnemyAircraft_Straight: [ 0.75, 1.02 ]
   EnemyAircraft_Omni:     [ 0.70, 0.70 ]
   EnemyAircraft_RayGun:   [ 1.20, 1.20 ]
@@ -68,6 +72,7 @@ BaseSize:
   
 BaseSpeed:
   EnemyAmmo00:            20.00
+  HeroAmmo00:             20.00
   EnemyAircraft_Straight:  5.00
   EnemyAircraft_Omni:      7.00
   EnemyAircraft_RayGun:    2.50
@@ -105,13 +110,20 @@ Formation:
     - '*.........*'
 
 Spawn:
+  HeroAmmo00:  
+    - AtEach:     Hero
+      TimeStep:   0.25
+      Offset:     [ 0.0, 0.9 ]
+      Pattern:    '********************************'
+      InitialDirection: Up
+      OnFlag: HeroTrigger0
   EnemyAmmo00:
     - AtEach:     EnemyAircraft_Straight
       TimeStep:   1.00
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '********************************'
       InitialDirection: Down
-    - xxxAtEach:     EnemyAircraft_Omni
+    - AtEach:     EnemyAircraft_Omni
       TimeStep:   0.1
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '********--------********--------'
@@ -204,3 +216,21 @@ Spawn:
       Expression: Sin
       Width:      0.8
       Repeat:     0.5
+
+DistanceTracker:
+  HeroAmmo00:  
+    - EnemyAircraft_Straight
+    - EnemyAircraft_Omni
+
+CollisionModHealth:
+  HeroAmmo00:  
+    - Target: EnemyAircraft_Straight
+      Amount: 10
+    - Target: EnemyAircraft_Omni
+      Amount: 10
+
+BaseHealth:
+  Hero:                     100
+  EnemyAircraft_Straight:   10
+  EnemyAircraft_Omni:       10
+

@@ -5,14 +5,17 @@
 #define kPlayAreaOffset                68
 #define kAssetBaseSizeOffset           72
 #define kAssetBaseSpeedOffset          76
-#define kAssetSpawnOffset              80
-#define kMaxInstanceCountOffset        84
-#define kInstanceCountOffset           88
-#define kInstanceLocationOffset        92
-#define kInstanceVelocityOffset        96
-#define kInstanceAgeOffset             100
-#define kPatternU32Offset              104
-#define kPatternU8Offset               108
+#define kAssetBaseHealthOffset         80
+#define kAssetSpawnOffset              84
+#define kMaxInstanceCountOffset        88
+#define kInstanceCountOffset           92
+#define kInstanceLocationOffset        96
+#define kInstanceVelocityOffset        100
+#define kInstanceAgeOffset             104
+#define kInstanceHealthOffset          108
+#define kPatternU32Offset              112
+#define kPatternU8Offset               116
+#define kDistanceTrackerOffset         120
 
 typedef struct static_array         static_array;
 typedef struct struct_vec2          struct_vec2;
@@ -20,6 +23,13 @@ typedef struct struct_play_area     struct_play_area;
 typedef struct struct_spawn         struct_spawn;
 typedef struct struct_at_each       struct_at_each;
 typedef struct struct_at_group      struct_at_group;
+typedef struct struct_distance      struct_distance;
+typedef struct struct_distance_tracker struct_distance_tracker;
+
+#define kBsuInitialDirectionDown 0
+#define kBsuInitialDirectionHero 1
+#define kBsuInitialDirectionUp   2
+#define kBsuOnFlagHeroTrigger0   1
 
 struct static_array
 {
@@ -64,5 +74,17 @@ struct struct_at_group
   struct_vec2          location_offset;
   uint32_t             pattern_count;
   uint32_t             pattern_u8_index;
+};
+
+struct struct_distance
+{
+  uint32_t             target_asset_index;
+  float                distance;
+};
+
+struct struct_distance_tracker
+{
+  uint32_t             source_asset_index;
+  static_array         targets;
 };
 

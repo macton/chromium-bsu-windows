@@ -18,6 +18,10 @@ sections:
     container: static_array
     type: f32
 
+  - id: asset_base_health
+    container: static_array
+    type: f32
+
   - id: asset_spawn
     container: static_array
     type: struct_spawn
@@ -42,6 +46,10 @@ sections:
     container: static_array
     type: struct_array_f32
 
+  - id: instance_health
+    container: static_array
+    type: struct_array_f32
+
   - id: pattern_u32
     container: static_array
     type: u32
@@ -49,6 +57,10 @@ sections:
   - id: pattern_u8
     container: static_array
     type: u8
+
+  - id: distance_tracker
+    container: static_array
+    type: struct_distance_tracker
 
 types:
   struct_vec2:
@@ -82,7 +94,6 @@ types:
   struct_at_each:
     - id: target_index
       type: u32
-      doc: '16:14:2 _pad:target_index:initial_velocity_type (0=none, 1=down, 2=target hero)'
     - id: time_step
       type: f32
     - id: time_next
@@ -97,7 +108,6 @@ types:
   struct_at_group:
     - id: target_index
       type: u32
-      doc: '16:14:2 _pad:target_index:initial_velocity_type (0=none, 1=down, 2=target hero)'
     - id: time_step
       type: f32
     - id: time_start
@@ -112,3 +122,17 @@ types:
       type: u32
     - id: pattern_u8_index
       type: u32
+
+  struct_distance:
+    - id: target_asset_index
+      type: u32
+    - id: distance
+      type: f32
+
+  struct_distance_tracker:
+    - id: source_asset_index
+      type: u32
+    - id: targets
+      container: static_array
+      type: struct_distance
+

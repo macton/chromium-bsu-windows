@@ -1,5 +1,7 @@
 References:
+  - Hero
   - EnemyAmmo00
+  - HeroAmmo00
   - EnemyAircraft_Straight
   - EnemyAircraft_Omni
   - EnemyAircraft_RayGun
@@ -18,7 +20,9 @@ PlayArea:
     - 15
     - 15
 MaxInstanceCount:
+  Hero: 1
   EnemyAmmo00: 128
+  HeroAmmo00: 32
   EnemyAircraft_Straight: 8
   EnemyAircraft_Omni: 16
   EnemyAircraft_RayGun: 2
@@ -34,35 +38,45 @@ MaxInstanceCount:
   SpawnPoint: 31
 Location:
   SpawnPoint:
-    Vec2Offset: 200
-  EnemyAmmo00:
+    Vec2Offset: 233
+  Hero:
     Vec2Offset: 0
-  EnemyAircraft_Straight:
-    Vec2Offset: 128
-  EnemyAircraft_Omni:
-    Vec2Offset: 136
-  EnemyAircraft_RayGun:
-    Vec2Offset: 152
-  EnemyAircraft_Tank:
-    Vec2Offset: 154
-  EnemyAircraft_Gnat:
-    Vec2Offset: 156
-  EnemyAircraft_Boss00:
-    Vec2Offset: 188
-  EnemyAircraft_Boss01:
-    Vec2Offset: 189
-  PowerUp_HeroAmmo00:
-    Vec2Offset: 190
-  PowerUp_HeroAmmo01:
-    Vec2Offset: 192
-  PowerUp_HeroAmmo02:
-    Vec2Offset: 194
-  PowerUp_Shields:
-    Vec2Offset: 196
-  PowerUp_Repair:
-    Vec2Offset: 198
-BaseSize:
   EnemyAmmo00:
+    Vec2Offset: 1
+  HeroAmmo00:
+    Vec2Offset: 129
+  EnemyAircraft_Straight:
+    Vec2Offset: 161
+  EnemyAircraft_Omni:
+    Vec2Offset: 169
+  EnemyAircraft_RayGun:
+    Vec2Offset: 185
+  EnemyAircraft_Tank:
+    Vec2Offset: 187
+  EnemyAircraft_Gnat:
+    Vec2Offset: 189
+  EnemyAircraft_Boss00:
+    Vec2Offset: 221
+  EnemyAircraft_Boss01:
+    Vec2Offset: 222
+  PowerUp_HeroAmmo00:
+    Vec2Offset: 223
+  PowerUp_HeroAmmo01:
+    Vec2Offset: 225
+  PowerUp_HeroAmmo02:
+    Vec2Offset: 227
+  PowerUp_Shields:
+    Vec2Offset: 229
+  PowerUp_Repair:
+    Vec2Offset: 231
+BaseSize:
+  Hero:
+    - 0.5
+    - 0.5
+  EnemyAmmo00:
+    - 0.25
+    - 0.25
+  HeroAmmo00:
     - 0.25
     - 0.25
   EnemyAircraft_Straight:
@@ -103,6 +117,7 @@ BaseSize:
     - 0.6
 BaseSpeed:
   EnemyAmmo00: 20
+  HeroAmmo00: 20
   EnemyAircraft_Straight: 5
   EnemyAircraft_Omni: 7
   EnemyAircraft_RayGun: 2.5
@@ -116,48 +131,63 @@ BaseSpeed:
   PowerUp_Shields: 4
   PowerUp_Repair: 4
 Spawn:
-  EnemyAmmo00:
+  HeroAmmo00:
     AtEachOffset: 0
     AtEachCount: 1
     AtGroupOffset: 0
     AtGroupCount: 0
-  EnemyAircraft_Straight:
+  EnemyAmmo00:
     AtEachOffset: 1
+    AtEachCount: 2
+    AtGroupOffset: 0
+    AtGroupCount: 0
+  EnemyAircraft_Straight:
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 0
     AtGroupCount: 2
   EnemyAircraft_Omni:
-    AtEachOffset: 1
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 2
     AtGroupCount: 11
   PowerUp_HeroAmmo00:
-    AtEachOffset: 1
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 13
     AtGroupCount: 1
   PowerUp_HeroAmmo01:
-    AtEachOffset: 1
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 14
     AtGroupCount: 1
   PowerUp_HeroAmmo02:
-    AtEachOffset: 1
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 15
     AtGroupCount: 1
   PowerUp_Shields:
-    AtEachOffset: 1
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 16
     AtGroupCount: 1
   PowerUp_Repair:
-    AtEachOffset: 1
+    AtEachOffset: 3
     AtEachCount: 0
     AtGroupOffset: 17
     AtGroupCount: 1
+DistanceTracker:
+  HeroAmmo00:
+    - EnemyAircraft_Straight
+    - EnemyAircraft_Omni
+BaseHealth:
+  Hero: 100
+  EnemyAircraft_Straight: 10
+  EnemyAircraft_Omni: 10
 InstanceCount:
+  Hero: 0
   EnemyAmmo00: 0
+  HeroAmmo00: 0
   EnemyAircraft_Straight: 0
   EnemyAircraft_Omni: 0
   EnemyAircraft_RayGun: 0
@@ -172,34 +202,38 @@ InstanceCount:
   PowerUp_Repair: 0
   SpawnPoint: 31
 Age:
-  EnemyAmmo00:
+  Hero:
     F32Offset: 0
+  EnemyAmmo00:
+    F32Offset: 1
+  HeroAmmo00:
+    F32Offset: 129
   EnemyAircraft_Straight:
-    F32Offset: 128
+    F32Offset: 161
   EnemyAircraft_Omni:
-    F32Offset: 136
+    F32Offset: 169
   EnemyAircraft_RayGun:
-    F32Offset: 152
+    F32Offset: 185
   EnemyAircraft_Tank:
-    F32Offset: 154
+    F32Offset: 187
   EnemyAircraft_Gnat:
-    F32Offset: 156
-  EnemyAircraft_Boss00:
-    F32Offset: 188
-  EnemyAircraft_Boss01:
     F32Offset: 189
+  EnemyAircraft_Boss00:
+    F32Offset: 221
+  EnemyAircraft_Boss01:
+    F32Offset: 222
   PowerUp_HeroAmmo00:
-    F32Offset: 190
+    F32Offset: 223
   PowerUp_HeroAmmo01:
-    F32Offset: 192
+    F32Offset: 225
   PowerUp_HeroAmmo02:
-    F32Offset: 194
+    F32Offset: 227
   PowerUp_Shields:
-    F32Offset: 196
+    F32Offset: 229
   PowerUp_Repair:
-    F32Offset: 198
+    F32Offset: 231
   SpawnPoint:
-    F32Offset: 200
+    F32Offset: 233
 DataU8:
   - '0x10'
   - '0x14'
@@ -967,21 +1001,42 @@ DataU8:
   - '0x10'
 DataU32:
   - '0xffffffff'
+  - '0x00ff00ff'
 DataAtEach:
+  - AtEach: Hero
+    TimeStep: 0.25
+    Offset:
+      - 0
+      - 0.9
+    InitialDirection: Up
+    OnFlag: HeroTrigger0
+    PatternWidth: 32
+    PatternDataU32Offset: 0
   - AtEach: EnemyAircraft_Straight
     TimeStep: 1
     Offset:
       - 0
       - -0.9
     InitialDirection: Down
+    OnFlag: None
     PatternWidth: 32
     PatternDataU32Offset: 0
+  - AtEach: EnemyAircraft_Omni
+    TimeStep: 0.1
+    Offset:
+      - 0
+      - -0.9
+    InitialDirection: Hero
+    OnFlag: None
+    PatternWidth: 32
+    PatternDataU32Offset: 1
 DataAtGroup:
   - AtGroup: SpawnPoint
     TimeStep: 3.5
     TimeStart: 0.5
     TimeStop: 240
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -992,6 +1047,7 @@ DataAtGroup:
     TimeStart: 60
     TimeStop: 240
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -1002,6 +1058,7 @@ DataAtGroup:
     TimeStart: 16
     TimeStop: 300
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -1011,6 +1068,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 1
     TimeStop: 9.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - 0
@@ -1021,6 +1079,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 1
     TimeStop: 9.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - 0
@@ -1031,6 +1090,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 30
     TimeStop: 38.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - -8
@@ -1041,6 +1101,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 30
     TimeStop: 38.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - -8
@@ -1051,6 +1112,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 90
     TimeStop: 98.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - 8
@@ -1061,6 +1123,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 90
     TimeStop: 98.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - 8
@@ -1071,6 +1134,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 150
     TimeStop: 158.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - -2
@@ -1081,6 +1145,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 150
     TimeStop: 158.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - -2
@@ -1091,6 +1156,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 210
     TimeStop: 218.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - 2
@@ -1101,6 +1167,7 @@ DataAtGroup:
     TimeStep: 0.5
     TimeStart: 210
     TimeStop: 218.5
+    OnFlag: None
     InitialDirection: Down
     Offset:
       - 2
@@ -1112,6 +1179,7 @@ DataAtGroup:
     TimeStart: 2
     TimeStop: 300
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -1122,6 +1190,7 @@ DataAtGroup:
     TimeStart: 4
     TimeStop: 300
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -1132,6 +1201,7 @@ DataAtGroup:
     TimeStart: 6
     TimeStop: 300
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -1142,6 +1212,7 @@ DataAtGroup:
     TimeStart: 8
     TimeStop: 300
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
@@ -1152,12 +1223,79 @@ DataAtGroup:
     TimeStart: 10
     TimeStop: 300
     InitialDirection: Down
+    OnFlag: None
     Offset:
       - 0
       - 0
     PatternLength: 10
     PatternDataU8Offset: 754
 DataVec2:
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
   - - 0
     - 0
   - - 0
@@ -1621,6 +1759,39 @@ DataVec2:
   - - 15
     - 17
 DataF32:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   - 0
   - 0
   - 0
