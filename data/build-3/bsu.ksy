@@ -15,6 +15,9 @@ instances:
   play_area:
     pos: _root.toc.play_area_offset
     type: struct_play_area
+  play_time:
+    pos: _root.toc.play_time_offset
+    type: struct_play_time
   asset_base_size:
     pos: _root.toc.asset_base_size_offset
     type: static_array_struct_vec2
@@ -51,15 +54,17 @@ instances:
   pattern_u8:
     pos: _root.toc.pattern_u8_offset
     type: static_array_u1
-  distance_tracker:
-    pos: _root.toc.distance_tracker_offset
-    type: static_array_struct_distance_tracker
+  collision_mod_health:
+    pos: _root.toc.collision_mod_health_offset
+    type: static_array_struct_collision_mod_health
 types:
   struct_toc:
     seq:
       - id: asset_names_offset
         type: u4
       - id: play_area_offset
+        type: u4
+      - id: play_time_offset
         type: u4
       - id: asset_base_size_offset
         type: u4
@@ -85,7 +90,7 @@ types:
         type: u4
       - id: pattern_u8_offset
         type: u4
-      - id: distance_tracker_offset
+      - id: collision_mod_health_offset
         type: u4
   static_array_utf8:
     seq:
@@ -193,7 +198,7 @@ types:
         pos: offset
         repeat: expr
         repeat-expr: count
-  static_array_struct_distance_tracker:
+  static_array_struct_collision_mod_health:
     seq:
       - id: offset
         type: u4
@@ -201,7 +206,7 @@ types:
         type: u4
     instances:
       value:
-        type: struct_distance_tracker
+        type: struct_collision_mod_health
         pos: offset
         repeat: expr
         repeat-expr: count
@@ -223,6 +228,14 @@ types:
     seq:
       - id: size
         type: struct_vec2
+  struct_play_time:
+    seq:
+      - id: time
+        type: f4
+      - id: time_delta
+        type: f4
+      - id: frame_counter
+        type: u4
   static_array_struct_at_each:
     seq:
       - id: offset
@@ -285,13 +298,13 @@ types:
         type: u4
       - id: pattern_u8_index
         type: u4
-  struct_distance:
+  struct_collision_mod_health_target:
     seq:
       - id: target_asset_index
         type: u4
-      - id: distance
+      - id: amount
         type: f4
-  static_array_struct_distance:
+  static_array_struct_collision_mod_health_target:
     seq:
       - id: offset
         type: u4
@@ -299,13 +312,13 @@ types:
         type: u4
     instances:
       value:
-        type: struct_distance
+        type: struct_collision_mod_health_target
         pos: offset
         repeat: expr
         repeat-expr: count
-  struct_distance_tracker:
+  struct_collision_mod_health:
     seq:
       - id: source_asset_index
         type: u4
       - id: targets
-        type: static_array_struct_distance
+        type: static_array_struct_collision_mod_health_target

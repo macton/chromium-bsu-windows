@@ -18,6 +18,23 @@ MaxInstanceCount:
   PowerUp_Shields:           2
   PowerUp_Repair:            2
 
+BaseHealth:
+  Hero:                    100
+  EnemyAmmo00:               1
+  HeroAmmo00:                1
+  EnemyAircraft_Straight:   10
+  EnemyAircraft_Omni:       10
+  EnemyAircraft_RayGun:     20
+  EnemyAircraft_Tank:       20
+  EnemyAircraft_Gnat:       20
+  EnemyAircraft_Boss00:    100
+  EnemyAircraft_Boss01:    100
+  PowerUp_HeroAmmo00:        1
+  PowerUp_HeroAmmo01:        1
+  PowerUp_HeroAmmo02:        1
+  PowerUp_Shields:           1
+  PowerUp_Repair:            1
+
 Location:
   SpawnPoint: [
     [ -15, 17 ],
@@ -124,7 +141,7 @@ Spawn:
       Pattern:    '********************************'
       InitialDirection: Down
     - AtEach:     EnemyAircraft_Omni
-      TimeStep:   0.1
+      TimeStep:   0.25
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '********--------********--------'
       InitialDirection: Hero
@@ -217,20 +234,9 @@ Spawn:
       Width:      0.8
       Repeat:     0.5
 
-DistanceTracker:
-  HeroAmmo00:  
-    - EnemyAircraft_Straight
-    - EnemyAircraft_Omni
-
 CollisionModHealth:
   HeroAmmo00:  
     - Target: EnemyAircraft_Straight
-      Amount: 10
+      Amount: -10
     - Target: EnemyAircraft_Omni
-      Amount: 10
-
-BaseHealth:
-  Hero:                     100
-  EnemyAircraft_Straight:   10
-  EnemyAircraft_Omni:       10
-
+      Amount: -10

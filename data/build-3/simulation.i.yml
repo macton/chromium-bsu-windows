@@ -36,6 +36,22 @@ MaxInstanceCount:
   PowerUp_Shields: 2
   PowerUp_Repair: 2
   SpawnPoint: 31
+BaseHealth:
+  Hero: 100
+  EnemyAmmo00: 1
+  HeroAmmo00: 1
+  EnemyAircraft_Straight: 10
+  EnemyAircraft_Omni: 10
+  EnemyAircraft_RayGun: 20
+  EnemyAircraft_Tank: 20
+  EnemyAircraft_Gnat: 20
+  EnemyAircraft_Boss00: 100
+  EnemyAircraft_Boss01: 100
+  PowerUp_HeroAmmo00: 1
+  PowerUp_HeroAmmo01: 1
+  PowerUp_HeroAmmo02: 1
+  PowerUp_Shields: 1
+  PowerUp_Repair: 1
 Location:
   SpawnPoint:
     Vec2Offset: 233
@@ -176,14 +192,12 @@ Spawn:
     AtEachCount: 0
     AtGroupOffset: 17
     AtGroupCount: 1
-DistanceTracker:
+CollisionModHealth:
   HeroAmmo00:
-    - EnemyAircraft_Straight
-    - EnemyAircraft_Omni
-BaseHealth:
-  Hero: 100
-  EnemyAircraft_Straight: 10
-  EnemyAircraft_Omni: 10
+    - Target: EnemyAircraft_Straight
+      Amount: -10
+    - Target: EnemyAircraft_Omni
+      Amount: -10
 InstanceCount:
   Hero: 0
   EnemyAmmo00: 0

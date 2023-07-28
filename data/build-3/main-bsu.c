@@ -35,10 +35,10 @@ uint32_t hero_flags = 0;
 
 #define kHeroFlagTrigger0 1
 
-int debug_a = 0;
-int debug_b = 0;
-int debug_c = 0;
-int debug_d = 0;
+float debug_a = 0.0f;
+float debug_b = 0.0f;
+float debug_c = 0.0f;
+float debug_d = 0.0f;
 
 int sdCircle( int x, int y, int r )
 {
@@ -118,8 +118,9 @@ void mvprint_timespec( int y, int x, const char* title, timespec time )
 {
   int64_t sec  = time.tv_sec;
   int64_t msec = time.tv_nsec / 1000000;
-  int64_t usec = (time.tv_nsec - (msec*1000000)) / 10000;
-  int64_t nsec = time.tv_nsec - (msec*1000000) - (usec*10000);
+  int64_t usec = (time.tv_nsec - (msec*1000000)) / 1000;
+  int64_t nsec = time.tv_nsec - (msec*1000000) - (usec*1000);
+
   mvprintw(y, x, "%s%ds %dms %dus %dns",title,(int)(sec),(int)(msec),(int)(usec),(int)(nsec));
 }
 
@@ -345,7 +346,7 @@ if (color_id == 0)
     uint32_t      asset_count             = asset_names_array->count;
     mvprintw(line++,0,          "asset_count:     %d", asset_count);
     mvprintw(line++,0,          "mouse            x:%d y:%d bstate:%d", mouse_x, mouse_y, mouse_bstate);
-    mvprintw(line++,0,          "debug %d,%d,%d,%d",debug_a,debug_b,debug_c,debug_d);
+    mvprintw(line++,0,          "debug %f,%f,%f,%f",debug_a,debug_b,debug_c,debug_d);
 
 
     mvprintw(line++,0,          "hero_location  %d,%d",hero_location_x,hero_location_y);
@@ -535,8 +536,8 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
         int   cy = (int)(ly * iHalfHeight);
         int   x = u-cx;
         int   y = v-cy;
-
         int   r    = ((base_size->x / 15.0) * iHalfWidth);
+
         if ( (abs(x) <= r) && (abs(y) <= r) )
         {
           result |= sdCircle( x, y, r ) <= 0;
@@ -563,6 +564,8 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
   static_array*  instance_velocity_data    = (static_array*)(bsu_start + instance_velocity_array->offset);
   static_array*  instance_age_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceAgeOffset));
   static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
+  static_array*  instance_health_array     = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceHealthOffset));
+  static_array*  instance_health_data      = (static_array*)(bsu_start + instance_health_array->offset);
   static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
   uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
   static_array*  max_instance_count_array  = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kMaxInstanceCountOffset));
@@ -617,6 +620,10 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
     float            base_speed          = asset_base_speed_data[ asset_index ];
     static_array*    location_array      = instance_location_data + asset_index;
     struct_vec2*     location_data       = (struct_vec2*)(bsu_start + location_array->offset);
+
+    static_array*    health_array        = instance_health_data + asset_index;
+    float*           health_data         = (float*)(bsu_start + health_array->offset);
+
     static_array*    velocity_array      = instance_velocity_data + asset_index;
     struct_vec2*     velocity_data       = (struct_vec2*)(bsu_start + velocity_array->offset);
     static_array*    age_array           = instance_age_data + asset_index;
@@ -626,13 +633,15 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
     uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
 
     // ---------------------------------------
-    // Update instance locations
+    // Update instance location and age
     // ---------------------------------------
 
     for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
     {
-      float*  live_instance_age = age_data + live_instance_index;
-      if ( *live_instance_age > 0 ) 
+      float*  live_age    = age_data + live_instance_index;
+      float*  live_health = health_data + live_instance_index;
+
+      if ( *live_age > 0 ) 
       {
         struct_vec2* live_location   = location_data + live_instance_index;
         struct_vec2* live_velocity   = velocity_data + live_instance_index;
@@ -640,9 +649,10 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
         live_location->x += live_velocity->x * iTimeDelta;
         live_location->y += live_velocity->y * iTimeDelta;
 
-        int out_band = 0;
-        out_band = ((live_location->x < -17.0f) || (live_location->x > 17.0f) || (live_location->y < -17.0f) || (live_location->y > 17.0f));
-        *live_instance_age = (out_band)?0.0f:(*live_instance_age + iTimeDelta);
+        int out_band    = ((live_location->x < -17.0f) || (live_location->x > 17.0f) || (live_location->y < -17.0f) || (live_location->y > 17.0f));
+        int out_health  = *live_health <= 0.0f;
+        int end_of_life = out_band || out_health;
+        *live_age = (end_of_life)?0.0f:(*live_age + iTimeDelta);
       }
     }
 
@@ -696,14 +706,14 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
             float*         target_age = target_age_data + target_instance_index;
             if ( *target_age > 0.0f )
             {
-              struct_vec2*   target_instance_location  = target_location_data + target_instance_index; 
+              struct_vec2*   target_location  = target_location_data + target_instance_index; 
               uint32_t       next_instance_index       = instance_count % max_instance_count; 
               struct_vec2*   next_instance_location    = location_data + next_instance_index;
               struct_vec2*   next_instance_velocity    = velocity_data + next_instance_index;
               float*         next_age                  = age_data + next_instance_index;
     
-              next_instance_location->x = target_instance_location->x + location_offset->x;
-              next_instance_location->y = target_instance_location->y + location_offset->y;
+              next_instance_location->x = target_location->x + location_offset->x;
+              next_instance_location->y = target_location->y + location_offset->y;
     
               float dir_x = 0.0f;
               float dir_y = 0.0f;
@@ -776,14 +786,14 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
 
         if ( target_instance_index < target_instance_count ) 
         {
-          struct_vec2*   target_instance_location  = target_location_data + target_instance_index;
+          struct_vec2*   target_location  = target_location_data + target_instance_index;
           uint32_t       next_instance_index       = instance_count % max_instance_count;
           struct_vec2*   next_instance_location    = location_data + next_instance_index;
           struct_vec2*   next_instance_velocity    = velocity_data + next_instance_index;
           float*         next_age                  = age_data + next_instance_index;
 
-          next_instance_location->x = target_instance_location->x + location_offset->x;
-          next_instance_location->y = target_instance_location->y + location_offset->y;
+          next_instance_location->x = target_location->x + location_offset->x;
+          next_instance_location->y = target_location->y + location_offset->y;
 
           float dir_x = 0.0f;
           float dir_y = 0.0f;
@@ -832,6 +842,8 @@ bsu_simulation_write_health( uintptr_t bsu_start )
 {
   static_array*  asset_base_health_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kAssetBaseHealthOffset));
   float*         asset_base_health_data    = (float*)(bsu_start + asset_base_health_array->offset);
+  static_array*  asset_base_size_array    = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kAssetBaseSizeOffset));
+  struct_vec2*   asset_base_size_data     = (struct_vec2*)(bsu_start + asset_base_size_array->offset);
   int            asset_count               = asset_base_health_array->count;
   static_array*  instance_location_array   = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceLocationOffset));
   static_array*  instance_location_data    = (static_array*)(bsu_start + instance_location_array->offset);
@@ -841,11 +853,98 @@ bsu_simulation_write_health( uintptr_t bsu_start )
   static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
   static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
   uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
+
   static_array*  instance_health_array     = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceHealthOffset));
   static_array*  instance_health_data      = (static_array*)(bsu_start + instance_health_array->offset);
   static_array*  max_instance_count_array  = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kMaxInstanceCountOffset));
   uint32_t*      max_instance_count_data   = (uint32_t*)(bsu_start + max_instance_count_array->offset);
   float          t                         = iTime;
+
+  static_array*                 collision_mod_health_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kCollisionModHealthOffset));
+  struct_collision_mod_health*  collision_mod_health_data         = (struct_collision_mod_health*)(bsu_start + collision_mod_health_array->offset);
+  int                           collision_mod_health_source_count = collision_mod_health_array->count;
+
+  // ---------------------------------------------------------------------------------
+  // Modify health on collision (all instances of source vs all instances of target)
+  // ---------------------------------------------------------------------------------
+
+  for (int source_index=0;source_index<collision_mod_health_source_count;source_index++)
+  {
+    struct_collision_mod_health*         collision_mod_health = collision_mod_health_data + source_index;
+    uint32_t                             source_asset_index   = collision_mod_health->source_asset_index;
+    uint32_t                             targets_offset       = collision_mod_health->targets.offset;
+    uint32_t                             targets_count        = collision_mod_health->targets.count;
+    struct_collision_mod_health_target*  targets_data         = (struct_collision_mod_health_target*)(bsu_start + targets_offset);
+
+    static_array*    source_age_array           = instance_age_data + source_asset_index;
+    float*           source_age_data            = (float*)(bsu_start + source_age_array->offset );
+    struct_vec2      source_base_size           = asset_base_size_data[ source_asset_index ];
+
+    static_array*    source_location_array      = instance_location_data + source_asset_index;
+    struct_vec2*     source_location_data       = (struct_vec2*)(bsu_start + source_location_array->offset);
+
+    static_array*    source_health_array        = instance_health_data + source_asset_index;
+    float*           source_health_data         = (float*)(bsu_start + source_health_array->offset);
+
+    uint32_t         source_instance_count      = instance_count_data[source_asset_index];
+    uint32_t         source_max_instance_count  = max_instance_count_data[source_asset_index];
+
+    uint32_t         source_live_instance_count = ( source_instance_count > source_max_instance_count ) ? source_max_instance_count : source_instance_count;
+
+    for (int source_instance_index=0;source_instance_index<source_live_instance_count;source_instance_index++)
+    {
+      float*        source_age      = source_age_data + source_instance_index;
+      struct_vec2*  source_location = source_location_data + source_instance_index;
+      float*        source_health   = source_health_data + source_instance_index;
+
+      if ( *source_age > 0)
+      {
+        for (int target_index=0;target_index<targets_count;target_index++)
+        {
+          struct_collision_mod_health_target*  target                   = targets_data + target_index;
+          uint32_t                             target_asset_index       = target->target_asset_index;
+          float                                target_mod_health_amount = target->amount;
+    
+          static_array*    target_age_array           = instance_age_data + target_asset_index;
+          float*           target_age_data            = (float*)(bsu_start + target_age_array->offset );
+          struct_vec2      target_base_size           = asset_base_size_data[ target_asset_index ];
+          static_array*    target_location_array      = instance_location_data + target_asset_index;
+          struct_vec2*     target_location_data       = (struct_vec2*)(bsu_start + target_location_array->offset);
+          static_array*    target_health_array        = instance_health_data + target_asset_index;
+          float*           target_health_data         = (float*)(bsu_start + target_health_array->offset);
+
+          uint32_t         target_instance_count      = instance_count_data[target_asset_index];
+          uint32_t         target_max_instance_count  = max_instance_count_data[target_asset_index];
+          uint32_t         target_live_instance_count = ( target_instance_count > target_max_instance_count ) ? target_max_instance_count : target_instance_count;
+      
+          for (int target_instance_index=0;target_instance_index<target_live_instance_count;target_instance_index++)
+          {
+            float*        target_age      = target_age_data + target_instance_index;
+            struct_vec2*  target_location = target_location_data + target_instance_index;
+            float*        target_health   = target_health_data + target_instance_index;
+      
+            if ( *target_age > 0)
+            {
+              float  r        = source_base_size.x + target_base_size.x;
+              float  dx       = source_location->x - target_location->x;
+              float  dy       = source_location->y - target_location->y;
+              float  center_d = sqrtf( (dx*dx)+(dy*dy) );
+              float  d        = center_d - r;
+              if ( d <= 0.0f) 
+              {
+                *target_health += target_mod_health_amount;
+                *source_health  = 0.0f; // self-destruct
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------------
+  // initialize instance health
+  // ---------------------------------------------------------------------------------
 
   for (int asset_index=0;asset_index<asset_count;asset_index++)
   {
@@ -861,10 +960,6 @@ bsu_simulation_write_health( uintptr_t bsu_start )
     uint32_t         instance_count      = instance_count_data[asset_index];
     uint32_t         max_instance_count  = max_instance_count_data[asset_index];
     uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
-
-    // ---------------------------------------------------------------------------------
-    // initialize instance health
-    // ---------------------------------------------------------------------------------
    
     for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
     {
@@ -873,10 +968,6 @@ bsu_simulation_write_health( uintptr_t bsu_start )
       {
         float* live_health = health_data + live_instance_index;
         *live_health = base_health;
-if ( asset_index == 0 ) {
-debug_a++;
-debug_b = base_health;
-}
       }
     }
   }

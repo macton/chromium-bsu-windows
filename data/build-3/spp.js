@@ -198,14 +198,14 @@ const PreProcess = ( config_in ) => {
   //
 
   const preprocessor = {
-    PlayArea:         value => { return { PlayArea: value } },
-    MaxInstanceCount: value => { return { MaxInstanceCount: value } },
-    Location:         value => { return { Location: value } },  
-    BaseSize:         value => { return { BaseSize: value } }, 
-    BaseSpeed:        value => { return { BaseSpeed: value } }, 
-    BaseHealth:       value => { return { BaseHealth: value } }, 
-    DistanceTracker:  value => { return { DistanceTracker: value } }, 
-    Spawn:            PreProcess_Spawn,
+    PlayArea:            value => { return { PlayArea: value } },
+    MaxInstanceCount:    value => { return { MaxInstanceCount: value } },
+    Location:            value => { return { Location: value } },  
+    BaseSize:            value => { return { BaseSize: value } }, 
+    BaseSpeed:           value => { return { BaseSpeed: value } }, 
+    BaseHealth:          value => { return { BaseHealth: value } }, 
+    CollisionModHealth:  value => { return { CollisionModHealth: value } }, 
+    Spawn:               PreProcess_Spawn,
   };
   config_out = {
     References: PreProcess_GatherReferences( config_in ),

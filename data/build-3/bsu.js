@@ -714,59 +714,60 @@ const map_pattern_u8_static_array = ( config ) => {
   };
 }
 
-const map_distance_tracker_static_array_element_struct_distance_tracker_targets_static_array_element = ( source_asset_name, config ) => {
+const map_collision_mod_health_static_array_element_struct_collision_mod_health_targets_static_array_element = ( source_asset_name, config ) => {
   return (index) => {
     return (id) => {
       if ( id == "target_asset_index" ) {
-        const target_asset_name  = config.DistanceTracker[source_asset_name][index];
+        const target_asset_name  = config.CollisionModHealth[source_asset_name][index].Target;
         const target_asset_index = config.References.indexOf( target_asset_name );
         return target_asset_index;
       }
-      else if ( id == "distance" ) {
-        return 0;
+      else if ( id == "amount" ) {
+        const amount             = config.CollisionModHealth[source_asset_name][index].Amount;
+        return amount;
       }
     };
   };
 }
 
-const map_distance_tracker_static_array_element_struct_distance_tracker_targets = ( source_asset_name, config ) => {
+const map_collision_mod_health_static_array_element_struct_collision_mod_health_targets = ( source_asset_name, config ) => {
   return ( id ) => {
     if ( id == "count" ) {
-      return config.DistanceTracker[source_asset_name].length;
+      return config.CollisionModHealth[source_asset_name].length;
     }
     else if ( id == "array" ) {
-      return map_distance_tracker_static_array_element_struct_distance_tracker_targets_static_array_element( source_asset_name, config );
+      return map_collision_mod_health_static_array_element_struct_collision_mod_health_targets_static_array_element( source_asset_name, config );
     }
   };
 }
 
-const map_distance_tracker_static_array_element_struct_distance_tracker = ( index, config ) => {
+const map_collision_mod_health_static_array_element_struct_collision_mod_health = ( index, config ) => {
   return ( id ) => {
     if ( id == "source_asset_index" ) {
-      const source_asset_name  = Object.keys(config.DistanceTracker)[ index ];
+      const source_asset_name  = Object.keys(config.CollisionModHealth)[ index ];
       const source_asset_index = config.References.indexOf( source_asset_name );
       return source_asset_index;
     }
     else if ( id == "targets" ) {
-      const source_asset_name  = Object.keys(config.DistanceTracker)[ index ];
-      return map_distance_tracker_static_array_element_struct_distance_tracker_targets( source_asset_name, config );
+      const source_asset_name  = Object.keys(config.CollisionModHealth)[ index ];
+      return map_collision_mod_health_static_array_element_struct_collision_mod_health_targets( source_asset_name, config );
     }
   };
 }
 
-const map_distance_tracker_static_array_element = ( config ) => {
+const map_collision_mod_health_static_array_element = ( config ) => {
   return (index) => {
-    return map_distance_tracker_static_array_element_struct_distance_tracker( index, config );
+    return map_collision_mod_health_static_array_element_struct_collision_mod_health( index, config );
   };
 }
 
-const map_distance_tracker_static_array = ( config ) => {
+const map_collision_mod_health_static_array = ( config ) => {
   return ( id ) => {
     if ( id == "count" ) {
-      return config.DistanceTracker ? Object.keys(config.DistanceTracker).length : 0;
+      return config.CollisionModHealth ? Object.keys(config.CollisionModHealth).length : 0;
     }
     else if ( id == "array" ) {
-      return map_distance_tracker_static_array_element( config );
+      return map_collision_mod_health_static_array_element( config );
     }
   };
 }
@@ -802,8 +803,8 @@ const map_bsu = ( config ) => {
       return map_pattern_u32_static_array( config );
     } else if ( id == "pattern_u8" ) {
       return map_pattern_u8_static_array( config );
-    } else if ( id == "distance_tracker" ) {
-      return map_distance_tracker_static_array( config );
+    } else if ( id == "collision_mod_health" ) {
+      return map_collision_mod_health_static_array( config );
     } else {
       return get_value;  
     }

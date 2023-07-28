@@ -1,7 +1,7 @@
 
 Merging program properties
 
-Removed property 0xc0000002 to merge /lib/x86_64-linux-gnu/Scrt1.o (0x3) and /tmp/main-bsu-0eda29.o (not found)
+Removed property 0xc0000002 to merge /lib/x86_64-linux-gnu/Scrt1.o (0x3) and /tmp/main-bsu-a3dcd5.o (not found)
 Removed property 0xc0000002 to merge /lib/x86_64-linux-gnu/Scrt1.o (not found) and /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o (0x3)
 Removed property 0xc0000002 to merge /lib/x86_64-linux-gnu/Scrt1.o (not found) and /lib/x86_64-linux-gnu/crtn.o (0x3)
 
@@ -18,8 +18,8 @@ Discarded input sections
  .note.gnu.property
                 0x0000000000000000       0x20 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
  .note.GNU-stack
-                0x0000000000000000        0x0 /tmp/main-bsu-0eda29.o
- .llvm_addrsig  0x0000000000000000        0x2 /tmp/main-bsu-0eda29.o
+                0x0000000000000000        0x0 /tmp/main-bsu-a3dcd5.o
+ .llvm_addrsig  0x0000000000000000        0x2 /tmp/main-bsu-a3dcd5.o
  .note.GNU-stack
                 0x0000000000000000        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
  .note.gnu.property
@@ -39,7 +39,7 @@ Linker script and memory map
 LOAD /lib/x86_64-linux-gnu/Scrt1.o
 LOAD /lib/x86_64-linux-gnu/crti.o
 LOAD /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
-LOAD /tmp/main-bsu-0eda29.o
+LOAD /tmp/main-bsu-a3dcd5.o
 LOAD simulation.bsu.o
 LOAD /lib/x86_64-linux-gnu/libm.so
 START GROUP
@@ -197,7 +197,7 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
 .plt.sec
  *(.plt.sec)
 
-.text           0x00000000000011a0     0x2268
+.text           0x00000000000011a0     0x2518
  *(.text.unlikely .text.*_unlikely .text.unlikely.*)
  *(.text.exit .text.exit.*)
  *(.text.startup .text.startup.*)
@@ -210,7 +210,7 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
  *fill*         0x00000000000011c6        0xa 
  .text          0x00000000000011d0       0xb9 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
  *fill*         0x0000000000001289        0x7 
- .text          0x0000000000001290     0x2178 /tmp/main-bsu-0eda29.o
+ .text          0x0000000000001290     0x2428 /tmp/main-bsu-a3dcd5.o
                 0x0000000000001290                sdCircle
                 0x00000000000012d0                clampf
                 0x0000000000001310                signf
@@ -221,62 +221,62 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
                 0x00000000000014d0                mvprint_timespec
                 0x0000000000001550                timespec_f
                 0x0000000000001570                main
-                0x00000000000026c0                fragment_main
-                0x00000000000027c0                bsu_simulation_write_count_age_location_velocity
-                0x0000000000003080                bsu_simulation_write_health
-                0x00000000000031f0                bsu_draw
- .text          0x0000000000003408        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
- .text          0x0000000000003408        0x0 /lib/x86_64-linux-gnu/crtn.o
+                0x00000000000025e0                fragment_main
+                0x00000000000026e0                bsu_simulation_write_count_age_location_velocity
+                0x0000000000002fb0                bsu_simulation_write_health
+                0x00000000000034a0                bsu_draw
+ .text          0x00000000000036b8        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
+ .text          0x00000000000036b8        0x0 /lib/x86_64-linux-gnu/crtn.o
  *(.gnu.warning)
 
-.fini           0x0000000000003408        0xd
+.fini           0x00000000000036b8        0xd
  *(SORT_NONE(.fini))
- .fini          0x0000000000003408        0x8 /lib/x86_64-linux-gnu/crti.o
-                0x0000000000003408                _fini
- .fini          0x0000000000003410        0x5 /lib/x86_64-linux-gnu/crtn.o
+ .fini          0x00000000000036b8        0x8 /lib/x86_64-linux-gnu/crti.o
+                0x00000000000036b8                _fini
+ .fini          0x00000000000036c0        0x5 /lib/x86_64-linux-gnu/crtn.o
                 [!provide]                        PROVIDE (__etext = .)
                 [!provide]                        PROVIDE (_etext = .)
                 [!provide]                        PROVIDE (etext = .)
                 0x0000000000004000                . = ALIGN (CONSTANT (MAXPAGESIZE))
                 0x0000000000004000                . = SEGMENT_START ("rodata-segment", (ALIGN (CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 0x1))))
 
-.rodata         0x0000000000004000      0x22f
+.rodata         0x0000000000004000      0x247
  *(.rodata .rodata.* .gnu.linkonce.r.*)
  .rodata.cst4   0x0000000000004000        0x4 /lib/x86_64-linux-gnu/Scrt1.o
                 0x0000000000004000                _IO_stdin_used
  *fill*         0x0000000000004004        0x4 
- .rodata.cst8   0x0000000000004008       0x20 /tmp/main-bsu-0eda29.o
+ .rodata.cst8   0x0000000000004008       0x20 /tmp/main-bsu-a3dcd5.o
                                          0x28 (size before relaxing)
  *fill*         0x0000000000004028        0x8 
- .rodata.cst16  0x0000000000004030       0x50 /tmp/main-bsu-0eda29.o
- .rodata.cst4   0x0000000000004080       0x40 /tmp/main-bsu-0eda29.o
-                                         0x58 (size before relaxing)
- .rodata        0x00000000000040c0       0x10 /tmp/main-bsu-0eda29.o
+ .rodata.cst16  0x0000000000004030       0x60 /tmp/main-bsu-a3dcd5.o
+ .rodata.cst4   0x0000000000004090       0x48 /tmp/main-bsu-a3dcd5.o
+                                         0x5c (size before relaxing)
+ .rodata        0x00000000000040d8       0x10 /tmp/main-bsu-a3dcd5.o
  .rodata.str1.1
-                0x00000000000040d0      0x15f /tmp/main-bsu-0eda29.o
+                0x00000000000040e8      0x15f /tmp/main-bsu-a3dcd5.o
                                         0x160 (size before relaxing)
 
 .rodata1
  *(.rodata1)
 
-.eh_frame_hdr   0x0000000000004230       0x94
+.eh_frame_hdr   0x0000000000004248       0x94
  *(.eh_frame_hdr)
- .eh_frame_hdr  0x0000000000004230       0x94 /lib/x86_64-linux-gnu/Scrt1.o
-                0x0000000000004230                __GNU_EH_FRAME_HDR
+ .eh_frame_hdr  0x0000000000004248       0x94 /lib/x86_64-linux-gnu/Scrt1.o
+                0x0000000000004248                __GNU_EH_FRAME_HDR
  *(.eh_frame_entry .eh_frame_entry.*)
 
-.eh_frame       0x00000000000042c8      0x2c0
+.eh_frame       0x00000000000042e0      0x2b8
  *(.eh_frame)
- .eh_frame      0x00000000000042c8       0x30 /lib/x86_64-linux-gnu/Scrt1.o
+ .eh_frame      0x00000000000042e0       0x30 /lib/x86_64-linux-gnu/Scrt1.o
                                          0x2c (size before relaxing)
- *fill*         0x00000000000042f8        0x0 
- .eh_frame      0x00000000000042f8       0x28 /lib/x86_64-linux-gnu/Scrt1.o
+ *fill*         0x0000000000004310        0x0 
+ .eh_frame      0x0000000000004310       0x28 /lib/x86_64-linux-gnu/Scrt1.o
                                          0x40 (size before relaxing)
- .eh_frame      0x0000000000004320       0x18 /lib/x86_64-linux-gnu/Scrt1.o
+ .eh_frame      0x0000000000004338       0x18 /lib/x86_64-linux-gnu/Scrt1.o
                                          0x30 (size before relaxing)
- .eh_frame      0x0000000000004338      0x24c /tmp/main-bsu-0eda29.o
-                                        0x268 (size before relaxing)
- .eh_frame      0x0000000000004584        0x4 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
+ .eh_frame      0x0000000000004350      0x244 /tmp/main-bsu-a3dcd5.o
+                                        0x260 (size before relaxing)
+ .eh_frame      0x0000000000004594        0x4 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
  *(.eh_frame.*)
 
 .gcc_except_table
@@ -368,7 +368,7 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
                 0x0000000000006000                _GLOBAL_OFFSET_TABLE_
  *(.igot.plt)
 
-.data           0x00000000000060c8     0x25a4
+.data           0x00000000000060c8     0x25b4
  *(.data .data.* .gnu.linkonce.d.*)
  .data          0x00000000000060c8        0x4 /lib/x86_64-linux-gnu/Scrt1.o
                 0x00000000000060c8                data_start
@@ -379,77 +379,77 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
  .data.rel.local
                 0x00000000000060d0        0x8 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
                 0x00000000000060d0                __dso_handle
- .data          0x00000000000060d8     0x2594 simulation.bsu.o
+ .data          0x00000000000060d8     0x25a4 simulation.bsu.o
                 0x00000000000060d8                _binary_simulation_bsu_start
-                0x000000000000866c                _binary_simulation_bsu_end
- .data          0x000000000000866c        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
- .data          0x000000000000866c        0x0 /lib/x86_64-linux-gnu/crtn.o
+                0x000000000000867c                _binary_simulation_bsu_end
+ .data          0x000000000000867c        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
+ .data          0x000000000000867c        0x0 /lib/x86_64-linux-gnu/crtn.o
 
 .tm_clone_table
-                0x0000000000008670        0x0
+                0x0000000000008680        0x0
  .tm_clone_table
-                0x0000000000008670        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
+                0x0000000000008680        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
  .tm_clone_table
-                0x0000000000008670        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
+                0x0000000000008680        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
 
 .data1
  *(.data1)
-                0x000000000000866c                _edata = .
+                0x000000000000867c                _edata = .
                 [!provide]                        PROVIDE (edata = .)
-                0x0000000000008670                . = .
-                0x000000000000866c                __bss_start = .
+                0x0000000000008680                . = .
+                0x000000000000867c                __bss_start = .
 
-.bss            0x000000000000866c       0x54
+.bss            0x000000000000867c       0x54
  *(.dynbss)
- .dynbss        0x000000000000866c        0x0 /lib/x86_64-linux-gnu/Scrt1.o
+ .dynbss        0x000000000000867c        0x0 /lib/x86_64-linux-gnu/Scrt1.o
  *(.bss .bss.* .gnu.linkonce.b.*)
- .bss           0x000000000000866c        0x0 /lib/x86_64-linux-gnu/Scrt1.o
- .bss           0x000000000000866c        0x0 /lib/x86_64-linux-gnu/crti.o
- .bss           0x000000000000866c        0x1 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
- *fill*         0x000000000000866d        0x3 
- .bss           0x0000000000008670       0x4c /tmp/main-bsu-0eda29.o
-                0x0000000000008670                hero_location_x
-                0x0000000000008674                hero_location_y
-                0x0000000000008678                hero_x
-                0x000000000000867c                hero_y
-                0x0000000000008680                hero_flags
-                0x0000000000008684                debug_a
-                0x0000000000008688                debug_b
-                0x000000000000868c                debug_c
-                0x0000000000008690                debug_d
-                0x0000000000008694                iWidth
-                0x0000000000008698                iHeight
-                0x000000000000869c                iHalfWidth
-                0x00000000000086a0                iHalfHeight
-                0x00000000000086a4                iFrameCounter
-                0x00000000000086a8                iTimeDelta
-                0x00000000000086ac                iTime
-                0x00000000000086b0                mouse_x
-                0x00000000000086b4                mouse_y
-                0x00000000000086b8                mouse_bstate
- .bss           0x00000000000086bc        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
- .bss           0x00000000000086bc        0x0 /lib/x86_64-linux-gnu/crtn.o
+ .bss           0x000000000000867c        0x0 /lib/x86_64-linux-gnu/Scrt1.o
+ .bss           0x000000000000867c        0x0 /lib/x86_64-linux-gnu/crti.o
+ .bss           0x000000000000867c        0x1 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
+ *fill*         0x000000000000867d        0x3 
+ .bss           0x0000000000008680       0x4c /tmp/main-bsu-a3dcd5.o
+                0x0000000000008680                hero_location_x
+                0x0000000000008684                hero_location_y
+                0x0000000000008688                hero_x
+                0x000000000000868c                hero_y
+                0x0000000000008690                hero_flags
+                0x0000000000008694                debug_a
+                0x0000000000008698                debug_b
+                0x000000000000869c                debug_c
+                0x00000000000086a0                debug_d
+                0x00000000000086a4                iWidth
+                0x00000000000086a8                iHeight
+                0x00000000000086ac                iHalfWidth
+                0x00000000000086b0                iHalfHeight
+                0x00000000000086b4                iFrameCounter
+                0x00000000000086b8                iTimeDelta
+                0x00000000000086bc                iTime
+                0x00000000000086c0                mouse_x
+                0x00000000000086c4                mouse_y
+                0x00000000000086c8                mouse_bstate
+ .bss           0x00000000000086cc        0x0 /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
+ .bss           0x00000000000086cc        0x0 /lib/x86_64-linux-gnu/crtn.o
  *(COMMON)
-                0x00000000000086c0                . = ALIGN ((. != 0x0)?0x8:0x1)
- *fill*         0x00000000000086bc        0x4 
+                0x00000000000086d0                . = ALIGN ((. != 0x0)?0x8:0x1)
+ *fill*         0x00000000000086cc        0x4 
 
 .lbss
  *(.dynlbss)
  *(.lbss .lbss.* .gnu.linkonce.lb.*)
  *(LARGE_COMMON)
-                0x00000000000086c0                . = ALIGN (0x8)
-                0x00000000000086c0                . = SEGMENT_START ("ldata-segment", .)
+                0x00000000000086d0                . = ALIGN (0x8)
+                0x00000000000086d0                . = SEGMENT_START ("ldata-segment", .)
 
 .lrodata
  *(.lrodata .lrodata.* .gnu.linkonce.lr.*)
 
-.ldata          0x000000000000a6c0        0x0
+.ldata          0x000000000000a6d0        0x0
  *(.ldata .ldata.* .gnu.linkonce.l.*)
-                0x000000000000a6c0                . = ALIGN ((. != 0x0)?0x8:0x1)
-                0x000000000000a6c0                . = ALIGN (0x8)
-                0x00000000000086c0                _end = .
+                0x000000000000a6d0                . = ALIGN ((. != 0x0)?0x8:0x1)
+                0x000000000000a6d0                . = ALIGN (0x8)
+                0x00000000000086d0                _end = .
                 [!provide]                        PROVIDE (end = .)
-                0x000000000000a6c0                . = DATA_SEGMENT_END (.)
+                0x000000000000a6d0                . = DATA_SEGMENT_END (.)
 
 .stab
  *(.stab)
@@ -473,7 +473,7 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
  *(.comment)
  .comment       0x0000000000000000       0x2d /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtbeginS.o
                                          0x2e (size before relaxing)
- .comment       0x000000000000002d       0x25 /tmp/main-bsu-0eda29.o
+ .comment       0x000000000000002d       0x25 /tmp/main-bsu-a3dcd5.o
                                          0x26 (size before relaxing)
  .comment       0x0000000000000052       0x2e /usr/bin/../lib/gcc/x86_64-linux-gnu/11/crtendS.o
 
@@ -498,25 +498,25 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000     0x1e40
+.debug_info     0x0000000000000000     0x1fab
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x0000000000000000     0x1e40 /tmp/main-bsu-0eda29.o
+ .debug_info    0x0000000000000000     0x1fab /tmp/main-bsu-a3dcd5.o
 
-.debug_abbrev   0x0000000000000000      0x30f
+.debug_abbrev   0x0000000000000000      0x2fd
  *(.debug_abbrev)
- .debug_abbrev  0x0000000000000000      0x30f /tmp/main-bsu-0eda29.o
+ .debug_abbrev  0x0000000000000000      0x2fd /tmp/main-bsu-a3dcd5.o
 
-.debug_line     0x0000000000000000     0x1132
+.debug_line     0x0000000000000000     0x1256
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x0000000000000000     0x1132 /tmp/main-bsu-0eda29.o
+ .debug_line    0x0000000000000000     0x1256 /tmp/main-bsu-a3dcd5.o
 
 .debug_frame
  *(.debug_frame)
 
-.debug_str      0x0000000000000000      0xb21
+.debug_str      0x0000000000000000      0xd8c
  *(.debug_str)
- .debug_str     0x0000000000000000      0xb21 /tmp/main-bsu-0eda29.o
-                                        0xca4 (size before relaxing)
+ .debug_str     0x0000000000000000      0xd8c /tmp/main-bsu-a3dcd5.o
+                                        0xf3c (size before relaxing)
 
 .debug_loc
  *(.debug_loc)
@@ -542,21 +542,21 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
 .debug_ranges
  *(.debug_ranges)
 
-.debug_addr     0x0000000000000000      0x478
+.debug_addr     0x0000000000000000      0x490
  *(.debug_addr)
- .debug_addr    0x0000000000000000      0x478 /tmp/main-bsu-0eda29.o
+ .debug_addr    0x0000000000000000      0x490 /tmp/main-bsu-a3dcd5.o
 
 .debug_line_str
                 0x0000000000000000      0x103
  *(.debug_line_str)
  .debug_line_str
-                0x0000000000000000      0x103 /tmp/main-bsu-0eda29.o
+                0x0000000000000000      0x103 /tmp/main-bsu-a3dcd5.o
 
 .debug_loclists
-                0x0000000000000000     0x1f6d
+                0x0000000000000000     0x224d
  *(.debug_loclists)
  .debug_loclists
-                0x0000000000000000     0x1f6d /tmp/main-bsu-0eda29.o
+                0x0000000000000000     0x224d /tmp/main-bsu-a3dcd5.o
 
 .debug_macro
  *(.debug_macro)
@@ -565,16 +565,16 @@ LOAD /lib/x86_64-linux-gnu/crtn.o
  *(.debug_names)
 
 .debug_rnglists
-                0x0000000000000000      0x228
+                0x0000000000000000      0x24b
  *(.debug_rnglists)
  .debug_rnglists
-                0x0000000000000000      0x228 /tmp/main-bsu-0eda29.o
+                0x0000000000000000      0x24b /tmp/main-bsu-a3dcd5.o
 
 .debug_str_offsets
-                0x0000000000000000      0x47c
+                0x0000000000000000      0x510
  *(.debug_str_offsets)
  .debug_str_offsets
-                0x0000000000000000      0x47c /tmp/main-bsu-0eda29.o
+                0x0000000000000000      0x510 /tmp/main-bsu-a3dcd5.o
 
 .debug_sup
  *(.debug_sup)
