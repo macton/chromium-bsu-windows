@@ -26,7 +26,7 @@ const stringReplaceAll = ( string, search_text, replace_text ) => {
   return string.replace( search_for, replace_text );
 }
 
-function snakeToPascalCase(inputString) {
+const snakeToPascalCase = (inputString) => {
   const words = inputString.split('_');
   for (let i = 0; i < words.length; i++) {
     words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
@@ -51,6 +51,13 @@ const WriteSectionsSeq = ( hpp, schema ) => {
     hpp.map[ constant_name ] = hpp.addr;
     hpp.addr += 4;
   });
+}
+
+const WriteMutableSeq = ( hpp, schema ) => {
+  hpp.map[ 'kMutableOffset' ] = hpp.addr;
+  hpp.addr += 4;
+  hpp.map[ 'kMutableSize' ] = hpp.addr;
+  hpp.addr += 4;
 }
 
 const WriteStaticArray = ( namespace, hpp, element_id, schema ) => {
@@ -139,6 +146,7 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
   };
 
   WriteMagicSeq( hpp, schema );
+  WriteMutableSeq( hpp, schema );
   WriteSectionsSeq( hpp, schema );
   WriteTypes( hpp, schema );
 
@@ -146,35 +154,59 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
   fs.writeSync(file,'#pragma once\n');
   fs.writeSync(file,'#include <stdint.h>\n');
   fs.writeSync(file,'\n');
+
+  // offset map
+  fs.writeSync(file,'// Offset Map\n');
   Object.keys(hpp.map).forEach( constant_name => {
     const constant_value = hpp.map[constant_name]; 
     fs.writeSync(file,`#define ${constant_name.padEnd(30,' ')} ${constant_value}\n`);
   });
   fs.writeSync(file,'\n');
-    fs.writeSync(file,`typedef struct ${'static_array'.padEnd(20,' ')} static_array;\n`);
+
+  // named constants
+  if (schema.hasOwnProperty('constants')) {
+    fs.writeSync(file,'// Named Constants\n');
+    Object.keys(schema.constants).forEach( constant_name => {
+      const constant_c_name  = 'k' + snakeToPascalCase(constant_name);
+      const constant_value   = schema.constants[constant_name]; 
+      fs.writeSync(file,`#define ${constant_c_name.padEnd(30,' ')} ${constant_value}\n`);
+    });
+  }
+  fs.writeSync(file,'\n');
+
+  // find text alignment size for struct names
+  let struct_name_alignment_size = Object.keys(hpp.types).reduce( (acc, struct_name) => { return Math.max(struct_name.length, acc); }, 0 ) + 4;
+
+  // struct typedefs
+  fs.writeSync(file,'#ifndef __cplusplus\n');
+  fs.writeSync(file,`typedef struct ${'static_array'.padEnd(struct_name_alignment_size,' ')} static_array;\n`);
   Object.keys(hpp.types).forEach( struct_name => {
     const struct = hpp.types[struct_name];
-    fs.writeSync(file,`typedef struct ${struct_name.padEnd(20,' ')} ${struct_name};\n`);
+    fs.writeSync(file,`typedef struct ${struct_name.padEnd(struct_name_alignment_size,' ')} ${struct_name};\n`);
   });
+  fs.writeSync(file,'#endif // __cplusplus\n');
   fs.writeSync(file,`\n`);
 
+  // known values - #todo move these to schema
   fs.writeSync(file,`#define kBsuInitialDirectionDown 0\n`);
   fs.writeSync(file,`#define kBsuInitialDirectionHero 1\n`);
   fs.writeSync(file,`#define kBsuInitialDirectionUp   2\n`);
   fs.writeSync(file,`#define kBsuOnFlagHeroTrigger0   1\n`);
 
+  // struct definitions
   fs.writeSync(file,`
 struct static_array
 {
-  uint32_t             offset;
-  uint32_t             count;
+  uint32_t    offset;
+  uint32_t    count;
 };\n\n`);
   Object.keys(hpp.types).forEach( struct_name => {
     const struct = hpp.types[struct_name];
+    let   field_type_alignment_size = struct.reduce( (acc, field) => { return Math.max(field.type.length, acc); }, 0 ) + 1;
     fs.writeSync(file,`struct ${struct_name}\n`);
     fs.writeSync(file,`{\n`);
     struct.forEach( field => {
-      fs.writeSync(file,`  ${field.type.padEnd(20,' ')} ${field.name};\n`);
+      fs.writeSync(file,`  ${field.type.padEnd(field_type_alignment_size,' ')} ${field.name};\n`);
     });
     fs.writeSync(file,`};\n`);
     fs.writeSync(file,'\n');

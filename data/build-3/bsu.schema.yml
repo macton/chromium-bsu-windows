@@ -2,6 +2,9 @@ magic:
   value: "CHROMIUM-BSU-2023-1"
   size: 64
 
+constants:
+  event_destroyed_at_max_count: 32
+
 sections:
   - id: asset_names
     container: static_array
@@ -9,9 +12,6 @@ sections:
 
   - id: play_area
     type: struct_play_area
-
-  - id: play_time
-    type: struct_play_time
 
   - id: asset_base_size
     container: static_array
@@ -33,26 +33,6 @@ sections:
     container: static_array
     type: u32
 
-  - id: instance_count
-    container: static_array
-    type: u32
-
-  - id: instance_location
-    container: static_array
-    type: struct_array_vec2
-
-  - id: instance_velocity
-    container: static_array
-    type: struct_array_vec2
-
-  - id: instance_age
-    container: static_array
-    type: struct_array_f32
-
-  - id: instance_health
-    container: static_array
-    type: struct_array_f32
-
   - id: pattern_u32
     container: static_array
     type: u32
@@ -64,6 +44,44 @@ sections:
   - id: collision_mod_health
     container: static_array
     type: struct_collision_mod_health
+
+  - id: play_time
+    type: struct_play_time
+    mutable: true
+    zi: true
+
+  - id: instance_velocity
+    container: static_array
+    type: struct_array_vec2
+    mutable: true
+    zi: true
+
+  - id: instance_age
+    container: static_array
+    type: struct_array_f32
+    mutable: true
+    zi: true
+
+  - id: instance_health
+    container: static_array
+    type: struct_array_f32
+    mutable: true
+    zi: true
+
+  - id: event_destroyed_at
+    type: struct_event_destroyed_at
+    mutable: true
+    zi: true
+
+  - id: instance_count
+    container: static_array
+    type: u32
+    mutable: true
+
+  - id: instance_location
+    container: static_array
+    type: struct_array_vec2
+    mutable: true
 
 types:
   struct_vec2:
@@ -146,3 +164,11 @@ types:
     - id: targets
       container: static_array
       type: struct_collision_mod_health_target
+
+  struct_event_destroyed_at:
+    - id: count
+      type: u32
+    - id: at
+      container: static_array
+      count: event_destroyed_at_max_count
+      type: struct_vec2

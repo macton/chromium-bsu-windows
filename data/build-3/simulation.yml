@@ -72,8 +72,8 @@ Location:
 
 BaseSize:
   Hero:                   [ 0.50, 0.50 ]
-  EnemyAmmo00:            [ 0.25, 0.25 ]
-  HeroAmmo00:             [ 0.25, 0.25 ]
+  EnemyAmmo00:            [ 0.35, 0.35 ]
+  HeroAmmo00:             [ 0.35, 0.35 ]
   EnemyAircraft_Straight: [ 0.75, 1.02 ]
   EnemyAircraft_Omni:     [ 0.70, 0.70 ]
   EnemyAircraft_RayGun:   [ 1.20, 1.20 ]
@@ -141,9 +141,9 @@ Spawn:
       Pattern:    '********************************'
       InitialDirection: Down
     - AtEach:     EnemyAircraft_Omni
-      TimeStep:   0.25
+      TimeStep:   0.1
       Offset:     [ 0.0, -0.9 ]
-      Pattern:    '********--------********--------'
+      Pattern:    '***-------------***-------------'
       InitialDirection: Hero
   EnemyAircraft_Straight:
     - AtGroup:    SpawnPoint

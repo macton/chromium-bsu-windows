@@ -33,6 +33,24 @@ const WriteMagicSeq = ( ksy, schema ) => {
   ksy.seq.push( { id: 'magic', type: 'str', encoding: 'UTF-8', size: 64 } );
 }
 
+const WriteMutableRef = ( ksy, schema ) => {
+  ksy.types["mutable"] = {
+    seq: [
+      { id: 'offset', type: 'u4' },
+      { id: 'size', type: 'u4' },
+    ],
+    instances: {
+      value: {
+        type: 'u1',
+        pos: 'offset',
+        repeat: 'expr',
+        'repeat-expr': 'size',
+      }
+    }
+  };
+  ksy.seq.push( { id: 'mutable', type: 'mutable' } );
+}
+
 const WriteSectionsSeq = ( ksy, schema ) => {
   const toc_ksy = {seq:[]};
   schema.sections.forEach( section => {
@@ -141,6 +159,7 @@ const WriteKsy = ( schema, ksy_filename_out ) => {
   ksy['types'] = {};
 
   WriteMagicSeq( ksy, schema );
+  WriteMutableRef( ksy, schema );
   WriteSectionsSeq( ksy, schema );
   WriteSectionsInstances( ksy, schema );
   WriteTypes( ksy, schema );

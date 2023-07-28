@@ -90,23 +90,29 @@ const WriteMagic = ( schema, file ) => {
   return magic_size;
 }
 
-const WriteSections = ( value, schema, data_section, file ) => {
+const WriteSections = ( value, schema, data_section, mutable_section, file ) => {
   let size = 0;
 
   schema.sections.forEach( section => {
     const section_gid    = section.id;
-    const section_offset = data_section.offsets[section_gid] || 0;
+    let section_offset = 0;
+    if (section.mutable) { 
+      section_offset = mutable_section.offsets[section_gid] || 0;
+    } else {
+      section_offset = data_section.offsets[section_gid] || 0;
+    }
     size += WriteU32( section_offset, file );
   });
 
   schema.sections.forEach( section => {
     const section_gid = section.id;
-    data_section.block.push( {
+    const storage_section = (section.mutable) ? mutable_section : data_section;
+    storage_section.block.push( {
       gid: section_gid,
       write: () => {
         let size = 0;
-        const section_value  = value( section_gid );
-        size += WriteBlock( section_gid, section_value, section, schema, data_section, file );
+        const section_value  = value ? value( section_gid ) : null;
+        size += WriteBlock( section_gid, section_value, section, schema, storage_section, section.zi?true:false, file );
         return size;
       },
     });
@@ -115,49 +121,79 @@ const WriteSections = ( value, schema, data_section, file ) => {
   return size;
 }
 
-const WriteBlock = ( gid, value, block, schema, data_section, file ) => {
+const WriteBlock = ( gid, value, block, schema, storage_section, zi, file ) => {
   const container = block.container;
   const type_id   = block.type;
   let   size      = 0;
 
   if ( container == "static_array" ) {
-    const count        = value("count");
-    const array_value  = value("array");
+
+    let count;
+    let array_value;
+
+    // is count statically part of schema?
+    if (block.hasOwnProperty('count')) {
+      // in the schema, count can be:
+      //  [x] a literal number
+      //  [x] a named constant in schema
+      //  [ ] a reference to a stored value
+      //  [ ] an expression (which would be default and replace all above)
+      if (Number.isInteger(block.count))  {
+        count = block.count; 
+      } else if (schema.hasOwnProperty('constants') && schema.constants.hasOwnProperty(block.count)) {
+        count = schema.constants[block.count];
+      }
+    } else {
+console.log(gid);
+      count = value("count");
+    }
+
+    // is value statically part of schema? 
+    if (block.hasOwnProperty('fill')) {
+      array_value  = (index) => { 
+        return (field_id) => { 
+          return block.fill[field_id] 
+        }; 
+      };
+    } else {
+      array_value  = value ? value("array") : null;
+    }
+
     const array_gid    = gid + '.static_array';
-    const array_offset = ( count > 0 ) ? ( data_section.offsets[array_gid] || 0 ) : 0;
+    const array_offset = ( count > 0 ) ? ( storage_section.offsets[array_gid] || 0 ) : 0;
 
     size += WriteU32( array_offset, file );
     size += WriteU32( count, file );
 
-    data_section.block.push( {
+    storage_section.block.push( {
       gid: array_gid,
       write: () => {
         let size = 0;
         for (let i=0;i<count;i++) {
-          const element_value = array_value(i);
+          const element_value = array_value ? array_value(i) : null;
           const element_gid   = array_gid + "[" + i + "]";
           const element_block = { type: type_id };
-          size += WriteBlock( element_gid, element_value, element_block, schema, data_section, file );
+          size += WriteBlock( element_gid, element_value, element_block, schema, storage_section, zi, file );
         }
         return size;
       },
     });
   } else if ( type_id == "u32" ) {
-    size += WriteU32( value, file );
+    size += WriteU32( zi ? 0 : value, file );
   } else if ( type_id == "u8" ) {
-    size += WriteU8( value, file );
+    size += WriteU8( zi ? 0 : value, file );
   } else if ( type_id == "u16" ) {
-    size += WriteU16( value, file );
+    size += WriteU16( zi ? 0 : value, file );
   } else if ( type_id == "f32" ) {
-    size += WriteF32( value, file );
+    size += WriteF32( zi ? 0.0 : value, file );
   } else if ( type_id == "utf8" ) {
 
     const utf8_gid    = gid + '.utf8';
-    const utf8_offset = data_section.offsets[utf8_gid] || 0;
+    const utf8_offset = storage_section.offsets[utf8_gid] || 0;
 
     size += WriteU32( utf8_offset, file );
 
-    data_section.block.push( {
+    storage_section.block.push( {
       gid: utf8_gid,
       write: () => {
         let size = 0; 
@@ -172,24 +208,34 @@ const WriteBlock = ( gid, value, block, schema, data_section, file ) => {
     const field_count = type.length;
 
     for (let i=0;i<field_count;i++) {
+
+      if ((!zi) && (!value)) {
+        throw new Error("Error: Missing mapped value for '" + field_gid + "'");
+      }
+
       const field_block = type[i];
       const field_id    = field_block.id;
       const field_gid   = gid + "." + field_id;
-      const field_value = value(field_id);
-      size += WriteBlock( field_gid, field_value, field_block, schema, data_section, file );
+      const field_value = value ? value(field_id) : null;
+
+      size += WriteBlock( field_gid, field_value, field_block, schema, storage_section, zi, file );
     }
   }
   return size;
 }
 
-const WriteBSUFile = ( get_value, schema, data_section, bsu_filename_out ) => {
+const WriteBSUFile = ( get_value, schema, data_section, mutable_section, bsu_filename_out ) => {
 
   const file = fs.openSync( bsu_filename_out, "w" );
   let   size = 0;
 
   size += WriteMagic( schema, file );
-  size += WriteSections( get_value, schema, data_section, file );
+  size += WriteU32( mutable_section.start, file );
+  size += WriteU32( mutable_section.size, file );
 
+  size += WriteSections( get_value, schema, data_section, mutable_section, file );
+
+  data_section.start = size;
   if (data_section.block.length > 0) {
     let next_block = data_section.block.shift(); 
     while ( next_block ) {
@@ -202,16 +248,41 @@ const WriteBSUFile = ( get_value, schema, data_section, bsu_filename_out ) => {
       next_block = data_section.block.shift(); 
     }
   }
+  data_section.size = size - data_section.start;
+
+  mutable_section.start = size;
+  if (mutable_section.block.length > 0) {
+    let next_block = mutable_section.block.shift(); 
+    while ( next_block ) {
+      const next_gid   = next_block.gid; 
+      const next_write = next_block.write;
+      mutable_section.offsets[next_gid] = size;
+      const next_block_size = next_write();
+      const next_block_offset = size;
+      size += next_block_size;
+      next_block = mutable_section.block.shift(); 
+    }
+  }
+  mutable_section.size = size - mutable_section.start;
+
   fs.closeSync(file);
 }
 
 const WriteBSU = ( get_value, schema, bsu_filename_out ) => {
   const data_section = {
+    start_offset: 0,
+    size: 0,
     offsets: {},
     block: [],
   };
-  WriteBSUFile( get_value, schema, data_section, bsu_filename_out );
-  WriteBSUFile( get_value, schema, data_section, bsu_filename_out );
+  const mutable_section = {
+    start_offset: 0,
+    size: 0,
+    offsets: {},
+    block: [],
+  };
+  WriteBSUFile( get_value, schema, data_section, mutable_section, bsu_filename_out );
+  WriteBSUFile( get_value, schema, data_section, mutable_section, bsu_filename_out );
 }
 
 // -----------------------------------------------------------------------------
@@ -774,7 +845,6 @@ const map_collision_mod_health_static_array = ( config ) => {
 
 const map_bsu = ( config ) => {
   const get_value = id => {
-
     if ( id == "asset_names" ) {
       return map_asset_names_static_array( config );
     } else if ( id == "asset_base_size" ) {
@@ -806,7 +876,7 @@ const map_bsu = ( config ) => {
     } else if ( id == "collision_mod_health" ) {
       return map_collision_mod_health_static_array( config );
     } else {
-      return get_value;  
+      return null;
     }
   }
   return get_value;

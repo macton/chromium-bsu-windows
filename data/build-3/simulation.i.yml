@@ -90,11 +90,11 @@ BaseSize:
     - 0.5
     - 0.5
   EnemyAmmo00:
-    - 0.25
-    - 0.25
+    - 0.35
+    - 0.35
   HeroAmmo00:
-    - 0.25
-    - 0.25
+    - 0.35
+    - 0.35
   EnemyAircraft_Straight:
     - 0.75
     - 1.02
@@ -1015,7 +1015,7 @@ DataU8:
   - '0x10'
 DataU32:
   - '0xffffffff'
-  - '0x00ff00ff'
+  - '0x00070007'
 DataAtEach:
   - AtEach: Hero
     TimeStep: 0.25
@@ -1036,7 +1036,7 @@ DataAtEach:
     PatternWidth: 32
     PatternDataU32Offset: 0
   - AtEach: EnemyAircraft_Omni
-    TimeStep: 0.25
+    TimeStep: 0.1
     Offset:
       - 0
       - -0.9

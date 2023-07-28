@@ -164,6 +164,7 @@ int main(void)
   nodelay(stdscr, TRUE);
   keypad(stdscr, TRUE);
   set_escdelay(0);
+
   // start_color();
 
   // Don't mask any mouse events
@@ -218,16 +219,6 @@ if (color_id == 0)
   }
   while (getch() != ' ');
 #endif
-
-
-
-
-
-
-
-
-
-
 
   timespec frame_time;
   timespec sleep_time;
@@ -418,76 +409,6 @@ int fragment_main( int u, int v )
 {
   int result = 0;
 
-/*
-  {
-    int cx = hero_location_x;
-    int cy = hero_location_y;
-    int x  = u-cx;
-    int y  = v-cy;
-    int r  = 6; 
-    if (( abs(x) <= (2*r) ) && ( abs(y) <= (2*r) ))
-    {
-      int d  = (int)sdPentagon( (float)x, (float)y, r );
-      result |= d <= 0;
-    }
-  }
-*/
-
-#if 0
-  {
-    float t  = iTime * 5.0f;
-    float vx = cosf(t)+sinf(t);
-    float vy = -sinf(t)+cosf(t);
-    float dx = vx * 20.0f;
-    float dy = vy * 20.0f;
-    int   cx   = (int)dx + hero_location_x;
-    int   cy   = (int)dy + hero_location_y;
-    int   x    = u - cx;
-    int   y    = v - cy;
-    int   r    = 5;
-    if ( (abs(x) <= r) && (abs(y) <= r) )
-    {
-      result |= sdCircle( x, y, r ) <= 0;
-    }
-  }
-
-  {
-    float t  = (iTime * 5.0f)-0.5f;
-    float vx = cosf(t)+sinf(t);
-    float vy = -sinf(t)+cosf(t);
-    float dx = vx * 20.0f;
-    float dy = vy * 20.0f;
-    int   cx   = (int)dx + hero_location_x;
-    int   cy   = (int)dy + hero_location_y;
-    int   x    = u - cx;
-    int   y    = v - cy;
-    int   r    = 4;
-    if ( (abs(x) <= r) && (abs(y) <= r) )
-    {
-      result |= sdCircle( x, y, r ) <= 0;
-    }
-  }
-#endif
-  {
-    float t    = iTime * 5.0f;
-    int   cx   = hero_location_x;
-    int   cy   = hero_location_y;
-    int   x    = u - cx;
-    int   y    = v - cy;
-    int   r    = 20;
-
-    if ( (abs(x) <= r) && (abs(y) <= r) )
-    {
-      int d = sdCircle( x, y, r );
-      if ( d < 0 )
-      {
-         float a = sinf( t + (float)d * 14.0f /r );
-         result |= a > 0.5f;
- 
-      }
-    }
-  }
-
   {
     int       cx        = iHalfWidth;
     int       cy        = iHalfHeight;
@@ -580,17 +501,13 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
       float size = start_size + (t*(stop_size-start_size));
       int   r = ((size / 15.0) * iHalfWidth);
 
-debug_a = (float)lx;
-debug_b = (float)ly;
-debug_c = (float)r;
-
       if ( (abs(x) <= r) && (abs(y) <= r) )
       {
         int d = sdCircle( x, y, r );
         if ( d < 0 )
         {
-           float a = sinf( ( 1.0f + (t*32.0f)) * (float)d/(float)r );
-           result |= a > 0.5f;
+           float a = sinf( ( 1.0f + (t*16.0f)) * (float)d/(float)r );
+           result |= fabs(a) > 0.8f;
    
         }
       }
@@ -663,9 +580,9 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
     location_data->y = hero_y;
   }
 
-  // ---------------------------------------
+  // ---------------------------------------------------------------------------------------
   // Update instance age
-  // ---------------------------------------
+  // ---------------------------------------------------------------------------------------
   for (int asset_index=0;asset_index<asset_count;asset_index++)
   {
     static_array*    age_array           = instance_age_data + asset_index;
@@ -709,9 +626,9 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
     uint32_t         max_instance_count  = max_instance_count_data[asset_index];
     uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
 
-    // ---------------------------------------
+    // ---------------------------------------------------------------------------------------
     // Update instance location and age
-    // ---------------------------------------
+    // ---------------------------------------------------------------------------------------
 
     for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
     {
