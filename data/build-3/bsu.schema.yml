@@ -3,7 +3,9 @@ magic:
   size: 64
 
 constants:
-  event_destroyed_at_max_count: 32
+  event_destroyed_at_max_count: 
+    type: s32 
+    value: 32
 
 sections:
   - id: asset_names

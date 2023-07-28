@@ -141,10 +141,9 @@ const WriteBlock = ( gid, value, block, schema, storage_section, zi, file ) => {
       if (Number.isInteger(block.count))  {
         count = block.count; 
       } else if (schema.hasOwnProperty('constants') && schema.constants.hasOwnProperty(block.count)) {
-        count = schema.constants[block.count];
+        count = schema.constants[block.count].value;
       }
     } else {
-console.log(gid);
       count = value("count");
     }
 

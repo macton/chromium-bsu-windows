@@ -22,12 +22,10 @@ extern char _binary_simulation_bsu_size[];
 void bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start );
 void bsu_simulation_write_health( uintptr_t bsu_start );
 int  bsu_draw( uintptr_t bsu_start, int u, int v );
-void bsu_draw_write_event_time(void);
+void bsu_draw_write_event_time( uintptr_t bsu_start );
 
 #define kEventDestroyTime 0.3f
 #define kEventDestroyMaxCount 32
-int         event_destroy_count = 0;
-struct_vec2 event_destroy_location[kEventDestroyMaxCount];
 
 int         draw_event_destroy_count = 0;
 float       draw_event_time_remaining[kEventDestroyMaxCount] = { 0.0f };
@@ -156,6 +154,7 @@ int fragment_main( int x, int y );
 
 int main(void)
 {
+  // enable support UTF-8
   setlocale(LC_ALL, "");
   
   initscr();
@@ -165,12 +164,15 @@ int main(void)
   keypad(stdscr, TRUE);
   set_escdelay(0);
 
-  // start_color();
-
-  // Don't mask any mouse events
   mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
   mouseinterval(0);
+
+  // xterm SET_ANY_EVENT_MOUSE
+  // see: https://www.xfree86.org/current/ctlseqs.html#Mouse%20Tracking
   printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
+  fflush(stdout);
+
+  // start_color();
 
   clear();
 
@@ -361,8 +363,13 @@ if (color_id == 0)
 
       mvprintw(line++,0,          "hero_health:  %f",hero_health);
     }
-    mvprintw(line++,0,          "draw_event_destroy_count:  %d",draw_event_destroy_count );
-    mvprintw(line++,0,          "draw_event_time:  %f",draw_event_time_remaining[0]);
+
+    {
+      struct_event_destroyed_at*    event_destroyed_at_data           = (struct_event_destroyed_at*)(bsu_start + *(uint32_t*)(bsu_start + kEventDestroyedAtOffset));
+      uint32_t                      event_destroyed_at_count          = event_destroyed_at_data->count;
+
+      mvprintw(line++,0,          "event_destroy_count:  %d",event_destroyed_at_count);
+    }
 
     {
       timespec start_time;
@@ -377,7 +384,7 @@ if (color_id == 0)
       run_time = timespec_sub( start_time, end_time );
       mvprint_timespec( line++,0, "sim_time:      ", run_time);
     }
-    bsu_draw_write_event_time();
+    bsu_draw_write_event_time(bsu_start);
 
     iFrameCounter++;
     refresh();
@@ -482,12 +489,17 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
   // ---------------------------------------------------------------------------------
   // draw destroy effects
   // ---------------------------------------------------------------------------------
+  struct_event_destroyed_at*    event_destroyed_at_data           = (struct_event_destroyed_at*)(bsu_start + *(uint32_t*)(bsu_start + kEventDestroyedAtOffset));
+  uint32_t                      event_destroyed_at_count          = event_destroyed_at_data->count;
+  static_array*                 event_destroyed_at_location_array = &event_destroyed_at_data->at;
+  struct_vec2*                  event_destroyed_at_location_data  = (struct_vec2*)(bsu_start + event_destroyed_at_location_array->offset);
+
   for (int draw_event_destroy_index=0;draw_event_destroy_index<kEventDestroyMaxCount;draw_event_destroy_index++)
   {
     float time_remaining = draw_event_time_remaining[draw_event_destroy_index];
     if (time_remaining > 0.0f)
     {
-      struct_vec2 location   = event_destroy_location[draw_event_destroy_index];
+      struct_vec2 location   = event_destroyed_at_location_data[draw_event_destroy_index];
       float t                = (kEventDestroyTime-time_remaining)/kEventDestroyTime;
   
       float lx = location.x / 15.0f;
@@ -518,19 +530,13 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
 }
 
 void
-bsu_draw_write_event_time(void)
+bsu_draw_write_event_time( uintptr_t bsu_start )
 {
-  // ---------------------------------------------------------------------------------
-  // add new destroy effects
-  // ---------------------------------------------------------------------------------
-  while ( draw_event_destroy_count < event_destroy_count )
-  {
-    draw_event_time_remaining[draw_event_destroy_count%kEventDestroyMaxCount] = kEventDestroyTime;
-    draw_event_destroy_count++;
-  }
+  struct_event_destroyed_at*    event_destroyed_at_data           = (struct_event_destroyed_at*)(bsu_start + *(uint32_t*)(bsu_start + kEventDestroyedAtOffset));
+  uint32_t                      event_destroyed_at_count          = event_destroyed_at_data->count;
 
   // ---------------------------------------------------------------------------------
-  // draw destroy effects
+  // Update timer for destroy effects
   // ---------------------------------------------------------------------------------
   for (int draw_event_destroy_index=0;draw_event_destroy_index<kEventDestroyMaxCount;draw_event_destroy_index++)
   {
@@ -540,6 +546,16 @@ bsu_draw_write_event_time(void)
       draw_event_time_remaining[draw_event_destroy_index] -= iTimeDelta;
     }
   }
+
+  // ---------------------------------------------------------------------------------
+  // add new destroy effects
+  // ---------------------------------------------------------------------------------
+  while ( draw_event_destroy_count < event_destroyed_at_count)
+  {
+    draw_event_time_remaining[draw_event_destroy_count%kEventDestroyMaxCount] = kEventDestroyTime;
+    draw_event_destroy_count++;
+  }
+
 }
 
 // ---------------------------------------------------------------------------------------
@@ -858,8 +874,14 @@ bsu_simulation_write_health( uintptr_t bsu_start )
   struct_collision_mod_health*  collision_mod_health_data         = (struct_collision_mod_health*)(bsu_start + collision_mod_health_array->offset);
   int                           collision_mod_health_source_count = collision_mod_health_array->count;
 
+  struct_event_destroyed_at*    event_destroyed_at_data           = (struct_event_destroyed_at*)(bsu_start + *(uint32_t*)(bsu_start + kEventDestroyedAtOffset));
+  uint32_t                      event_destroyed_at_count          = event_destroyed_at_data->count;
+  static_array*                 event_destroyed_at_location_array = &event_destroyed_at_data->at;
+  struct_vec2*                  event_destroyed_at_location_data  = (struct_vec2*)(bsu_start + event_destroyed_at_location_array->offset);
+
   // ---------------------------------------------------------------------------------
-  // Modify health on collision (all instances of source vs all instances of target)
+  // Write to health on collision (all instances of source vs all instances of target)
+  // Write to event_destroyed_at
   // ---------------------------------------------------------------------------------
 
   for (int source_index=0;source_index<collision_mod_health_source_count;source_index++)
@@ -928,9 +950,10 @@ bsu_simulation_write_health( uintptr_t bsu_start )
               {
                 *target_health += target_mod_health_amount;
                 *source_health  = 0.0f; // self-destruct
-
-                event_destroy_location[ event_destroy_count % kEventDestroyMaxCount ] = *target_location;
-                event_destroy_count++;
+                if ( *target_health <= 0.0f ) {
+                  event_destroyed_at_location_data[event_destroyed_at_count % kEventDestroyedAtMaxCount] = *target_location;
+                  event_destroyed_at_count++;
+                }
               }
             }
           }
@@ -938,6 +961,8 @@ bsu_simulation_write_health( uintptr_t bsu_start )
       }
     }
   }
+
+  event_destroyed_at_data->count = event_destroyed_at_count;
 
   // ---------------------------------------------------------------------------------
   // initialize instance health

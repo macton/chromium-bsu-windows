@@ -168,8 +168,13 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
     fs.writeSync(file,'// Named Constants\n');
     Object.keys(schema.constants).forEach( constant_name => {
       const constant_c_name  = 'k' + snakeToPascalCase(constant_name);
-      const constant_value   = schema.constants[constant_name]; 
-      fs.writeSync(file,`#define ${constant_c_name.padEnd(30,' ')} ${constant_value}\n`);
+      const constant_type    = schema.constants[constant_name].type; 
+      const constant_value   = schema.constants[constant_name].value; 
+      if ( constant_type == 'f32' ) {
+        fs.writeSync(file,`#define ${constant_c_name.padEnd(30,' ')} ${constant_value.toFixed(8)}f\n`);
+      } else {
+        fs.writeSync(file,`#define ${constant_c_name.padEnd(30,' ')} ${constant_value}\n`);
+      }
     });
   }
   fs.writeSync(file,'\n');
