@@ -1036,7 +1036,7 @@ DataAtEach:
     PatternWidth: 32
     PatternDataU32Offset: 0
   - AtEach: EnemyAircraft_Omni
-    TimeStep: 0.1
+    TimeStep: 0.25
     Offset:
       - 0
       - -0.9

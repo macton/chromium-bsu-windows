@@ -22,6 +22,15 @@ extern char _binary_simulation_bsu_size[];
 void bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start );
 void bsu_simulation_write_health( uintptr_t bsu_start );
 int  bsu_draw( uintptr_t bsu_start, int u, int v );
+void bsu_draw_write_event_time(void);
+
+#define kEventDestroyTime 0.3f
+#define kEventDestroyMaxCount 32
+int         event_destroy_count = 0;
+struct_vec2 event_destroy_location[kEventDestroyMaxCount];
+
+int         draw_event_destroy_count = 0;
+float       draw_event_time_remaining[kEventDestroyMaxCount] = { 0.0f };
 
 // ---------------------------------------------------------------------------------------
 
@@ -361,6 +370,8 @@ if (color_id == 0)
 
       mvprintw(line++,0,          "hero_health:  %f",hero_health);
     }
+    mvprintw(line++,0,          "draw_event_destroy_count:  %d",draw_event_destroy_count );
+    mvprintw(line++,0,          "draw_event_time:  %f",draw_event_time_remaining[0]);
 
     {
       timespec start_time;
@@ -375,6 +386,7 @@ if (color_id == 0)
       run_time = timespec_sub( start_time, end_time );
       mvprint_timespec( line++,0, "sim_time:      ", run_time);
     }
+    bsu_draw_write_event_time();
 
     iFrameCounter++;
     refresh();
@@ -545,7 +557,72 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
       }
     }
   }
+
+  // ---------------------------------------------------------------------------------
+  // draw destroy effects
+  // ---------------------------------------------------------------------------------
+  for (int draw_event_destroy_index=0;draw_event_destroy_index<kEventDestroyMaxCount;draw_event_destroy_index++)
+  {
+    float time_remaining = draw_event_time_remaining[draw_event_destroy_index];
+    if (time_remaining > 0.0f)
+    {
+      struct_vec2 location   = event_destroy_location[draw_event_destroy_index];
+      float t                = (kEventDestroyTime-time_remaining)/kEventDestroyTime;
+  
+      float lx = location.x / 15.0f;
+      float ly = location.y / 15.0f;
+      int   cx = (int)(lx * iHalfWidth);
+      int   cy = (int)(ly * iHalfHeight);
+      int   x = u-cx;
+      int   y = v-cy;
+      float start_size = 2.0f;
+      float stop_size  = 3.0f;
+      float size = start_size + (t*(stop_size-start_size));
+      int   r = ((size / 15.0) * iHalfWidth);
+
+debug_a = (float)lx;
+debug_b = (float)ly;
+debug_c = (float)r;
+
+      if ( (abs(x) <= r) && (abs(y) <= r) )
+      {
+        int d = sdCircle( x, y, r );
+        if ( d < 0 )
+        {
+           float a = sinf( ( 1.0f + (t*32.0f)) * (float)d/(float)r );
+           result |= a > 0.5f;
+   
+        }
+      }
+    }
+  }
+
   return result;
+}
+
+void
+bsu_draw_write_event_time(void)
+{
+  // ---------------------------------------------------------------------------------
+  // add new destroy effects
+  // ---------------------------------------------------------------------------------
+  while ( draw_event_destroy_count < event_destroy_count )
+  {
+    draw_event_time_remaining[draw_event_destroy_count%kEventDestroyMaxCount] = kEventDestroyTime;
+    draw_event_destroy_count++;
+  }
+
+  // ---------------------------------------------------------------------------------
+  // draw destroy effects
+  // ---------------------------------------------------------------------------------
+  for (int draw_event_destroy_index=0;draw_event_destroy_index<kEventDestroyMaxCount;draw_event_destroy_index++)
+  {
+    float time_remaining = draw_event_time_remaining[draw_event_destroy_index];
+    if (time_remaining > 0.0f)
+    {
+      draw_event_time_remaining[draw_event_destroy_index] -= iTimeDelta;
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------------------
@@ -934,6 +1011,9 @@ bsu_simulation_write_health( uintptr_t bsu_start )
               {
                 *target_health += target_mod_health_amount;
                 *source_health  = 0.0f; // self-destruct
+
+                event_destroy_location[ event_destroy_count % kEventDestroyMaxCount ] = *target_location;
+                event_destroy_count++;
               }
             }
           }
