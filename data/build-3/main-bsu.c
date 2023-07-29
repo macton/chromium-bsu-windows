@@ -7,6 +7,7 @@
 #include <float.h>
 #include <signal.h>
 #include <sys/ioctl.h>
+#include <string.h>
 #include "bsu.h"
 
 #include <unistd.h> // usleep
@@ -19,9 +20,10 @@
 extern char _binary_simulation_bsu_start[];
 extern char _binary_simulation_bsu_size[];
 
+void bsu_simulation_enable_hero( uintptr_t bsu_start );
 void bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start );
 void bsu_simulation_write_health( uintptr_t bsu_start );
-int  bsu_draw( uintptr_t bsu_start, int u, int v );
+int  bsu_draw( uintptr_t bsu_start );
 void bsu_draw_write_event_time( uintptr_t bsu_start );
 
 #define kEventDestroyTime 0.3f
@@ -29,6 +31,9 @@ void bsu_draw_write_event_time( uintptr_t bsu_start );
 
 int         draw_event_destroy_count = 0;
 float       draw_event_time_remaining[kEventDestroyMaxCount] = { 0.0f };
+
+int debug_asset_index = 0;
+int line = 0;
 
 // ---------------------------------------------------------------------------------------
 
@@ -152,6 +157,124 @@ int   mouse_bstate = 0;
 
 int fragment_main( int x, int y );
 
+#define FRAMEBUFFER_WIDTH  512
+#define FRAMEBUFFER_HEIGHT 512
+#define FRAMEBUFFER_SIZE   (FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT)
+uint8_t framebuffer[ FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT ];
+
+void
+framebuffer_clear(void)
+{
+  memset(framebuffer,0,FRAMEBUFFER_SIZE);
+}
+
+int framebuffer_bitmask[8] = { 1, 8, 2, 16, 4, 32, 64, 128 };
+
+uint8_t
+framebuffer_byte_read(int x, int y)
+{
+  if ( x < 0 ) return 0;
+  if ( y < 0 ) return 0;
+
+  int char_x             = x/2;
+  int char_y             = y/4;
+  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
+  int char_value         = framebuffer[ char_index ];
+  return char_value;
+}
+
+void
+framebuffer_byte_write(int x, int y, uint8_t value)
+{
+  if ( x < 0 ) return;
+  if ( y < 0 ) return;
+
+  int char_x             = x/2;
+  int char_y             = y/4;
+  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
+
+  framebuffer[ char_index ] = value;
+}
+
+uint8_t
+framebuffer_bit_read(int x, int y)
+{
+  if ( x < 0 ) return 0;
+  if ( y < 0 ) return 0;
+
+  int char_x             = x/2;
+  int char_y             = y/4;
+  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
+  int char_value         = framebuffer[ char_index ];
+  int char_ox            = x - (char_x*2);
+  int char_oy            = y - (char_y*4);
+  int char_bitmask_index = (char_oy*2)+char_ox;
+  int char_bitmask       = framebuffer_bitmask[ char_bitmask_index ];
+  return char_value & char_bitmask;
+}
+
+void
+framebuffer_bit_write(int x, int y)
+{
+  if ( x < 0 ) return;
+  if ( y < 0 ) return;
+  
+  int char_x             = x/2;
+  int char_y             = y/4;
+  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
+  int char_value         = framebuffer[ char_index ];
+  int char_ox            = x - (char_x*2);
+  int char_oy            = y - (char_y*4);
+  int char_bitmask_index = (char_oy*2)+char_ox;
+  int char_bitmask       = framebuffer_bitmask[ char_bitmask_index ];
+
+  framebuffer[ char_index ] |= char_bitmask;
+}
+
+void
+framebuffer_bit_clear(int x, int y)
+{
+  if ( x < 0 ) return;
+  if ( y < 0 ) return;
+
+  int char_x             = x/2;
+  int char_y             = y/4;
+  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
+  int char_value         = framebuffer[ char_index ];
+  int char_ox            = x - (char_x*2);
+  int char_oy            = y - (char_y*4);
+  int char_bitmask_index = (char_oy*2)+char_ox;
+  int char_bitmask       = framebuffer_bitmask[ char_bitmask_index ];
+
+  framebuffer[ char_index ] &= ~char_bitmask;
+}
+
+void
+framebuffer_draw_circle(int cx, int cy, int r)
+{
+  int x0 = cx-r;
+  int y0 = cy-r;
+  int x1 = cx+r;
+  int y1 = cy+r;
+  int lcx = (x0+x1)/2;
+  int lcy = (y0+y1)/2;
+
+  for (int ly=y0;ly<=y1;ly++)
+  {
+    for (int lx=x0;lx<=x1;lx++)
+    {
+      int x = lx - lcx;
+      int y = ly - lcy;
+      int d = sdCircle( x, y, r);
+      if ( d <= 0 )
+      {
+        framebuffer_bit_write( lx, ly );
+      }
+    }
+  }
+}
+
+
 int main(void)
 {
   // enable support UTF-8
@@ -229,19 +352,7 @@ if (color_id == 0)
 
   uintptr_t bsu_start = (uintptr_t)_binary_simulation_bsu_start;
 
-  // enable hero
-  {
-    static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
-    uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
-    static_array*  instance_age_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceAgeOffset));
-    static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
-    static_array*  age_array                 = instance_age_data + 0;
-    float*         age_data                  = (float*)(bsu_start + age_array->offset );
-
-    instance_count_data[0] = 1;
-    age_data[0] = FLT_MIN;
-  }
-
+  bsu_simulation_enable_hero( bsu_start );
 
   while (1)
   {
@@ -306,29 +417,63 @@ if (color_id == 0)
       }
     } while (event_key != ERR);
 
-    for (int y=0;y<iHeight;y+=4)
+    line = 0;
+
+    timespec draw_time;
+    timespec present_time;
+    timespec sim_time;
+
     {
-      for (int x=0;x<iWidth;x+=2)
-      {
-        int ch = 0;
-  
-        ch |= fragment_main(x+0,y+0)  ?  1 : 0;
-        ch |= fragment_main(x+1,y+0) ?   8 : 0;
-        ch |= fragment_main(x+0,y+1) ?   2 : 0;
-        ch |= fragment_main(x+1,y+1) ?  16 : 0;
-        ch |= fragment_main(x+0,y+2) ?   4 : 0;
-        ch |= fragment_main(x+1,y+2) ?  32 : 0;
-        ch |= fragment_main(x+0,y+3) ?  64 : 0;
-        ch |= fragment_main(x+1,y+3) ? 128 : 0;
-  
-        mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
-      }
+      timespec start_time;
+      timespec end_time;
+
+      clock_gettime(CLOCK_REALTIME, &start_time);
+      bsu_simulation_write_count_age_location_velocity( bsu_start );
+      bsu_simulation_write_health( bsu_start );
+      clock_gettime(CLOCK_REALTIME, &end_time);
+      sim_time = timespec_sub( start_time, end_time );
     }
 
 
-    int line = 0;
+    {
+      timespec start_time;
+      timespec end_time;
+
+      clock_gettime(CLOCK_REALTIME, &start_time);
+
+      framebuffer_clear();
+      bsu_draw_write_event_time(bsu_start);
+      bsu_draw( bsu_start );
+
+      clock_gettime(CLOCK_REALTIME, &end_time);
+      draw_time = timespec_sub( start_time, end_time );
+    }
+
+    {
+      timespec start_time;
+      timespec end_time;
+
+      clock_gettime(CLOCK_REALTIME, &start_time);
+
+      for (int y=0;y<iHeight;y+=4)
+      {
+        for (int x=0;x<iWidth;x+=2)
+        {
+          int ch = framebuffer_byte_read(x,y);
+          mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
+        }
+      }
+
+      clock_gettime(CLOCK_REALTIME, &end_time);
+      present_time = timespec_sub( start_time, end_time );
+    }
+
+
     mvprint_timespec( line++,0, "frame_time:      ", frame_time);
     mvprint_timespec( line++,0, "sleep_time:      ", sleep_time);
+    mvprint_timespec( line++,0, "sim_time:      ", sim_time);
+    mvprint_timespec( line++,0, "draw_time:     ", draw_time);
+    mvprint_timespec( line++,0, "present_time:  ", present_time);
     mvprintw(line++,0,          "iTime:           %f",iTime);
     mvprintw(line++,0,          "iTimeDelta:      %f",iTimeDelta);
     mvprintw(line++,0,          "iFrameCounter:   %d",iFrameCounter);
@@ -371,21 +516,6 @@ if (color_id == 0)
       mvprintw(line++,0,          "event_destroy_count:  %d",event_destroyed_at_count);
     }
 
-    {
-      timespec start_time;
-      timespec end_time;
-      timespec run_time;
-      float    run_sec;
-
-      clock_gettime(CLOCK_REALTIME, &start_time);
-      bsu_simulation_write_count_age_location_velocity( bsu_start );
-      bsu_simulation_write_health( bsu_start );
-      clock_gettime(CLOCK_REALTIME, &end_time);
-      run_time = timespec_sub( start_time, end_time );
-      mvprint_timespec( line++,0, "sim_time:      ", run_time);
-    }
-    bsu_draw_write_event_time(bsu_start);
-
     iFrameCounter++;
     refresh();
 
@@ -412,28 +542,8 @@ quit:
   exit(0);
 }
 
-int fragment_main( int u, int v )
-{
-  int result = 0;
-
-  {
-    int       cx        = iHalfWidth;
-    int       cy        = iHalfHeight;
-    int       x         = u-cx;
-    int       y         = -(v-cy);
-    uintptr_t bsu_start = (uintptr_t)_binary_simulation_bsu_start;
-
-    result |= bsu_draw( bsu_start, x, y );
-  }
-
-  result |= ((u%64)==0);
-  result |= ((v%64)==0);
-
-  return result;
-}
-
 int
-bsu_draw( uintptr_t bsu_start, int u, int v )
+bsu_draw( uintptr_t bsu_start )
 {
   static_array*  asset_spawn_array         = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kAssetSpawnOffset));
   struct_spawn*  asset_spawn_data          = (struct_spawn*)(bsu_start + asset_spawn_array->offset);
@@ -472,16 +582,12 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
   
         float lx = (live_location->x) / 15.0f;
         float ly = (live_location->y) / 15.0f;
-        int   cx = (int)(lx * iHalfWidth);
-        int   cy = (int)(ly * iHalfHeight);
-        int   x = u-cx;
-        int   y = v-cy;
+        int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
+        int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
         int   r    = ((base_size->x / 15.0) * iHalfWidth);
 
-        if ( (abs(x) <= r) && (abs(y) <= r) )
-        {
-          result |= sdCircle( x, y, r ) <= 0;
-        }
+        debug_asset_index = asset_index;
+        framebuffer_draw_circle(cx, cy, r);
       }
     }
   }
@@ -504,25 +610,14 @@ bsu_draw( uintptr_t bsu_start, int u, int v )
   
       float lx = location.x / 15.0f;
       float ly = location.y / 15.0f;
-      int   cx = (int)(lx * iHalfWidth);
-      int   cy = (int)(ly * iHalfHeight);
-      int   x = u-cx;
-      int   y = v-cy;
+      int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
+      int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
       float start_size = 2.0f;
       float stop_size  = 3.0f;
       float size = start_size + (t*(stop_size-start_size));
       int   r = ((size / 15.0) * iHalfWidth);
 
-      if ( (abs(x) <= r) && (abs(y) <= r) )
-      {
-        int d = sdCircle( x, y, r );
-        if ( d < 0 )
-        {
-           float a = sinf( ( 1.0f + (t*16.0f)) * (float)d/(float)r );
-           result |= fabs(a) > 0.8f;
-   
-        }
-      }
+      framebuffer_draw_circle(cx, cy, r);
     }
   }
 
@@ -560,6 +655,19 @@ bsu_draw_write_event_time( uintptr_t bsu_start )
 
 // ---------------------------------------------------------------------------------------
 
+void
+bsu_simulation_enable_hero( uintptr_t bsu_start )
+{
+  static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
+  uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
+  static_array*  instance_age_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceAgeOffset));
+  static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
+  static_array*  age_array                 = instance_age_data + 0;
+  float*         age_data                  = (float*)(bsu_start + age_array->offset );
+
+  instance_count_data[0] = 1;
+  age_data[0] = FLT_MIN;
+}
 
 void
 bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
@@ -921,12 +1029,12 @@ bsu_simulation_write_health( uintptr_t bsu_start )
           uint32_t                             target_asset_index       = target->target_asset_index;
           float                                target_mod_health_amount = target->amount;
     
-          static_array*    target_age_array           = instance_age_data + target_asset_index;
-          float*           target_age_data            = (float*)(bsu_start + target_age_array->offset );
-          struct_vec2      target_base_size           = asset_base_size_data[ target_asset_index ];
-          static_array*    target_location_array      = instance_location_data + target_asset_index;
-          struct_vec2*     target_location_data       = (struct_vec2*)(bsu_start + target_location_array->offset);
-          static_array*    target_health_array        = instance_health_data + target_asset_index;
+          static_array*                        target_age_array           = instance_age_data + target_asset_index;
+          float*                               target_age_data            = (float*)(bsu_start + target_age_array->offset );
+          struct_vec2                          target_base_size           = asset_base_size_data[ target_asset_index ];
+          static_array*                        target_location_array      = instance_location_data + target_asset_index;
+          struct_vec2*                         target_location_data       = (struct_vec2*)(bsu_start + target_location_array->offset);
+          static_array*                        target_health_array        = instance_health_data + target_asset_index;
           float*           target_health_data         = (float*)(bsu_start + target_health_array->offset);
 
           uint32_t         target_instance_count      = instance_count_data[target_asset_index];
