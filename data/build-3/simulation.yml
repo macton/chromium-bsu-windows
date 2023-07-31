@@ -132,19 +132,36 @@ Spawn:
       TimeStep:   0.25
       Offset:     [ 0.0, 0.9 ]
       Pattern:    '********************************'
-      InitialDirection: Up
-      OnFlag: HeroTrigger0
+      InitialDirection: kInitialDirectionUp
+      OnFlag: kHeroTrigger0
+
+    - AtEach:     Hero
+      TimeStep:   0.25
+      Offset:     [ -0.5, 0.9 ]
+      Pattern:    '********************************'
+      InitialDirection: kInitialDirectionUp
+      OnFlag: kHeroTrigger0 | kHeroGun1
+
+    - AtEach:     Hero
+      TimeStep:   0.25
+      Offset:     [ 0.5, 0.9 ]
+      Pattern:    '********************************'
+      InitialDirection: kInitialDirectionUp
+      OnFlag: kHeroTrigger0 | kHeroGun1
+
   EnemyAmmo00:
     - AtEach:     EnemyAircraft_Straight
       TimeStep:   1.00
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '********************************'
-      InitialDirection: Down
+      InitialDirection: kInitialDirectionDown
+
     - AtEach:     EnemyAircraft_Omni
       TimeStep:   0.1
       Offset:     [ 0.0, -0.9 ]
       Pattern:    '***-------------***-------------'
-      InitialDirection: Hero
+      InitialDirection: kInitialDirectionHero
+
   EnemyAircraft_Straight:
     - AtGroup:    SpawnPoint
       TimeStep:   3.50
@@ -160,6 +177,7 @@ Spawn:
       Expression: Sin
       Width:      -0.8
       Repeat:     3.0
+
   EnemyAircraft_Omni:
     - AtGroup:    SpawnPoint
       TimeStep:   0.5
@@ -193,6 +211,7 @@ Spawn:
       TimeStep:   0.5
       Formation:  Form1
       TimeStart:  210
+
   PowerUp_HeroAmmo00:
     - AtGroup:    SpawnPoint
       TimeStep:   30.00
@@ -201,6 +220,7 @@ Spawn:
       Expression: Sin
       Width:      0.8
       Repeat:     0.5
+
   PowerUp_HeroAmmo01:
     - AtGroup:    SpawnPoint
       TimeStep:   30.00
@@ -209,6 +229,7 @@ Spawn:
       Expression: Sin
       Width:      0.8
       Repeat:     0.5
+
   PowerUp_HeroAmmo02:
     - AtGroup:    SpawnPoint
       TimeStep:   30.00
@@ -217,6 +238,7 @@ Spawn:
       Expression: Sin
       Width:      0.8
       Repeat:     0.5
+
   PowerUp_Shields:
     - AtGroup:    SpawnPoint
       TimeStep:   30.00
@@ -225,6 +247,7 @@ Spawn:
       Expression: Sin
       Width:      0.8
       Repeat:     0.5
+
   PowerUp_Repair:
     - AtGroup:    SpawnPoint
       TimeStep:   30.00
@@ -240,3 +263,11 @@ CollisionModHealth:
       Amount: -10
     - Target: EnemyAircraft_Omni
       Amount: -10
+  EnemyAmmo00:
+    - Target: Hero
+      Amount: -10
+
+CollisionModFlag:
+  PowerUp_HeroAmmo00:
+    - Target: Hero
+      Amount: HeroGun1

@@ -3,9 +3,29 @@ magic:
   size: 64
 
 constants:
-  event_destroyed_at_max_count: 
+  - id: kInitialDirectionDown
+    type: u32
+    value: 0
+
+  - id: kInitialDirectionHero
+    type: u32
+    value: 1
+
+  - id: kInitialDirectionUp
+    type: u32
+    value: 2
+
+  - id: kEventDestroyedAtMaxCount
     type: s32 
     value: 32
+
+  - id: kHeroTrigger0
+    type: u32 
+    value: 1
+
+  - id: kHeroGun1
+    type: u32 
+    value: 2
 
 sections:
   - id: asset_names
@@ -50,7 +70,6 @@ sections:
   - id: play_time
     type: struct_play_time
     mutable: true
-    zi: true
 
   - id: instance_velocity
     container: static_array
@@ -109,10 +128,13 @@ types:
   struct_play_time:
     - id: time
       type: f32
+      value: 1
     - id: time_delta
       type: f32
+      value: 2
     - id: frame_counter
       type: u32
+      value: 3
 
   struct_spawn:
     - id: at_each
@@ -170,7 +192,8 @@ types:
   struct_event_destroyed_at:
     - id: count
       type: u32
+      value: 0
     - id: at
       container: static_array
-      count: event_destroyed_at_max_count
+      count: kEventDestroyedAtMaxCount
       type: struct_vec2

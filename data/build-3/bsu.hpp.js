@@ -166,14 +166,14 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
   // named constants
   if (schema.hasOwnProperty('constants')) {
     fs.writeSync(file,'// Named Constants\n');
-    Object.keys(schema.constants).forEach( constant_name => {
-      const constant_c_name  = 'k' + snakeToPascalCase(constant_name);
-      const constant_type    = schema.constants[constant_name].type; 
-      const constant_value   = schema.constants[constant_name].value; 
+    schema.constants.forEach( constant => {
+      const constant_name    = constant.id;
+      const constant_type    = constant.type;
+      const constant_value   = constant.value;
       if ( constant_type == 'f32' ) {
-        fs.writeSync(file,`#define ${constant_c_name.padEnd(30,' ')} ${constant_value.toFixed(8)}f\n`);
+        fs.writeSync(file,`#define ${constant_name.padEnd(30,' ')} ${constant_value.toFixed(8)}f\n`);
       } else {
-        fs.writeSync(file,`#define ${constant_c_name.padEnd(30,' ')} ${constant_value}\n`);
+        fs.writeSync(file,`#define ${constant_name.padEnd(30,' ')} ${constant_value}\n`);
       }
     });
   }
@@ -191,12 +191,6 @@ const WriteHpp = ( schema, hpp_filename_out ) => {
   });
   fs.writeSync(file,'#endif // __cplusplus\n');
   fs.writeSync(file,`\n`);
-
-  // known values - #todo move these to schema
-  fs.writeSync(file,`#define kBsuInitialDirectionDown 0\n`);
-  fs.writeSync(file,`#define kBsuInitialDirectionHero 1\n`);
-  fs.writeSync(file,`#define kBsuInitialDirectionUp   2\n`);
-  fs.writeSync(file,`#define kBsuOnFlagHeroTrigger0   1\n`);
 
   // struct definitions
   fs.writeSync(file,`

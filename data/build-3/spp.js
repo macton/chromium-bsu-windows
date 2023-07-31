@@ -50,8 +50,8 @@ const PreProcess_Spawn_AtEach = ( spawn_in, config_in ) => {
     AtEach:             spawn_in.AtEach,
     TimeStep:           spawn_in.TimeStep,
     Offset:             spawn_in.Offset,
-    InitialDirection:   spawn_in.InitialDirection || "Down",
-    OnFlag:             spawn_in.OnFlag || "None",
+    InitialDirection:   spawn_in.InitialDirection,
+    OnFlag:             spawn_in.OnFlag,
     ...PreProcess_Spawn_AtEach_Pattern( spawn_in.Pattern ),
   };
 }
@@ -99,8 +99,8 @@ const PreProcess_Spawn_AtGroup_Expression = ( spawn_in, config_in ) => {
     TimeStep:          spawn_in.TimeStep,
     TimeStart:         spawn_in.TimeStart,
     TimeStop:          spawn_in.TimeStop,
-    InitialDirection:  spawn_in.InitialDirection || "Down",
-    OnFlag:             spawn_in.OnFlag || "None",
+    InitialDirection:  spawn_in.InitialDirection,
+    OnFlag:             spawn_in.OnFlag,
     Offset:            [...spawn_in.Offset],
     Pattern:           [...pattern],
   };
@@ -151,8 +151,8 @@ const PreProcess_Spawn_AtGroup_Formation = ( spawn_in, config_in ) => {
         TimeStep:          spawn_in.TimeStep,
         TimeStart:         spawn_in.TimeStart,
         TimeStop:          spawn_in.TimeStop,
-        OnFlag:            spawn_in.OnFlag || "None",
-        InitialDirection:  spawn_in.InitialDirection || "Down",
+        OnFlag:            spawn_in.OnFlag,
+        InitialDirection:  spawn_in.InitialDirection,
         Offset:            [...spawn_in.Offset],
         Pattern:           [...slice_pattern],
       });

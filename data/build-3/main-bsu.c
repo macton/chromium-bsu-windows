@@ -3,17 +3,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include <time.h>
 #include <float.h>
 #include <signal.h>
 #include <sys/ioctl.h>
 #include <string.h>
 #include "bsu.h"
-
-#include <unistd.h> // usleep
-
-#define imin(x,y) ((x)<(y))?(x):(y)
-#define imax(x,y) ((x)>(y))?(x):(y)
+#include "timespec_util.h"
+#include "f32_math.h"
+#include "s32_math.h"
 
 // ---------------------------------------------------------------------------------------
 
@@ -37,7 +34,6 @@ int line = 0;
 
 // ---------------------------------------------------------------------------------------
 
-typedef struct timespec timespec;
 
 int hero_location_x = 0;
 int hero_location_y = 0;
@@ -45,101 +41,12 @@ float hero_x = 0;
 float hero_y = 0;
 uint32_t hero_flags = 0;
 
-#define kHeroFlagTrigger0 1
 
 float debug_a = 0.0f;
 float debug_b = 0.0f;
 float debug_c = 0.0f;
 float debug_d = 0.0f;
 
-int sdCircle( int x, int y, int r )
-{
-  return sqrt((x*x)+(y*y)) - r;
-}
-
-float clampf( float a, float low, float high )
-{
-  return fmax(fmin(a,high),low);
-}
-
-float signf( float a )
-{
-  return (a<0)?-1.0f:1.0f;
-}
-
-float sdPentagon( float px, float py, float r )
-{
-  float kx = 0.809016994f;
-  float ky = 0.587785252f;
-  float kz = 0.726542528f;
-
-  px  = fabs(px);
-
-  float d0   = 2.0f * fminf( (px*-kx)+(py*ky) , 0.0f );
-  float k1x  = d0 * -kx;
-  float k1y  = d0 * ky;
-
-  px -= k1x;
-  py -= k1y;
-
-  float d1   = 2.0f * fminf( (px*kx)+(py*ky) , 0.0f );
-  float k3x  = d1 * kx;
-  float k3y  = d1 * ky;
-
-  px -= k3x;
-  py -= k3y;
-
-  float dx   = clampf(px,-r*kz,r*kz);
-  float dy   = r;
-
-  px -= dx;
-  py -= dy;
-
-  return sqrtf( (px*px)+(py*py) ) * signf(py);
-}
-
-int opOnion( int d, int r )
-{
-  return abs(d)-r;
-}
-
-timespec timespec_sub(timespec start, timespec end)
-{
-	timespec temp;
-	if ((end.tv_nsec-start.tv_nsec)<0) {
-		temp.tv_sec = end.tv_sec-start.tv_sec-1;
-		temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
-	} else {
-		temp.tv_sec = end.tv_sec-start.tv_sec;
-		temp.tv_nsec = end.tv_nsec-start.tv_nsec;
-	}
-	return temp;
-}
-
-timespec timespec_add(timespec start, timespec end)
-{
-  int64_t sec  = start.tv_sec + end.tv_sec;
-  int64_t nsec = start.tv_nsec + end.tv_nsec;
-  int64_t extra_sec  = (nsec/1000000000);
-  int64_t extra_nsec = extra_sec * 1000000000;
-  timespec sum = { sec+extra_sec, nsec-extra_nsec};
-  return sum;
-}
-
-void mvprint_timespec( int y, int x, const char* title, timespec time )
-{
-  int64_t sec  = time.tv_sec;
-  int64_t msec = time.tv_nsec / 1000000;
-  int64_t usec = (time.tv_nsec - (msec*1000000)) / 1000;
-  int64_t nsec = time.tv_nsec - (msec*1000000) - (usec*1000);
-
-  mvprintw(y, x, "%s%ds %dms %dus %dns",title,(int)(sec),(int)(msec),(int)(usec),(int)(nsec));
-}
-
-float timespec_f( timespec time )
-{
-  return ((float) time.tv_sec + (time.tv_nsec / 1000000000.0f));
-}
 
 // ---------------------------------------------------------------------------------------
 
@@ -265,7 +172,7 @@ framebuffer_draw_circle(int cx, int cy, int r)
     {
       int x = lx - lcx;
       int y = ly - lcy;
-      int d = sdCircle( x, y, r);
+      int d = f32_sd_circle( x, y, r);
       if ( d <= 0 )
       {
         framebuffer_bit_write( lx, ly );
@@ -274,6 +181,12 @@ framebuffer_draw_circle(int cx, int cy, int r)
   }
 }
 
+void quit(void)
+{
+  printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
+  endwin();
+  exit(0);
+}
 
 int main(void)
 {
@@ -286,17 +199,15 @@ int main(void)
   nodelay(stdscr, TRUE);
   keypad(stdscr, TRUE);
   set_escdelay(0);
-
   mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
   mouseinterval(0);
 
   // xterm SET_ANY_EVENT_MOUSE
   // see: https://www.xfree86.org/current/ctlseqs.html#Mouse%20Tracking
-  printf("\033[?1003h\n"); // Makes the terminal report mouse movement events
+  printf("\033[?1003h\n"); 
   fflush(stdout);
 
   // start_color();
-
   clear();
 
   iWidth      = COLS * 2;
@@ -378,7 +289,7 @@ if (color_id == 0)
           hero_location_y += 10;
         break;
         case 'q':
-          goto quit;
+          quit();
         break;
         case KEY_MOUSE:
         {
@@ -396,11 +307,11 @@ if (color_id == 0)
 
             if ( event.bstate & BUTTON1_RELEASED )
             {
-              hero_flags &= ~(1 << kHeroFlagTrigger0);
+              hero_flags &= ~kHeroTrigger0;
             }
             if ( event.bstate & BUTTON1_PRESSED )
             {
-              hero_flags |= 1 << kHeroFlagTrigger0;
+              hero_flags |= kHeroTrigger0;
             }
 
           }
@@ -471,9 +382,9 @@ if (color_id == 0)
 
     mvprint_timespec( line++,0, "frame_time:      ", frame_time);
     mvprint_timespec( line++,0, "sleep_time:      ", sleep_time);
-    mvprint_timespec( line++,0, "sim_time:      ", sim_time);
-    mvprint_timespec( line++,0, "draw_time:     ", draw_time);
-    mvprint_timespec( line++,0, "present_time:  ", present_time);
+    mvprint_timespec( line++,0, "sim_time:        ", sim_time);
+    mvprint_timespec( line++,0, "draw_time:       ", draw_time);
+    mvprint_timespec( line++,0, "present_time:    ", present_time);
     mvprintw(line++,0,          "iTime:           %f",iTime);
     mvprintw(line++,0,          "iTimeDelta:      %f",iTimeDelta);
     mvprintw(line++,0,          "iFrameCounter:   %d",iFrameCounter);
@@ -535,11 +446,6 @@ if (color_id == 0)
     iTimeDelta = timespec_f( delta_time );
     iTime     += iTimeDelta;
   }
-
-quit:
-  printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
-  endwin();
-  exit(0);
 }
 
 int
@@ -707,20 +613,31 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
   // ---------------------------------------------------------------------------------------
   // Update instance age
   // ---------------------------------------------------------------------------------------
-  for (int asset_index=0;asset_index<asset_count;asset_index++)
+
+  for (int asset_index=1;asset_index<asset_count;asset_index++)
   {
     static_array*    age_array           = instance_age_data + asset_index;
     float*           age_data            = (float*)(bsu_start + age_array->offset );
     uint32_t         instance_count      = instance_count_data[asset_index];
     uint32_t         max_instance_count  = max_instance_count_data[asset_index];
+    static_array*    location_array      = instance_location_data + asset_index;
+    struct_vec2*     location_data       = (struct_vec2*)(bsu_start + location_array->offset);
     uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
+    static_array*    health_array        = instance_health_data + asset_index;
+    float*           health_data         = (float*)(bsu_start + health_array->offset);
 
     for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
     {
-      float*  live_instance_age = age_data + live_instance_index;
+      float*       live_instance_age = age_data + live_instance_index;
+      struct_vec2* live_location     = location_data + live_instance_index;
+      float*       live_health       = health_data + live_instance_index;
+
       if ( *live_instance_age > 0 ) 
       {
-        *live_instance_age += iTimeDelta;
+        int out_band    = ((live_location->x < -17.0f) || (live_location->x > 17.0f) || (live_location->y < -17.0f) || (live_location->y > 17.0f));
+        int out_health  = *live_health <= 0.0f;
+        int end_of_life = out_band || out_health;
+        *live_instance_age = (end_of_life)?0.0f:(*live_instance_age + iTimeDelta);
       }
     }
   }
@@ -766,11 +683,6 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
 
         live_location->x += live_velocity->x * iTimeDelta;
         live_location->y += live_velocity->y * iTimeDelta;
-
-        int out_band    = ((live_location->x < -17.0f) || (live_location->x > 17.0f) || (live_location->y < -17.0f) || (live_location->y > 17.0f));
-        int out_health  = *live_health <= 0.0f;
-        int end_of_life = out_band || out_health;
-        *live_age = (end_of_life)?0.0f:(*live_age + iTimeDelta);
       }
     }
 
@@ -794,12 +706,9 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
       static_array*    target_age_array             = instance_age_data + target_asset_index;
       float*           target_age_data              = (float*)(bsu_start + target_age_array->offset);
 
-      if ( on_flag == kBsuOnFlagHeroTrigger0 )
+      if (( on_flag & hero_flags ) != on_flag)
       {
-        if ( (hero_flags & (1 << kHeroFlagTrigger0)) == 0) 
-        {
-          continue;
-        }
+        continue;
       }
 
       if (t >= time_next)
@@ -837,13 +746,13 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
               float dir_y = 0.0f;
               switch (initial_direction)
               {
-                case kBsuInitialDirectionDown:
+                case kInitialDirectionDown:
                   dir_y = -1.0f;
                 break;
-                case kBsuInitialDirectionUp:
+                case kInitialDirectionUp:
                   dir_y = 1.0f;
                 break;
-                case kBsuInitialDirectionHero:
+                case kInitialDirectionHero:
                 {
                   float dx = hero_x - next_instance_location->x;
                   float dy = hero_y - next_instance_location->y;
@@ -884,12 +793,9 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
       uint32_t         initial_direction            = target_asset_index_direction & 0x03;
       uint32_t         on_flag                      = (target_asset_index_direction >> 2) & 0x03;
 
-      if ( on_flag == kBsuOnFlagHeroTrigger0 )
+      if (( on_flag & hero_flags ) != on_flag )
       {
-        if ( (hero_flags & (1 << kHeroFlagTrigger0)) == 0) 
-        {
-          continue;
-        }
+        continue;
       }
 
       if ((t >= time_next) && (t >= time_start) && (t <= time_stop))
@@ -917,13 +823,13 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
           float dir_y = 0.0f;
           switch (initial_direction)
           {
-            case kBsuInitialDirectionDown:
+            case kInitialDirectionDown:
               dir_y = -1.0f;
             break;
-            case kBsuInitialDirectionUp:
+            case kInitialDirectionUp:
               dir_y = 1.0f;
             break;
-            case kBsuInitialDirectionHero:
+            case kInitialDirectionHero:
             {
               float dx = hero_x - next_instance_location->x;
               float dy = hero_y - next_instance_location->y;

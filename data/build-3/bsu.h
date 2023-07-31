@@ -23,7 +23,12 @@
 #define kInstanceLocationOffset        136
 
 // Named Constants
+#define kInitialDirectionDown          0
+#define kInitialDirectionHero          1
+#define kInitialDirectionUp            2
 #define kEventDestroyedAtMaxCount      32
+#define kHeroTrigger0                  1
+#define kHeroGun1                      2
 
 #ifndef __cplusplus
 typedef struct static_array                           static_array;
@@ -38,10 +43,6 @@ typedef struct struct_collision_mod_health            struct_collision_mod_healt
 typedef struct struct_event_destroyed_at              struct_event_destroyed_at;
 #endif // __cplusplus
 
-#define kBsuInitialDirectionDown 0
-#define kBsuInitialDirectionHero 1
-#define kBsuInitialDirectionUp   2
-#define kBsuOnFlagHeroTrigger0   1
 
 struct static_array
 {

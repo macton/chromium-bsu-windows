@@ -29,6 +29,20 @@ const stringReplaceAll = ( string, search_text, replace_text ) => {
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
+if (process.argv.length < 5) {
+  console.error( process.argv[1] + ' [config.yml] [bsu_schema.yml] [outputfile]' );
+  process.exit(1);
+}
+
+const config_filename_in           = process.argv[2];
+const schema_filename_in           = process.argv[3];
+const bsu_filename_out             = process.argv[4];
+const config                       = yaml.load( fs.readFileSync( config_filename_in, 'utf8' ) );
+const schema                       = yaml.load( fs.readFileSync( schema_filename_in, 'utf8' ) );
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
 const WriteU32 = ( u32, file ) => {
   const write_u32_buffer         = new ArrayBuffer(4);
   const write_u32                = new Uint32Array(write_u32_buffer);
@@ -77,6 +91,16 @@ const WriteUTF8 = ( string, file ) => {
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
+
+const EvaluateExpression = ( expression_text, schema ) => {
+  const context = { };
+  schema.constants.forEach( constant => {
+    context[ constant.id ] = constant.value;
+  });
+  vm.createContext( context );
+  vm.runInContext( "var _result = " + expression_text, context );
+  return context._result;
+}
 
 const WriteMagic = ( schema, file ) => {
   const magic_str           = schema.magic.value;
@@ -133,16 +157,7 @@ const WriteBlock = ( gid, value, block, schema, storage_section, zi, file ) => {
 
     // is count statically part of schema?
     if (block.hasOwnProperty('count')) {
-      // in the schema, count can be:
-      //  [x] a literal number
-      //  [x] a named constant in schema
-      //  [ ] a reference to a stored value
-      //  [ ] an expression (which would be default and replace all above)
-      if (Number.isInteger(block.count))  {
-        count = block.count; 
-      } else if (schema.hasOwnProperty('constants') && schema.constants.hasOwnProperty(block.count)) {
-        count = schema.constants[block.count].value;
-      }
+      count = EvaluateExpression( block.count, schema ) || 0;
     } else {
       count = value("count");
     }
@@ -208,14 +223,20 @@ const WriteBlock = ( gid, value, block, schema, storage_section, zi, file ) => {
 
     for (let i=0;i<field_count;i++) {
 
-      if ((!zi) && (!value)) {
-        throw new Error("Error: Missing mapped value for '" + field_gid + "'");
-      }
-
       const field_block = type[i];
       const field_id    = field_block.id;
       const field_gid   = gid + "." + field_id;
-      const field_value = value ? value(field_id) : null;
+      let   field_value = null;
+      if ( field_block.hasOwnProperty('value') ) {
+        // value in schema
+        field_value = EvaluateExpression( field_block.value, schema );
+      } else {
+        if ((!zi) && (!value)) {
+          throw new Error("Error: Missing mapped value for '" + field_gid + "'");
+        }
+        // value in map
+        field_value = value && value( field_id );
+      }
 
       size += WriteBlock( field_gid, field_value, field_block, schema, storage_section, zi, file );
     }
@@ -602,26 +623,9 @@ const map_asset_spawn_static_array_element_struct_spawn_at_each_static_array_ele
   return (id) => {
     if (id == "target_index") {
       const target_index = config.References.indexOf( at_each.AtEach );
-      let result    = 0;
-      let direction = 0;
-      let on_flag   = 0;
-      switch (at_each.InitialDirection) { 
-        case "Down":
-          direction = 0;
-        break;
-        case "Hero":
-          direction = 1;
-        break;
-        case "Up":
-          direction = 2;
-        break;
-      }
-      switch (at_each.OnFlag) { 
-        case "HeroTrigger0":
-          on_flag = 1;
-        break;
-      }
-      result = direction | ( on_flag << 2) | ( target_index << 4 );
+      const direction    = EvaluateExpression( at_each.InitialDirection, schema ) || 0;
+      const on_flag      = EvaluateExpression( at_each.OnFlag, schema ) || 0;
+      const result       = direction | ( on_flag << 2) | ( target_index << 4 );
       return result; 
     } else if (id == "time_step") {
       return at_each.TimeStep;
@@ -661,26 +665,9 @@ const map_asset_spawn_static_array_element_struct_spawn_at_group_static_array_el
   return (id) => {
     if (id == "target_index") {
       const target_index = config.References.indexOf( at_group.AtGroup );
-      let result    = 0;
-      let direction = 0;
-      let on_flag   = 0;
-      switch (at_group.InitialDirection) { 
-        case "Down":
-          direction = 0;
-        break;
-        case "Hero":
-          direction = 1;
-        break;
-        case "Up":
-          direction = 2;
-        break;
-      }
-      switch (at_group.OnFlag) { 
-        case "HeroTrigger0":
-          on_flag = 1;
-        break;
-      }
-      result = direction | ( on_flag << 2) | ( target_index << 4 );
+      const direction    = EvaluateExpression( at_group.InitialDirection, schema ) || 0;
+      const on_flag      = EvaluateExpression( at_group.OnFlag, schema ) || 0;
+      const result       = direction | ( on_flag << 2) | ( target_index << 4 );
       return result; 
     } else if (id == "time_step") {
       return at_group.TimeStep;
@@ -883,16 +870,5 @@ const map_bsu = ( config ) => {
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
-
-if (process.argv.length < 5) {
-  console.error( process.argv[1] + ' [config.yml] [bsu_schema.yml] [outputfile]' );
-  process.exit(1);
-}
-
-const config_filename_in           = process.argv[2];
-const schema_filename_in           = process.argv[3];
-const bsu_filename_out             = process.argv[4];
-const config                       = yaml.load( fs.readFileSync( config_filename_in, 'utf8' ) );
-const schema                       = yaml.load( fs.readFileSync( schema_filename_in, 'utf8' ) );
 
 WriteBSU( map_bsu(config), schema, bsu_filename_out );

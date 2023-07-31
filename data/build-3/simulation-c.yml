@@ -1,0 +1,16 @@
+update_age:
+  if ( $instance_age > 0 )
+  {
+    int out_band    = ((live_location->x < -17.0f) || (live_location->x > 17.0f) || (live_location->y < -17.0f) || (live_location->y > 17.0f));
+    int out_health  = *live_health <= 0.0f;
+    int end_of_life = out_band || out_health;
+    *live_age = (end_of_life)?0.0f:(*live_age + iTimeDelta);
+  }
+  
+update_location:
+  if ( $instance_age > 0 )
+  {
+    $instance_location->x += $instance_velocity->x * iTimeDelta; 
+    $instance_location->y += $instance_velocity->y * iTimeDelta; 
+  }
+
