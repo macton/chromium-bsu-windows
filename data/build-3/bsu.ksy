@@ -41,9 +41,15 @@ instances:
   collision_mod_health:
     pos: _root.toc.collision_mod_health_offset
     type: static_array_struct_collision_mod_health
+  collision_mod_flag:
+    pos: _root.toc.collision_mod_flag_offset
+    type: static_array_struct_collision_mod_flag
   play_time:
     pos: _root.toc.play_time_offset
     type: struct_play_time
+  instance_count:
+    pos: _root.toc.instance_count_offset
+    type: static_array_u4
   instance_velocity:
     pos: _root.toc.instance_velocity_offset
     type: static_array_struct_array_vec2
@@ -56,9 +62,6 @@ instances:
   event_destroyed_at:
     pos: _root.toc.event_destroyed_at_offset
     type: struct_event_destroyed_at
-  instance_count:
-    pos: _root.toc.instance_count_offset
-    type: static_array_u4
   instance_location:
     pos: _root.toc.instance_location_offset
     type: static_array_struct_array_vec2
@@ -97,7 +100,11 @@ types:
         type: u4
       - id: collision_mod_health_offset
         type: u4
+      - id: collision_mod_flag_offset
+        type: u4
       - id: play_time_offset
+        type: u4
+      - id: instance_count_offset
         type: u4
       - id: instance_velocity_offset
         type: u4
@@ -106,8 +113,6 @@ types:
       - id: instance_health_offset
         type: u4
       - id: event_destroyed_at_offset
-        type: u4
-      - id: instance_count_offset
         type: u4
       - id: instance_location_offset
         type: u4
@@ -202,6 +207,18 @@ types:
     instances:
       value:
         type: struct_collision_mod_health
+        pos: offset
+        repeat: expr
+        repeat-expr: count
+  static_array_struct_collision_mod_flag:
+    seq:
+      - id: offset
+        type: u4
+      - id: count
+        type: u4
+    instances:
+      value:
+        type: struct_collision_mod_flag
         pos: offset
         repeat: expr
         repeat-expr: count
@@ -336,6 +353,18 @@ types:
         repeat: expr
         repeat-expr: count
   struct_collision_mod_health:
+    seq:
+      - id: source_asset_index
+        type: u4
+      - id: targets
+        type: static_array_struct_collision_mod_health_target
+  struct_collision_mod_flag_target:
+    seq:
+      - id: target_asset_index
+        type: u4
+      - id: value
+        type: u4
+  struct_collision_mod_flag:
     seq:
       - id: source_asset_index
         type: u4

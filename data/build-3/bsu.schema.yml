@@ -3,6 +3,10 @@ magic:
   size: 64
 
 constants:
+  - id: kEventDestroyedAtMaxCount
+    type: s32 
+    value: 32
+
   - id: kInitialDirectionDown
     type: u32
     value: 0
@@ -14,10 +18,6 @@ constants:
   - id: kInitialDirectionUp
     type: u32
     value: 2
-
-  - id: kEventDestroyedAtMaxCount
-    type: s32 
-    value: 32
 
   - id: kHeroTrigger0
     type: u32 
@@ -67,9 +67,19 @@ sections:
     container: static_array
     type: struct_collision_mod_health
 
+  - id: collision_mod_flag
+    container: static_array
+    type: struct_collision_mod_flag
+
   - id: play_time
     type: struct_play_time
     mutable: true
+
+  - id: instance_count
+    container: static_array
+    type: u32
+    mutable: true
+    zi: true
 
   - id: instance_velocity
     container: static_array
@@ -93,11 +103,6 @@ sections:
     type: struct_event_destroyed_at
     mutable: true
     zi: true
-
-  - id: instance_count
-    container: static_array
-    type: u32
-    mutable: true
 
   - id: instance_location
     container: static_array
@@ -183,6 +188,19 @@ types:
       type: f32
 
   struct_collision_mod_health:
+    - id: source_asset_index
+      type: u32
+    - id: targets
+      container: static_array
+      type: struct_collision_mod_health_target
+
+  struct_collision_mod_flag_target:
+    - id: target_asset_index
+      type: u32
+    - id: value
+      type: u32
+
+  struct_collision_mod_flag:
     - id: source_asset_index
       type: u32
     - id: targets

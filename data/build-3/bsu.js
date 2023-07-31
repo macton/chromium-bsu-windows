@@ -152,27 +152,15 @@ const WriteBlock = ( gid, value, block, schema, storage_section, zi, file ) => {
 
   if ( container == "static_array" ) {
 
-    let count;
-    let array_value;
-
     // is count statically part of schema?
+    let count;
     if (block.hasOwnProperty('count')) {
       count = EvaluateExpression( block.count, schema ) || 0;
     } else {
       count = value("count");
     }
 
-    // is value statically part of schema? 
-    if (block.hasOwnProperty('fill')) {
-      array_value  = (index) => { 
-        return (field_id) => { 
-          return block.fill[field_id] 
-        }; 
-      };
-    } else {
-      array_value  = value ? value("array") : null;
-    }
-
+    const array_value  = value ? value("array") : null;
     const array_gid    = gid + '.static_array';
     const array_offset = ( count > 0 ) ? ( storage_section.offsets[array_gid] || 0 ) : 0;
 
@@ -821,10 +809,69 @@ const map_collision_mod_health_static_array_element = ( config ) => {
 const map_collision_mod_health_static_array = ( config ) => {
   return ( id ) => {
     if ( id == "count" ) {
-      return config.CollisionModHealth ? Object.keys(config.CollisionModHealth).length : 0;
+      return config.CollisionModFlag ? Object.keys(config.CollisionModFlag).length : 0;
     }
     else if ( id == "array" ) {
       return map_collision_mod_health_static_array_element( config );
+    }
+  };
+}
+
+const map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets_static_array_element = ( source_asset_name, config ) => {
+  return (index) => {
+    return (id) => {
+      if ( id == "target_asset_index" ) {
+        const target_asset_name  = config.CollisionModFlag[source_asset_name][index].Target;
+        const target_asset_index = config.References.indexOf( target_asset_name );
+        return target_asset_index;
+      }
+      else if ( id == "value" ) {
+        const flag_text = config.CollisionModFlag[source_asset_name][index].Value;
+        const flag_value = EvaluateExpression( flag_text, schema ) || 0;
+        return flag_value;
+      }
+    };
+  };
+}
+
+const map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets = ( source_asset_name, config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.CollisionModFlag[source_asset_name].length;
+    }
+    else if ( id == "array" ) {
+      return map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets_static_array_element( source_asset_name, config );
+    }
+  };
+}
+
+const map_collision_mod_flag_static_array_element_struct_collision_mod_flag = ( index, config ) => {
+  return ( id ) => {
+    if ( id == "source_asset_index" ) {
+      const source_asset_name  = Object.keys(config.CollisionModFlag)[ index ];
+      const source_asset_index = config.References.indexOf( source_asset_name );
+      return source_asset_index;
+    }
+    else if ( id == "targets" ) {
+      const source_asset_name  = Object.keys(config.CollisionModFlag)[ index ];
+      return map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets( source_asset_name, config );
+    }
+  };
+}
+
+const map_collision_mod_flag_static_array_element = ( config ) => {
+  return (index) => {
+    return map_collision_mod_flag_static_array_element_struct_collision_mod_flag( index, config );
+  };
+}
+
+const map_collision_mod_flag_static_array = ( config ) => {
+  return ( id ) => {
+    if ( id == "count" ) {
+      return config.CollisionModFlag ? Object.keys(config.CollisionModFlag).length : 0;
+    }
+    else if ( id == "array" ) {
+      return map_collision_mod_flag_static_array_element( config );
     }
   };
 }
@@ -861,6 +908,8 @@ const map_bsu = ( config ) => {
       return map_pattern_u8_static_array( config );
     } else if ( id == "collision_mod_health" ) {
       return map_collision_mod_health_static_array( config );
+    } else if ( id == "collision_mod_flag" ) {
+      return map_collision_mod_flag_static_array( config );
     } else {
       return null;
     }

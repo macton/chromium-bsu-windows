@@ -205,6 +205,7 @@ const PreProcess = ( config_in ) => {
     BaseSpeed:           value => { return { BaseSpeed: value } }, 
     BaseHealth:          value => { return { BaseHealth: value } }, 
     CollisionModHealth:  value => { return { CollisionModHealth: value } }, 
+    CollisionModFlag:    value => { return { CollisionModFlag: value } }, 
     Spawn:               PreProcess_Spawn,
   };
   config_out = {

@@ -201,6 +201,10 @@ CollisionModHealth:
   EnemyAmmo00:
     - Target: Hero
       Amount: -10
+CollisionModFlag:
+  PowerUp_HeroAmmo00:
+    - Target: Hero
+      Value: kHeroGun1
 InstanceCount:
   Hero: 0
   EnemyAmmo00: 0

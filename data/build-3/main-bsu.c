@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <string.h>
 #include "bsu.h"
+#include "bitrect.h"
 #include "timespec_util.h"
 #include "f32_math.h"
 #include "s32_math.h"
@@ -66,120 +67,16 @@ int fragment_main( int x, int y );
 
 #define FRAMEBUFFER_WIDTH  512
 #define FRAMEBUFFER_HEIGHT 512
-#define FRAMEBUFFER_SIZE   (FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT)
-uint8_t framebuffer[ FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT ];
 
-void
-framebuffer_clear(void)
+typedef struct bitrect_framebuffer bitrect_framebuffer;
+struct bitrect_framebuffer
 {
-  memset(framebuffer,0,FRAMEBUFFER_SIZE);
-}
+  int32_t width;
+  int32_t height;
+  uint8_t buffer[ bitrect_calcsize( FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT ) ];
+};
 
-int framebuffer_bitmask[8] = { 1, 8, 2, 16, 4, 32, 64, 128 };
-
-uint8_t
-framebuffer_byte_read(int x, int y)
-{
-  if ( x < 0 ) return 0;
-  if ( y < 0 ) return 0;
-
-  int char_x             = x/2;
-  int char_y             = y/4;
-  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
-  int char_value         = framebuffer[ char_index ];
-  return char_value;
-}
-
-void
-framebuffer_byte_write(int x, int y, uint8_t value)
-{
-  if ( x < 0 ) return;
-  if ( y < 0 ) return;
-
-  int char_x             = x/2;
-  int char_y             = y/4;
-  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
-
-  framebuffer[ char_index ] = value;
-}
-
-uint8_t
-framebuffer_bit_read(int x, int y)
-{
-  if ( x < 0 ) return 0;
-  if ( y < 0 ) return 0;
-
-  int char_x             = x/2;
-  int char_y             = y/4;
-  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
-  int char_value         = framebuffer[ char_index ];
-  int char_ox            = x - (char_x*2);
-  int char_oy            = y - (char_y*4);
-  int char_bitmask_index = (char_oy*2)+char_ox;
-  int char_bitmask       = framebuffer_bitmask[ char_bitmask_index ];
-  return char_value & char_bitmask;
-}
-
-void
-framebuffer_bit_write(int x, int y)
-{
-  if ( x < 0 ) return;
-  if ( y < 0 ) return;
-  
-  int char_x             = x/2;
-  int char_y             = y/4;
-  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
-  int char_value         = framebuffer[ char_index ];
-  int char_ox            = x - (char_x*2);
-  int char_oy            = y - (char_y*4);
-  int char_bitmask_index = (char_oy*2)+char_ox;
-  int char_bitmask       = framebuffer_bitmask[ char_bitmask_index ];
-
-  framebuffer[ char_index ] |= char_bitmask;
-}
-
-void
-framebuffer_bit_clear(int x, int y)
-{
-  if ( x < 0 ) return;
-  if ( y < 0 ) return;
-
-  int char_x             = x/2;
-  int char_y             = y/4;
-  int char_index         = (char_y * FRAMEBUFFER_WIDTH)+char_x;
-  int char_value         = framebuffer[ char_index ];
-  int char_ox            = x - (char_x*2);
-  int char_oy            = y - (char_y*4);
-  int char_bitmask_index = (char_oy*2)+char_ox;
-  int char_bitmask       = framebuffer_bitmask[ char_bitmask_index ];
-
-  framebuffer[ char_index ] &= ~char_bitmask;
-}
-
-void
-framebuffer_draw_circle(int cx, int cy, int r)
-{
-  int x0 = cx-r;
-  int y0 = cy-r;
-  int x1 = cx+r;
-  int y1 = cy+r;
-  int lcx = (x0+x1)/2;
-  int lcy = (y0+y1)/2;
-
-  for (int ly=y0;ly<=y1;ly++)
-  {
-    for (int lx=x0;lx<=x1;lx++)
-    {
-      int x = lx - lcx;
-      int y = ly - lcy;
-      int d = f32_sd_circle( x, y, r);
-      if ( d <= 0 )
-      {
-        framebuffer_bit_write( lx, ly );
-      }
-    }
-  }
-}
+bitrect_framebuffer framebuffer = { FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 0 };
 
 void quit(void)
 {
@@ -352,7 +249,7 @@ if (color_id == 0)
 
       clock_gettime(CLOCK_REALTIME, &start_time);
 
-      framebuffer_clear();
+      bitrect_clear((bitrect_buffer*)&framebuffer);
       bsu_draw_write_event_time(bsu_start);
       bsu_draw( bsu_start );
 
@@ -370,7 +267,7 @@ if (color_id == 0)
       {
         for (int x=0;x<iWidth;x+=2)
         {
-          int ch = framebuffer_byte_read(x,y);
+          int ch = bitrect_byte_read((bitrect_buffer*)&framebuffer,x,y);
           mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
         }
       }
@@ -493,7 +390,7 @@ bsu_draw( uintptr_t bsu_start )
         int   r    = ((base_size->x / 15.0) * iHalfWidth);
 
         debug_asset_index = asset_index;
-        framebuffer_draw_circle(cx, cy, r);
+        bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
       }
     }
   }
@@ -523,7 +420,7 @@ bsu_draw( uintptr_t bsu_start )
       float size = start_size + (t*(stop_size-start_size));
       int   r = ((size / 15.0) * iHalfWidth);
 
-      framebuffer_draw_circle(cx, cy, r);
+      bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
     }
   }
 
