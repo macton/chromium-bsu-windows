@@ -809,7 +809,7 @@ const map_collision_mod_health_static_array_element = ( config ) => {
 const map_collision_mod_health_static_array = ( config ) => {
   return ( id ) => {
     if ( id == "count" ) {
-      return config.CollisionModFlag ? Object.keys(config.CollisionModFlag).length : 0;
+      return config.CollisionModHealth ? Object.keys(config.CollisionModHealth).length : 0;
     }
     else if ( id == "array" ) {
       return map_collision_mod_health_static_array_element( config );
@@ -817,7 +817,7 @@ const map_collision_mod_health_static_array = ( config ) => {
   };
 }
 
-const map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets_static_array_element = ( source_asset_name, config ) => {
+const map_collision_mod_flags_static_array_element_struct_collision_mod_flags_targets_static_array_element = ( source_asset_name, config ) => {
   return (index) => {
     return (id) => {
       if ( id == "target_asset_index" ) {
@@ -834,18 +834,18 @@ const map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targ
   };
 }
 
-const map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets = ( source_asset_name, config ) => {
+const map_collision_mod_flags_static_array_element_struct_collision_mod_flags_targets = ( source_asset_name, config ) => {
   return ( id ) => {
     if ( id == "count" ) {
       return config.CollisionModFlag[source_asset_name].length;
     }
     else if ( id == "array" ) {
-      return map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets_static_array_element( source_asset_name, config );
+      return map_collision_mod_flags_static_array_element_struct_collision_mod_flags_targets_static_array_element( source_asset_name, config );
     }
   };
 }
 
-const map_collision_mod_flag_static_array_element_struct_collision_mod_flag = ( index, config ) => {
+const map_collision_mod_flags_static_array_element_struct_collision_mod_flags = ( index, config ) => {
   return ( id ) => {
     if ( id == "source_asset_index" ) {
       const source_asset_name  = Object.keys(config.CollisionModFlag)[ index ];
@@ -854,24 +854,24 @@ const map_collision_mod_flag_static_array_element_struct_collision_mod_flag = ( 
     }
     else if ( id == "targets" ) {
       const source_asset_name  = Object.keys(config.CollisionModFlag)[ index ];
-      return map_collision_mod_flag_static_array_element_struct_collision_mod_flag_targets( source_asset_name, config );
+      return map_collision_mod_flags_static_array_element_struct_collision_mod_flags_targets( source_asset_name, config );
     }
   };
 }
 
-const map_collision_mod_flag_static_array_element = ( config ) => {
+const map_collision_mod_flags_static_array_element = ( config ) => {
   return (index) => {
-    return map_collision_mod_flag_static_array_element_struct_collision_mod_flag( index, config );
+    return map_collision_mod_flags_static_array_element_struct_collision_mod_flags( index, config );
   };
 }
 
-const map_collision_mod_flag_static_array = ( config ) => {
+const map_collision_mod_flags_static_array = ( config ) => {
   return ( id ) => {
     if ( id == "count" ) {
       return config.CollisionModFlag ? Object.keys(config.CollisionModFlag).length : 0;
     }
     else if ( id == "array" ) {
-      return map_collision_mod_flag_static_array_element( config );
+      return map_collision_mod_flags_static_array_element( config );
     }
   };
 }
@@ -908,8 +908,8 @@ const map_bsu = ( config ) => {
       return map_pattern_u8_static_array( config );
     } else if ( id == "collision_mod_health" ) {
       return map_collision_mod_health_static_array( config );
-    } else if ( id == "collision_mod_flag" ) {
-      return map_collision_mod_flag_static_array( config );
+    } else if ( id == "collision_mod_flags" ) {
+      return map_collision_mod_flags_static_array( config );
     } else {
       return null;
     }

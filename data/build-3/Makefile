@@ -32,5 +32,5 @@ bsu.h: bsu.schema.yml bsu.hpp.js bsu.schema.yml
 simulation.bsu.o: simulation.bsu
 	objcopy -I binary -O default simulation.bsu simulation.bsu.o
 
-main-bsu-c: main-bsu.c simulation.bsu.o bsu.h
-	clang -g -O2 -fno-strict-aliasing main-bsu.c simulation.bsu.o -lm -lncursesw -Wl,-Map,main-bsu-c.map -o main-bsu-c
+main-bsu-c: main-bsu.c simulation.bsu.o bsu.h bsu_simulation_runtime.h bitrect.h
+	clang -Winline -std=c99 -D_XOPEN_SOURCE=700 -g -O2 -fno-strict-aliasing main-bsu.c simulation.bsu.o -lm -lncursesw -Wl,-Map,main-bsu-c.map -o main-bsu-c

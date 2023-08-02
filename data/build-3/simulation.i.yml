@@ -1,5 +1,6 @@
 References:
   - Hero
+  - HeroShield
   - EnemyAmmo00
   - HeroAmmo00
   - EnemyAircraft_Straight
@@ -21,16 +22,17 @@ PlayArea:
     - 15
 MaxInstanceCount:
   Hero: 1
+  HeroShield: 1
   EnemyAmmo00: 128
   HeroAmmo00: 32
   EnemyAircraft_Straight: 8
-  EnemyAircraft_Omni: 16
+  EnemyAircraft_Omni: 32
   EnemyAircraft_RayGun: 2
   EnemyAircraft_Tank: 2
   EnemyAircraft_Gnat: 32
   EnemyAircraft_Boss00: 1
   EnemyAircraft_Boss01: 1
-  PowerUp_HeroAmmo00: 2
+  PowerUp_HeroAmmo00: 32
   PowerUp_HeroAmmo01: 2
   PowerUp_HeroAmmo02: 2
   PowerUp_Shields: 2
@@ -38,6 +40,7 @@ MaxInstanceCount:
   SpawnPoint: 31
 BaseHealth:
   Hero: 100
+  HeroShield: 50
   EnemyAmmo00: 1
   HeroAmmo00: 1
   EnemyAircraft_Straight: 10
@@ -54,46 +57,51 @@ BaseHealth:
   PowerUp_Repair: 1
 Location:
   SpawnPoint:
-    Vec2Offset: 233
+    Vec2Offset: 280
   Hero:
     Vec2Offset: 0
-  EnemyAmmo00:
+  HeroShield:
     Vec2Offset: 1
+  EnemyAmmo00:
+    Vec2Offset: 2
   HeroAmmo00:
-    Vec2Offset: 129
+    Vec2Offset: 130
   EnemyAircraft_Straight:
-    Vec2Offset: 161
+    Vec2Offset: 162
   EnemyAircraft_Omni:
-    Vec2Offset: 169
+    Vec2Offset: 170
   EnemyAircraft_RayGun:
-    Vec2Offset: 185
+    Vec2Offset: 202
   EnemyAircraft_Tank:
-    Vec2Offset: 187
+    Vec2Offset: 204
   EnemyAircraft_Gnat:
-    Vec2Offset: 189
+    Vec2Offset: 206
   EnemyAircraft_Boss00:
-    Vec2Offset: 221
+    Vec2Offset: 238
   EnemyAircraft_Boss01:
-    Vec2Offset: 222
+    Vec2Offset: 239
   PowerUp_HeroAmmo00:
-    Vec2Offset: 223
+    Vec2Offset: 240
   PowerUp_HeroAmmo01:
-    Vec2Offset: 225
+    Vec2Offset: 272
   PowerUp_HeroAmmo02:
-    Vec2Offset: 227
+    Vec2Offset: 274
   PowerUp_Shields:
-    Vec2Offset: 229
+    Vec2Offset: 276
   PowerUp_Repair:
-    Vec2Offset: 231
+    Vec2Offset: 278
 BaseSize:
   Hero:
     - 0.5
     - 0.5
+  HeroShield:
+    - 2
+    - 2
   EnemyAmmo00:
-    - 0.35
+    - 0.3
     - 0.35
   HeroAmmo00:
-    - 0.35
+    - 0.3
     - 0.35
   EnemyAircraft_Straight:
     - 0.75
@@ -117,20 +125,20 @@ BaseSize:
     - 2.6
     - 2.3
   PowerUp_HeroAmmo00:
-    - 0.6
-    - 0.6
+    - 1
+    - 1
   PowerUp_HeroAmmo01:
-    - 0.6
-    - 0.6
+    - 1
+    - 1
   PowerUp_HeroAmmo02:
-    - 0.6
-    - 0.6
+    - 1
+    - 1
   PowerUp_Shields:
-    - 0.6
-    - 0.6
+    - 1
+    - 1
   PowerUp_Repair:
-    - 0.6
-    - 0.6
+    - 1
+    - 1
 BaseSpeed:
   EnemyAmmo00: 20
   HeroAmmo00: 20
@@ -200,13 +208,16 @@ CollisionModHealth:
       Amount: -10
   EnemyAmmo00:
     - Target: Hero
-      Amount: -10
+      Amount: -1
+    - Target: HeroShield
+      Amount: -1
 CollisionModFlag:
   PowerUp_HeroAmmo00:
     - Target: Hero
       Value: kHeroGun1
 InstanceCount:
   Hero: 0
+  HeroShield: 0
   EnemyAmmo00: 0
   HeroAmmo00: 0
   EnemyAircraft_Straight: 0
@@ -225,36 +236,38 @@ InstanceCount:
 Age:
   Hero:
     F32Offset: 0
-  EnemyAmmo00:
+  HeroShield:
     F32Offset: 1
+  EnemyAmmo00:
+    F32Offset: 2
   HeroAmmo00:
-    F32Offset: 129
+    F32Offset: 130
   EnemyAircraft_Straight:
-    F32Offset: 161
+    F32Offset: 162
   EnemyAircraft_Omni:
-    F32Offset: 169
+    F32Offset: 170
   EnemyAircraft_RayGun:
-    F32Offset: 185
+    F32Offset: 202
   EnemyAircraft_Tank:
-    F32Offset: 187
+    F32Offset: 204
   EnemyAircraft_Gnat:
-    F32Offset: 189
+    F32Offset: 206
   EnemyAircraft_Boss00:
-    F32Offset: 221
+    F32Offset: 238
   EnemyAircraft_Boss01:
-    F32Offset: 222
+    F32Offset: 239
   PowerUp_HeroAmmo00:
-    F32Offset: 223
+    F32Offset: 240
   PowerUp_HeroAmmo01:
-    F32Offset: 225
+    F32Offset: 272
   PowerUp_HeroAmmo02:
-    F32Offset: 227
+    F32Offset: 274
   PowerUp_Shields:
-    F32Offset: 229
+    F32Offset: 276
   PowerUp_Repair:
-    F32Offset: 231
+    F32Offset: 278
   SpawnPoint:
-    F32Offset: 233
+    F32Offset: 280
 DataU8:
   - '0x10'
   - '0x14'
@@ -981,15 +994,155 @@ DataU8:
   - '0x09'
   - '0x0a'
   - '0x0f'
-  - '0x13'
-  - '0x17'
-  - '0x19'
-  - '0x1b'
-  - '0x1b'
-  - '0x1b'
-  - '0x19'
-  - '0x16'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
   - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1b'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x1a'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x19'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x18'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x17'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x16'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x15'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x14'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x13'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x12'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x11'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x10'
+  - '0x0f'
+  - '0x0f'
+  - '0x0f'
   - '0x10'
   - '0x13'
   - '0x17'
@@ -1038,7 +1191,7 @@ DataAtEach:
     Offset:
       - -0.5
       - 0.9
-    InitialDirection: kInitialDirectionUp
+    InitialDirection: kInitialDirectionOffset
     OnFlag: kHeroTrigger0 | kHeroGun1
     PatternWidth: 32
     PatternDataU32Offset: 0
@@ -1047,7 +1200,7 @@ DataAtEach:
     Offset:
       - 0.5
       - 0.9
-    InitialDirection: kInitialDirectionUp
+    InitialDirection: kInitialDirectionOffset
     OnFlag: kHeroTrigger0 | kHeroGun1
     PatternWidth: 32
     PatternDataU32Offset: 0
@@ -1186,13 +1339,13 @@ DataAtGroup:
     PatternLength: 17
     PatternDataU8Offset: 707
   - AtGroup: SpawnPoint
-    TimeStep: 30
+    TimeStep: 2
     TimeStart: 2
     TimeStop: 300
     Offset:
       - 0
       - 0
-    PatternLength: 10
+    PatternLength: 150
     PatternDataU8Offset: 724
   - AtGroup: SpawnPoint
     TimeStep: 30
@@ -1202,7 +1355,7 @@ DataAtGroup:
       - 0
       - 0
     PatternLength: 10
-    PatternDataU8Offset: 734
+    PatternDataU8Offset: 874
   - AtGroup: SpawnPoint
     TimeStep: 30
     TimeStart: 6
@@ -1211,7 +1364,7 @@ DataAtGroup:
       - 0
       - 0
     PatternLength: 10
-    PatternDataU8Offset: 744
+    PatternDataU8Offset: 884
   - AtGroup: SpawnPoint
     TimeStep: 30
     TimeStart: 8
@@ -1220,7 +1373,7 @@ DataAtGroup:
       - 0
       - 0
     PatternLength: 10
-    PatternDataU8Offset: 744
+    PatternDataU8Offset: 884
   - AtGroup: SpawnPoint
     TimeStep: 30
     TimeStart: 10
@@ -1229,8 +1382,102 @@ DataAtGroup:
       - 0
       - 0
     PatternLength: 10
-    PatternDataU8Offset: 754
+    PatternDataU8Offset: 894
 DataVec2:
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
+  - - 0
+    - 0
   - - 0
     - 0
   - - 0
@@ -1760,6 +2007,53 @@ DataVec2:
   - - 15
     - 17
 DataF32:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   - 0
   - 0
   - 0

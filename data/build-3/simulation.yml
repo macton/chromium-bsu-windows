@@ -3,16 +3,17 @@ PlayArea:
 
 MaxInstanceCount:
   Hero:                      1
+  HeroShield:                1
   EnemyAmmo00:             128
   HeroAmmo00:               32
   EnemyAircraft_Straight:    8
-  EnemyAircraft_Omni:       16
+  EnemyAircraft_Omni:       32
   EnemyAircraft_RayGun:      2
   EnemyAircraft_Tank:        2
   EnemyAircraft_Gnat:       32
   EnemyAircraft_Boss00:      1
   EnemyAircraft_Boss01:      1
-  PowerUp_HeroAmmo00:        2
+  PowerUp_HeroAmmo00:       32
   PowerUp_HeroAmmo01:        2
   PowerUp_HeroAmmo02:        2
   PowerUp_Shields:           2
@@ -20,6 +21,7 @@ MaxInstanceCount:
 
 BaseHealth:
   Hero:                    100
+  HeroShield:               50
   EnemyAmmo00:               1
   HeroAmmo00:                1
   EnemyAircraft_Straight:   10
@@ -72,8 +74,9 @@ Location:
 
 BaseSize:
   Hero:                   [ 0.50, 0.50 ]
-  EnemyAmmo00:            [ 0.35, 0.35 ]
-  HeroAmmo00:             [ 0.35, 0.35 ]
+  HeroShield:             [ 2.00, 2.00 ]
+  EnemyAmmo00:            [ 0.30, 0.35 ]
+  HeroAmmo00:             [ 0.30, 0.35 ]
   EnemyAircraft_Straight: [ 0.75, 1.02 ]
   EnemyAircraft_Omni:     [ 0.70, 0.70 ]
   EnemyAircraft_RayGun:   [ 1.20, 1.20 ]
@@ -81,11 +84,12 @@ BaseSize:
   EnemyAircraft_Gnat:     [ 0.45, 0.45 ]
   EnemyAircraft_Boss00:   [ 3.50, 2.75 ]
   EnemyAircraft_Boss01:   [ 2.60, 2.30 ]
-  PowerUp_HeroAmmo00:     [ 0.60, 0.60 ]
-  PowerUp_HeroAmmo01:     [ 0.60, 0.60 ]
-  PowerUp_HeroAmmo02:     [ 0.60, 0.60 ]
-  PowerUp_Shields:        [ 0.60, 0.60 ]
-  PowerUp_Repair:         [ 0.60, 0.60 ]
+
+  PowerUp_HeroAmmo00:     [ 1.00, 1.00 ]
+  PowerUp_HeroAmmo01:     [ 1.00, 1.00 ]
+  PowerUp_HeroAmmo02:     [ 1.00, 1.00 ]
+  PowerUp_Shields:        [ 1.00, 1.00 ]
+  PowerUp_Repair:         [ 1.00, 1.00 ]
   
 BaseSpeed:
   EnemyAmmo00:            20.00
@@ -139,14 +143,14 @@ Spawn:
       TimeStep:   0.25
       Offset:     [ -0.5, 0.9 ]
       Pattern:    '********************************'
-      InitialDirection: kInitialDirectionUp
+      InitialDirection: kInitialDirectionOffset
       OnFlag: kHeroTrigger0 | kHeroGun1
 
     - AtEach:     Hero
       TimeStep:   0.25
       Offset:     [ 0.5, 0.9 ]
       Pattern:    '********************************'
-      InitialDirection: kInitialDirectionUp
+      InitialDirection: kInitialDirectionOffset
       OnFlag: kHeroTrigger0 | kHeroGun1
 
   EnemyAmmo00:
@@ -214,7 +218,7 @@ Spawn:
 
   PowerUp_HeroAmmo00:
     - AtGroup:    SpawnPoint
-      TimeStep:   30.00
+      TimeStep:   2.00
       TimeStart:  2.0
       TimeStop:   300
       Expression: Sin
@@ -265,7 +269,9 @@ CollisionModHealth:
       Amount: -10
   EnemyAmmo00:
     - Target: Hero
-      Amount: -10
+      Amount: -1
+    - Target: HeroShield
+      Amount: -1
 
 CollisionModFlag:
   PowerUp_HeroAmmo00:

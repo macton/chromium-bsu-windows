@@ -1,12 +1,13 @@
 #pragma once
 #include <curses.h>
 #include <time.h>
+#include <sys/time.h>
 
 #ifndef __cplusplus
 typedef struct timespec timespec;
 #endif
 
-inline timespec timespec_sub(timespec start, timespec end)
+extern inline timespec timespec_sub(timespec start, timespec end)
 {
 	timespec temp;
 	if ((end.tv_nsec-start.tv_nsec)<0) {
@@ -19,7 +20,7 @@ inline timespec timespec_sub(timespec start, timespec end)
 	return temp;
 }
 
-inline timespec timespec_add(timespec start, timespec end)
+extern inline timespec timespec_add(timespec start, timespec end)
 {
   int64_t sec  = start.tv_sec + end.tv_sec;
   int64_t nsec = start.tv_nsec + end.tv_nsec;
@@ -29,12 +30,12 @@ inline timespec timespec_add(timespec start, timespec end)
   return sum;
 }
 
-inline float timespec_f( timespec time )
+extern inline float timespec_f( timespec time )
 {
   return ((float) time.tv_sec + (time.tv_nsec / 1000000000.0f));
 }
 
-inline void mvprint_timespec( int y, int x, const char* title, timespec time )
+extern inline void mvprint_timespec( int y, int x, const char* title, timespec time )
 {
   int64_t sec  = time.tv_sec;
   int64_t msec = time.tv_nsec / 1000000;

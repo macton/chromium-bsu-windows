@@ -19,6 +19,10 @@ constants:
     type: u32
     value: 2
 
+  - id: kInitialDirectionOffset
+    type: u32
+    value: 3
+
   - id: kHeroTrigger0
     type: u32 
     value: 1
@@ -67,19 +71,19 @@ sections:
     container: static_array
     type: struct_collision_mod_health
 
-  - id: collision_mod_flag
+  - id: collision_mod_flags
     container: static_array
-    type: struct_collision_mod_flag
+    type: struct_collision_mod_flags
 
   - id: play_time
     type: struct_play_time
     mutable: true
+    zi: true
 
   - id: instance_count
     container: static_array
     type: u32
     mutable: true
-    zi: true
 
   - id: instance_velocity
     container: static_array
@@ -109,6 +113,16 @@ sections:
     type: struct_array_vec2
     mutable: true
 
+  - id: hero_flags
+    type: u32
+    mutable: true
+    zi: true
+
+  - id: mod_flags
+    type: u32
+    mutable: true
+    zi: true
+
 types:
   struct_vec2:
     - id: x
@@ -133,13 +147,10 @@ types:
   struct_play_time:
     - id: time
       type: f32
-      value: 1
     - id: time_delta
       type: f32
-      value: 2
     - id: frame_counter
       type: u32
-      value: 3
 
   struct_spawn:
     - id: at_each
@@ -194,18 +205,18 @@ types:
       container: static_array
       type: struct_collision_mod_health_target
 
-  struct_collision_mod_flag_target:
+  struct_collision_mod_flags_target:
     - id: target_asset_index
       type: u32
     - id: value
       type: u32
 
-  struct_collision_mod_flag:
+  struct_collision_mod_flags:
     - id: source_asset_index
       type: u32
     - id: targets
       container: static_array
-      type: struct_collision_mod_health_target
+      type: struct_collision_mod_flags_target
 
   struct_event_destroyed_at:
     - id: count

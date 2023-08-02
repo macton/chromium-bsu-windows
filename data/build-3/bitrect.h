@@ -19,25 +19,25 @@ const uint8_t bitrect_bitmask[8] = { 1, 8, 2, 16, 4, 32, 64, 128 };
 #define bitrect_calcsize(width,height)  ((((width)+1)/2) * (((height)+3)/4))
 #define bitrect_calcstride(width)       (((width)+1)/2)
 
-inline int32_t 
+extern inline int32_t 
 bitrect_size(bitrect_buffer* bitrect)
 {
   return bitrect_calcsize(bitrect->width, bitrect->height);
 }
 
-inline int32_t 
+extern inline int32_t 
 bitrect_stride(bitrect_buffer* bitrect)
 {
   return bitrect_calcstride(bitrect->width);
 }
 
-inline void
+extern inline void
 bitrect_clear(bitrect_buffer* bitrect)
 {
   memset(bitrect->buffer,0,bitrect_size(bitrect));
 }
 
-inline uint8_t
+extern inline uint8_t
 bitrect_byte_read(bitrect_buffer* bitrect, int32_t x, int32_t y)
 {
   if ( x < 0 ) return 0;
@@ -51,7 +51,7 @@ bitrect_byte_read(bitrect_buffer* bitrect, int32_t x, int32_t y)
   return char_value;
 }
 
-void
+extern inline void
 bitrect_byte_write(bitrect_buffer* bitrect, int32_t x, int32_t y, uint8_t value)
 {
   if ( x < 0 ) return;
@@ -64,7 +64,7 @@ bitrect_byte_write(bitrect_buffer* bitrect, int32_t x, int32_t y, uint8_t value)
   bitrect->buffer[ char_index ] = value;
 }
 
-uint8_t
+extern inline uint8_t
 bitrect_bit_read(bitrect_buffer* bitrect, int32_t x, int32_t y)
 {
   if ( x < 0 ) return 0;
@@ -82,7 +82,7 @@ bitrect_bit_read(bitrect_buffer* bitrect, int32_t x, int32_t y)
   return char_value & char_bitmask;
 }
 
-void
+extern inline void
 bitrect_bit_write(bitrect_buffer* bitrect, int32_t x, int32_t y)
 {
   if ( x < 0 ) return;
@@ -100,7 +100,7 @@ bitrect_bit_write(bitrect_buffer* bitrect, int32_t x, int32_t y)
   bitrect->buffer[ char_index ] |= char_bitmask;
 }
 
-void
+extern inline void
 bitrect_bit_clear(bitrect_buffer* bitrect, int32_t x, int32_t y)
 {
   if ( x < 0 ) return;
@@ -118,26 +118,73 @@ bitrect_bit_clear(bitrect_buffer* bitrect, int32_t x, int32_t y)
   bitrect->buffer[ char_index ] &= ~char_bitmask;
 }
 
-void
+extern inline void
 bitrect_draw_circle(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r)
 {
   int32_t x0  = cx-r;
   int32_t y0  = cy-r;
   int32_t x1  = cx+r;
   int32_t y1  = cy+r;
-  int32_t lcx = (x0+x1)/2;
-  int32_t lcy = (y0+y1)/2;
 
-  for (int32_t ly=y0;ly<=y1;ly++)
+  for (int32_t y=y0;y<=y1;y++)
   {
-    for (int32_t lx=x0;lx<=x1;lx++)
+    for (int32_t x=x0;x<=x1;x++)
     {
-      int32_t x = lx - lcx;
-      int32_t y = ly - lcy;
-      int32_t d = f32_sd_circle( x, y, r);
+      int32_t d = s32_sd_circle( x-cx, y-cy, r );
       if ( d <= 0 )
       {
-        bitrect_bit_write( bitrect, lx, ly );
+        bitrect_bit_write( bitrect, x, y );
+      }
+    }
+  }
+}
+
+extern inline void
+bitrect_draw_circle_2(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r)
+{
+  int32_t x0  = cx-r;
+  int32_t y0  = cy-r;
+  int32_t x1  = cx+r;
+  int32_t y1  = cy+r;
+
+  for (int32_t y=y0;y<=y1;y++)
+  {
+    for (int32_t x=x0;x<=x1;x++)
+    {
+      int32_t d = s32_sd_circle( x-cx, y-cy, r );
+      if (( x == cx ) || ( y == cy ))
+        bitrect_bit_write( bitrect, x, y );
+      else if ( d <= 0 )
+      {
+        int ox = (x&0x3);
+        int oy = (y&0x3);
+        if (!(( ox & 1 ) || ( oy & 1)))
+        bitrect_bit_write( bitrect, x, y );
+      }
+    }
+  }
+}
+
+extern inline void
+bitrect_draw_circle_border(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t circle_r, int32_t border_r)
+{
+  int32_t x0  = cx-(circle_r + border_r);
+  int32_t y0  = cy-(circle_r + border_r);
+  int32_t x1  = cx+(circle_r + border_r);
+  int32_t y1  = cy+(circle_r + border_r);
+
+  for (int32_t y=y0;y<=y1;y++)
+  {
+    for (int32_t x=x0;x<=x1;x++)
+    {
+      int32_t circle_d = s32_sd_circle( x-cx, y-cy, circle_r );
+      int32_t border_d = s32_sd_onion( circle_d, border_r );
+      if ( border_d <= 0 )
+      {
+        int ox = (x&0x3);
+        int oy = (y&0x3);
+        if (!(( ox & 1 ) || ( oy & 1)))
+        bitrect_bit_write( bitrect, x, y );
       }
     }
   }

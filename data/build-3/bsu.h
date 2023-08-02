@@ -14,7 +14,7 @@
 #define kPatternU32Offset              100
 #define kPatternU8Offset               104
 #define kCollisionModHealthOffset      108
-#define kCollisionModFlagOffset        112
+#define kCollisionModFlagsOffset       112
 #define kPlayTimeOffset                116
 #define kInstanceCountOffset           120
 #define kInstanceVelocityOffset        124
@@ -22,12 +22,15 @@
 #define kInstanceHealthOffset          132
 #define kEventDestroyedAtOffset        136
 #define kInstanceLocationOffset        140
+#define kHeroFlagsOffset               144
+#define kModFlagsOffset                148
 
 // Named Constants
 #define kEventDestroyedAtMaxCount      32
 #define kInitialDirectionDown          0
 #define kInitialDirectionHero          1
 #define kInitialDirectionUp            2
+#define kInitialDirectionOffset        3
 #define kHeroTrigger0                  1
 #define kHeroGun1                      2
 
@@ -41,8 +44,8 @@ typedef struct struct_at_each                         struct_at_each;
 typedef struct struct_at_group                        struct_at_group;
 typedef struct struct_collision_mod_health_target     struct_collision_mod_health_target;
 typedef struct struct_collision_mod_health            struct_collision_mod_health;
-typedef struct struct_collision_mod_flag_target       struct_collision_mod_flag_target;
-typedef struct struct_collision_mod_flag              struct_collision_mod_flag;
+typedef struct struct_collision_mod_flags_target      struct_collision_mod_flags_target;
+typedef struct struct_collision_mod_flags             struct_collision_mod_flags;
 typedef struct struct_event_destroyed_at              struct_event_destroyed_at;
 #endif // __cplusplus
 
@@ -111,13 +114,13 @@ struct struct_collision_mod_health
   static_array  targets;
 };
 
-struct struct_collision_mod_flag_target
+struct struct_collision_mod_flags_target
 {
   uint32_t  target_asset_index;
   uint32_t  value;
 };
 
-struct struct_collision_mod_flag
+struct struct_collision_mod_flags
 {
   uint32_t      source_asset_index;
   static_array  targets;
