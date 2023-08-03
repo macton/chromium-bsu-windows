@@ -1,15 +1,18 @@
 
 Simulation:
-[ ] Hero shield
-[ ] HeroAmmo powerups
+[ ] Menu
+    [ ] Start
+[x] Hero shield
+[x] HeroAmmo powerups
    [ ] clear on hit
 [ ] HeroHealth powerup
-[ ] Remove powerup when picked up
-[ ] Hero shield
 [ ] Restore original mutable buffer
-[ ] Repeat time with hero playback
 [ ] velocity movement
 [ ] output asset id header
+[ ] mod flags destroy powerup
+
+Simulation updates:
+[ ] Repeat time with hero playback
 
 Tools:
 [ ] imgui shared memory edit

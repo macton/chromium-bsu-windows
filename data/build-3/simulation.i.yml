@@ -40,7 +40,7 @@ MaxInstanceCount:
   SpawnPoint: 31
 BaseHealth:
   Hero: 100
-  HeroShield: 50
+  HeroShield: 150
   EnemyAmmo00: 1
   HeroAmmo00: 1
   EnemyAircraft_Straight: 10
@@ -207,6 +207,16 @@ CollisionModHealth:
     - Target: EnemyAircraft_Omni
       Amount: -10
   EnemyAmmo00:
+    - Target: Hero
+      Amount: -1
+    - Target: HeroShield
+      Amount: -1
+  EnemyAircraft_Omni:
+    - Target: Hero
+      Amount: -1
+    - Target: HeroShield
+      Amount: -1
+  EnemyAircraft_Straight:
     - Target: Hero
       Amount: -1
     - Target: HeroShield
@@ -1175,7 +1185,7 @@ DataU8:
   - '0x10'
 DataU32:
   - '0xffffffff'
-  - '0x00070007'
+  - '0x00000007'
 DataAtEach:
   - AtEach: Hero
     TimeStep: 0.25
@@ -1189,7 +1199,7 @@ DataAtEach:
   - AtEach: Hero
     TimeStep: 0.25
     Offset:
-      - -0.5
+      - -0.3
       - 0.9
     InitialDirection: kInitialDirectionOffset
     OnFlag: kHeroTrigger0 | kHeroGun1
@@ -1198,7 +1208,7 @@ DataAtEach:
   - AtEach: Hero
     TimeStep: 0.25
     Offset:
-      - 0.5
+      - 0.3
       - 0.9
     InitialDirection: kInitialDirectionOffset
     OnFlag: kHeroTrigger0 | kHeroGun1
@@ -1216,7 +1226,7 @@ DataAtEach:
     TimeStep: 0.1
     Offset:
       - 0
-      - -0.9
+      - 0
     InitialDirection: kInitialDirectionHero
     PatternWidth: 32
     PatternDataU32Offset: 1

@@ -7,6 +7,8 @@
 typedef struct bitrect_buffer bitrect_buffer;
 #endif
 
+extern float iTime;
+
 struct bitrect_buffer
 {
   uint32_t width;
@@ -152,13 +154,26 @@ bitrect_draw_circle_2(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r
     for (int32_t x=x0;x<=x1;x++)
     {
       int32_t d = s32_sd_circle( x-cx, y-cy, r );
+
+/*
       if (( x == cx ) || ( y == cy ))
-        bitrect_bit_write( bitrect, x, y );
-      else if ( d <= 0 )
       {
-        int ox = (x&0x3);
-        int oy = (y&0x3);
-        if (!(( ox & 1 ) || ( oy & 1)))
+        bitrect_bit_write( bitrect, x, y );
+      }
+      else if ( d <= 0 )
+*/
+      if ( d <= 0 )
+      {
+        int32_t dx = x-cx;
+        int32_t dy = y-cy;
+        int32_t xt = (dx * cosf( iTime * 3.f )) - (dy * sinf( iTime * 3.0f ));;
+        int32_t yt = (dx * sinf( iTime * 3.f )) + (dy * cosf( iTime * 3.0f ));;
+        // int32_t enable_y = ((yt&3)==0) || ( xt == 0 );
+        // int32_t enable_x = ((xt&3)==0) || ( yt == 0 );
+        int32_t enable_y = ((yt&1)==0);
+        int32_t enable_x = ((xt&1)==0);
+        int32_t enable = enable_x && enable_y;
+        if (enable)
         bitrect_bit_write( bitrect, x, y );
       }
     }
@@ -181,9 +196,16 @@ bitrect_draw_circle_border(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int3
       int32_t border_d = s32_sd_onion( circle_d, border_r );
       if ( border_d <= 0 )
       {
-        int ox = (x&0x3);
-        int oy = (y&0x3);
-        if (!(( ox & 1 ) || ( oy & 1)))
+        int32_t dx = x-cx;
+        int32_t dy = y-cy;
+        int32_t xt = (dx * cosf( iTime * 3.f )) - (dy * sinf( iTime * 3.0f ));;
+        int32_t yt = (dx * sinf( iTime * 3.f )) + (dy * cosf( iTime * 3.0f ));;
+        // int32_t enable_y = ((yt&3)==0) || ( xt == 0 );
+        // int32_t enable_x = ((xt&3)==0) || ( yt == 0 );
+        int32_t enable_y = ((yt&3)==0);
+        int32_t enable_x = ((xt&3)==0);
+        int32_t enable = enable_x && enable_y;
+        if (enable)
         bitrect_bit_write( bitrect, x, y );
       }
     }

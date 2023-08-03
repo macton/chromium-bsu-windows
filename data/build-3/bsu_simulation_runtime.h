@@ -173,24 +173,26 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
 
       if (t >= time_next)
       {
-        int            time_index                 = (int)(t / time_step);
         uint32_t       target_instance_count      = instance_count_data[target_asset_index];
         static_array*  target_location_array      = instance_location_data + target_asset_index;
         struct_vec2*   target_location_data       = (struct_vec2*)(bsu_start + target_location_array->offset);
-        uint32_t       pattern_width              = at_each->pattern_width;
-        uint32_t       pattern_index              = time_index % pattern_width;
-        uint32_t       pattern_index_word_index   = pattern_index >> 5;
-        uint32_t       pattern_index_bit_index    = pattern_index & 0x1f;
-        uint32_t       pattern_word_start_index   = at_each->pattern_u32_index;
-        uint32_t       pattern_word               = pattern_u32_data[ pattern_word_start_index + pattern_index_word_index ];
-        uint32_t       pattern_bit                = pattern_word & ( 1 << pattern_index_bit_index );
 
-        if ( pattern_bit )
+        for (int target_instance_index=0;target_instance_index<target_live_instance_count;target_instance_index++)
         {
-          for (int target_instance_index=0;target_instance_index<target_live_instance_count;target_instance_index++)
+          float*         target_age                 = target_age_data + target_instance_index;
+
+          if ( *target_age > 0.0f )
           {
-            float*         target_age = target_age_data + target_instance_index;
-            if ( *target_age > 0.0f )
+            int            time_index                 = (int)((*target_age) / time_step);
+            uint32_t       pattern_width              = at_each->pattern_width;
+            uint32_t       pattern_index              = time_index % pattern_width;
+            uint32_t       pattern_index_word_index   = pattern_index >> 5;
+            uint32_t       pattern_index_bit_index    = pattern_index & 0x1f;
+            uint32_t       pattern_word_start_index   = at_each->pattern_u32_index;
+            uint32_t       pattern_word               = pattern_u32_data[ pattern_word_start_index + pattern_index_word_index ];
+            uint32_t       pattern_bit                = pattern_word & ( 1 << pattern_index_bit_index );
+
+            if ( pattern_bit )
             {
               struct_vec2*   target_location  = target_location_data + target_instance_index; 
               uint32_t       next_instance_index       = instance_count % max_instance_count; 
@@ -331,7 +333,6 @@ bsu_simulation_write_count_age_location_velocity( uintptr_t bsu_start )
       }
     }
 
-  
     // ---------------------------------------------------------------------------------
     // write instance count
     // ---------------------------------------------------------------------------------
@@ -435,8 +436,8 @@ bsu_simulation_write_health( uintptr_t bsu_start )
               {
                 *target_health += target_mod_health_amount;
                 *source_health  = 0.0f; // self-destruct
-                if ( *target_health <= 0.0f ) {
-                  event_destroyed_at_location_data[event_destroyed_at_count % kEventDestroyedAtMaxCount] = *target_location;
+                if ( ( *target_health <= 0.0f ) || ( *source_health <= 0.0f )) {
+                  event_destroyed_at_location_data[event_destroyed_at_count % kEventDestroyedAtMaxCount] = *source_location;
                   event_destroyed_at_count++;
                 }
               }

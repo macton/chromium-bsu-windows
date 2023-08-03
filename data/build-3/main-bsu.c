@@ -22,7 +22,7 @@ extern char _binary_simulation_bsu_size[];
 int  bsu_draw( uintptr_t bsu_start );
 void bsu_draw_write_event_time( uintptr_t bsu_start );
 
-#define kEventDestroyTime 0.3f
+#define kEventDestroyTime 0.2f
 #define kEventDestroyMaxCount 32
 
 int         draw_event_destroy_count = 0;
@@ -266,10 +266,15 @@ if (color_id == 0)
 
       for (int y=0;y<iHeight;y+=4)
       {
+        move(y/4,0);
         for (int x=0;x<iWidth;x+=2)
         {
           int ch = bitrect_byte_read((bitrect_buffer*)&framebuffer,x,y);
-          mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
+          wchar_t str[2];
+          str[0] = L'\u2800'+ch;
+          str[1] = 0;
+          // mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
+          addwstr(str); 
         }
       }
 
@@ -366,12 +371,40 @@ bsu_draw( uintptr_t bsu_start )
   static_array*  instance_velocity_data    = (static_array*)(bsu_start + instance_velocity_array->offset);
   static_array*  instance_age_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceAgeOffset));
   static_array*  instance_age_data         = (static_array*)(bsu_start + instance_age_array->offset);
+  static_array*  instance_health_array        = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceHealthOffset));
+  static_array*  instance_health_data         = (static_array*)(bsu_start + instance_health_array->offset);
   static_array*  instance_count_array      = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kInstanceCountOffset));
   uint32_t*      instance_count_data       = (uint32_t*)(bsu_start + instance_count_array->offset);
   static_array*  max_instance_count_array  = (static_array*)(bsu_start + *(uint32_t*)(bsu_start + kMaxInstanceCountOffset));
   uint32_t*      max_instance_count_data   = (uint32_t*)(bsu_start + max_instance_count_array->offset);
   int            asset_count               = asset_spawn_array->count;
   int            result                    = 0;
+
+  {
+    float x = 7.0f;
+    float y = 3.0f;
+    float r0 = 1.0f;
+    float lx = (x) / 15.0f;
+    float ly = (y) / 15.0f;
+    int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
+    int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
+    int   r  = (int)((r0 / 15.0f) * (float)iHalfWidth);
+
+    bitrect_draw_circle_2((bitrect_buffer*)&framebuffer, cx,cy,r);
+  }
+
+  {
+    float x = 7.0f;
+    float y = 6.5f;
+    float r0 = 1.0f;
+    float lx = (x) / 15.0f;
+    float ly = (y) / 15.0f;
+    int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
+    int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
+    int   r  = (int)((r0 / 15.0f) * (float)iHalfWidth);
+
+    bitrect_draw_circle_2((bitrect_buffer*)&framebuffer, cx,cy,r);
+  }
  
   for (int asset_index=0;asset_index<asset_count;asset_index++)
   {
@@ -380,14 +413,18 @@ bsu_draw( uintptr_t bsu_start )
     struct_vec2*     location_data       = (struct_vec2*)(bsu_start + location_array->offset);
     static_array*    age_array           = instance_age_data + asset_index;
     float*           age_data            = (float*)(bsu_start + age_array->offset );
+    static_array*    health_array        = instance_health_data + asset_index;
+    float*           health_data         = (float*)(bsu_start + health_array->offset );
     uint32_t         instance_count      = instance_count_data[asset_index];
     uint32_t         max_instance_count  = max_instance_count_data[asset_index];
     uint32_t         live_instance_count = ( instance_count > max_instance_count ) ? max_instance_count : instance_count;
 
     for (int live_instance_index=0;live_instance_index<live_instance_count;live_instance_index++)
     {
-      float*    live_instance_age = age_data + live_instance_index;
-      if ( *live_instance_age > 0 ) 
+      float*    live_instance_age    = age_data + live_instance_index;
+      float*    live_instance_health = health_data + live_instance_index;
+
+      if ((*live_instance_age > 0) && (*live_instance_health > 0))
       {
         struct_vec2* live_location     = location_data + live_instance_index;
   
@@ -395,13 +432,13 @@ bsu_draw( uintptr_t bsu_start )
         float ly = (live_location->y) / 15.0f;
         int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
         int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
-        int   r    = ((base_size->x / 15.0) * iHalfWidth);
+        int   r  = (int)((base_size->x / 15.0f) * (float)iHalfWidth);
 
         debug_asset_index = asset_index;
         if ( asset_index == kHeroShieldIndex ) 
         {
-          // bitrect_draw_circle_border((bitrect_buffer*)&framebuffer,cx, cy, r, 1);
-          bitrect_draw_circle_2((bitrect_buffer*)&framebuffer,cx, cy, r);
+          bitrect_draw_circle_border((bitrect_buffer*)&framebuffer,cx, cy, r, 1);
+          // bitrect_draw_circle_2((bitrect_buffer*)&framebuffer,cx, cy, r);
         }
         else
         {
@@ -431,12 +468,12 @@ bsu_draw( uintptr_t bsu_start )
       float ly = location.y / 15.0f;
       int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
       int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
-      float start_size = 2.0f;
-      float stop_size  = 3.0f;
+      float start_size = 0.5f;
+      float stop_size  = 2.0f;
       float size = start_size + (t*(stop_size-start_size));
       int   r = ((size / 15.0) * iHalfWidth);
 
-      bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+      bitrect_draw_circle_2((bitrect_buffer*)&framebuffer,cx, cy, r);
     }
   }
 
@@ -469,7 +506,6 @@ bsu_draw_write_event_time( uintptr_t bsu_start )
     draw_event_time_remaining[draw_event_destroy_count%kEventDestroyMaxCount] = kEventDestroyTime;
     draw_event_destroy_count++;
   }
-
 }
 
 

@@ -21,7 +21,7 @@ MaxInstanceCount:
 
 BaseHealth:
   Hero:                    100
-  HeroShield:               50
+  HeroShield:              150
   EnemyAmmo00:               1
   HeroAmmo00:                1
   EnemyAircraft_Straight:   10
@@ -84,7 +84,6 @@ BaseSize:
   EnemyAircraft_Gnat:     [ 0.45, 0.45 ]
   EnemyAircraft_Boss00:   [ 3.50, 2.75 ]
   EnemyAircraft_Boss01:   [ 2.60, 2.30 ]
-
   PowerUp_HeroAmmo00:     [ 1.00, 1.00 ]
   PowerUp_HeroAmmo01:     [ 1.00, 1.00 ]
   PowerUp_HeroAmmo02:     [ 1.00, 1.00 ]
@@ -141,14 +140,14 @@ Spawn:
 
     - AtEach:     Hero
       TimeStep:   0.25
-      Offset:     [ -0.5, 0.9 ]
+      Offset:     [ -0.3, 0.9 ]
       Pattern:    '********************************'
       InitialDirection: kInitialDirectionOffset
       OnFlag: kHeroTrigger0 | kHeroGun1
 
     - AtEach:     Hero
       TimeStep:   0.25
-      Offset:     [ 0.5, 0.9 ]
+      Offset:     [ 0.3, 0.9 ]
       Pattern:    '********************************'
       InitialDirection: kInitialDirectionOffset
       OnFlag: kHeroTrigger0 | kHeroGun1
@@ -162,8 +161,8 @@ Spawn:
 
     - AtEach:     EnemyAircraft_Omni
       TimeStep:   0.1
-      Offset:     [ 0.0, -0.9 ]
-      Pattern:    '***-------------***-------------'
+      Offset:     [ 0.0, 0.0 ]
+      Pattern:    '***-----------------------------'
       InitialDirection: kInitialDirectionHero
 
   EnemyAircraft_Straight:
@@ -268,6 +267,16 @@ CollisionModHealth:
     - Target: EnemyAircraft_Omni
       Amount: -10
   EnemyAmmo00:
+    - Target: Hero
+      Amount: -1
+    - Target: HeroShield
+      Amount: -1
+  EnemyAircraft_Omni:
+    - Target: Hero
+      Amount: -1
+    - Target: HeroShield
+      Amount: -1
+  EnemyAircraft_Straight:
     - Target: Hero
       Amount: -1
     - Target: HeroShield
