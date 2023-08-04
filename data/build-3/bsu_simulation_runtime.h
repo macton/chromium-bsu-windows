@@ -5,8 +5,17 @@ extern float debug_b;
 extern float debug_c;
 extern float debug_d;
 
-#define kHeroIndex       0
-#define kHeroShieldIndex 1
+#define kHeroIndex        0
+#define kHeroShieldIndex  1
+#define kEnemyAmmo00Index 2
+#define kHeroAmmo00Index  3
+#define kEnemyAircraftStraightIndex 4
+#define kEnemyAircraftOmniIndex 5
+#define kPowerUpHeroAmmo00Index 11
+#define kPowerUpHeroAmmo01Index 12
+#define kPowerUpHeroAmmo02Index 13
+#define kPowerUpShieldsIndex 14
+#define kPowerUpRepairIndex 15
 
 extern inline void
 bsu_simulation_write_play_time( uintptr_t bsu_start, float time, float time_delta, uint32_t frame_counter )

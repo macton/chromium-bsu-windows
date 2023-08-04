@@ -22,14 +22,28 @@ extern char _binary_simulation_bsu_size[];
 int  bsu_draw( uintptr_t bsu_start );
 void bsu_draw_write_event_time( uintptr_t bsu_start );
 
+int debug_asset_index = 0;
+int line = 0;
+
+void
+init_color_rgb( int id, uint32_t rgb )
+{
+  uint32_t b = ((rgb & 0xff) * 1000 ) / 255;
+  uint32_t g = (((rgb >> 8) & 0xff) * 1000 ) / 255;
+  uint32_t r = (((rgb >> 16) & 0xff) * 1000 ) / 255;
+
+  mvprintw(line++,0,"0x%08x = %d %d %d\n",rgb,r,g,b);
+  
+  init_color(id, r, g, b);
+  init_pair(id, id, COLOR_BLACK);
+}
+
 #define kEventDestroyTime 0.2f
 #define kEventDestroyMaxCount 32
 
 int         draw_event_destroy_count = 0;
 float       draw_event_time_remaining[kEventDestroyMaxCount] = { 0.0f };
 
-int debug_asset_index = 0;
-int line = 0;
 
 // ---------------------------------------------------------------------------------------
 
@@ -63,8 +77,8 @@ int   mouse_bstate = 0;
 
 int fragment_main( int x, int y );
 
-#define FRAMEBUFFER_WIDTH  512
-#define FRAMEBUFFER_HEIGHT 512
+#define FRAMEBUFFER_WIDTH  2048
+#define FRAMEBUFFER_HEIGHT 2048
 
 typedef struct bitrect_framebuffer bitrect_framebuffer;
 struct bitrect_framebuffer
@@ -72,7 +86,42 @@ struct bitrect_framebuffer
   int32_t width;
   int32_t height;
   uint8_t buffer[ bitrect_calcsize( FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT ) ];
+  uint8_t color_buffer[ bitrect_calcsize( FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT ) ];
 };
+
+void
+set_color( bitrect_framebuffer* fb, int32_t x, int32_t y, uint8_t color_index )
+{
+  int32_t stride = bitrect_calcstride(fb->width);
+  int32_t char_x = x/2;
+  int32_t char_y = y/4;
+  fb->color_buffer[ (char_y*stride)+char_x ] = color_index;
+}
+
+uint8_t
+get_color( bitrect_framebuffer* fb, int32_t x, int32_t y )
+{
+  int32_t stride = bitrect_calcstride(fb->width);
+  int32_t char_x = x/2;
+  int32_t char_y = y/4;
+  return fb->color_buffer[ (char_y*stride)+char_x ];
+}
+
+void
+set_color_square( bitrect_framebuffer* fb, int32_t x, int32_t y, int32_t r, uint8_t color_index )
+{
+  int32_t x0 = x-r;
+  int32_t y0 = y-r;
+  int32_t x1 = x+r;
+  int32_t y1 = y+r;
+  for (int32_t ly=y0;ly<=y1;ly+=4)
+  {
+    for (int32_t lx=x0;lx<=x1;lx+=2)
+    {
+      set_color(fb,lx,ly,color_index);
+    }
+  }
+}
 
 bitrect_framebuffer framebuffer = { FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 0 };
 
@@ -100,9 +149,11 @@ int main(void)
   // xterm SET_ANY_EVENT_MOUSE
   // see: https://www.xfree86.org/current/ctlseqs.html#Mouse%20Tracking
   printf("\033[?1003h\n"); 
+  printf("\033[ ]50;7x13bold\n");
+
   fflush(stdout);
 
-  // start_color();
+  start_color();
   clear();
 
   iWidth      = COLS * 2;
@@ -111,7 +162,7 @@ int main(void)
   iHalfHeight = iHeight / 2;
 
 
-#if 0
+#if 1
   int offset = 0;
   do
   {
@@ -123,7 +174,7 @@ int main(void)
       {
         int r = 250+(x*750)/16;
         int b = 250+(y*750)/16;
-        int g = imin(r,b);
+        int g = s32_min(r,b);
 
 if (color_id == 0)
 {
@@ -146,10 +197,25 @@ if (color_id == 0)
 
     refresh();
     offset = (offset+1)%1000;
-    usleep(10000 );
   }
   while (getch() != ' ');
 #endif
+
+  init_color_rgb( COLOR_BLUE+(16*0), 0x374a77 );
+  init_color_rgb( COLOR_BLUE+(16*1), 0x1b335a );
+  init_color_rgb( COLOR_BLUE+(16*2), 0x304977 );
+  init_color_rgb( COLOR_BLUE+(16*3), 0x4f85c4 );
+  init_color_rgb( COLOR_BLUE+(16*4), 0x236ba3 );
+  init_color_rgb( COLOR_BLUE+(16*5), 0x3188c7 );
+  init_color_rgb( COLOR_BLUE+(16*6), 0x479bcf );
+  init_color_rgb( COLOR_BLUE+(16*7), 0x6ac7ec );
+  init_color_rgb( COLOR_BLUE+(16*8), 0xabdef8 );
+  init_color_rgb( COLOR_BLUE+(16*9), 0xffffff );
+
+  refresh();
+  do { } while (getch() != ' ');
+
+
 
   timespec frame_time;
   timespec sleep_time;
@@ -264,16 +330,23 @@ if (color_id == 0)
       timespec end_time;
       clock_gettime(CLOCK_REALTIME, &start_time);
 
+      uint8_t last_color = 0;
       for (int y=0;y<iHeight;y+=4)
       {
         move(y/4,0);
         for (int x=0;x<iWidth;x+=2)
         {
           int ch = bitrect_byte_read((bitrect_buffer*)&framebuffer,x,y);
+          uint8_t color = get_color(&framebuffer,x,y);
           wchar_t str[2];
           str[0] = L'\u2800'+ch;
           str[1] = 0;
           // mvprintw(y/4,x/2,"%lc",L'\u2800'+ch);
+          if ( color != last_color ) 
+          {
+            attron( COLOR_PAIR(color) );
+            last_color = color;
+          }
           addwstr(str); 
         }
       }
@@ -283,6 +356,7 @@ if (color_id == 0)
     }
 
 
+    attron( COLOR_PAIR(255) );
     mvprint_timespec( line++,0, "frame_time:      ", frame_time);
     mvprint_timespec( line++,0, "sleep_time:      ", sleep_time);
     mvprint_timespec( line++,0, "sim_time:        ", sim_time);
@@ -381,9 +455,9 @@ bsu_draw( uintptr_t bsu_start )
   int            result                    = 0;
 
   {
-    float x = 7.0f;
-    float y = 3.0f;
-    float r0 = 1.0f;
+    float x = 0.0f;
+    float y = 0.0f;
+    float r0 = 2.0f;
     float lx = (x) / 15.0f;
     float ly = (y) / 15.0f;
     int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
@@ -391,6 +465,7 @@ bsu_draw( uintptr_t bsu_start )
     int   r  = (int)((r0 / 15.0f) * (float)iHalfWidth);
 
     bitrect_draw_circle_2((bitrect_buffer*)&framebuffer, cx,cy,r);
+    set_color_square( &framebuffer,cx,cy, r, 16);
   }
 
   {
@@ -404,6 +479,7 @@ bsu_draw( uintptr_t bsu_start )
     int   r  = (int)((r0 / 15.0f) * (float)iHalfWidth);
 
     bitrect_draw_circle_2((bitrect_buffer*)&framebuffer, cx,cy,r);
+    set_color_square( &framebuffer,cx,cy, r, 32);
   }
  
   for (int asset_index=0;asset_index<asset_count;asset_index++)
@@ -433,16 +509,52 @@ bsu_draw( uintptr_t bsu_start )
         int   cx = iHalfWidth  + (int)(lx * iHalfWidth);
         int   cy = iHeight-(iHalfHeight + (int)(ly * iHalfHeight));
         int   r  = (int)((base_size->x / 15.0f) * (float)iHalfWidth);
+        int   br  = (int)((0.2f / 15.0f) * (float)iHalfWidth);
 
         debug_asset_index = asset_index;
+
         if ( asset_index == kHeroShieldIndex ) 
         {
-          bitrect_draw_circle_border((bitrect_buffer*)&framebuffer,cx, cy, r, 1);
-          // bitrect_draw_circle_2((bitrect_buffer*)&framebuffer,cx, cy, r);
+          bitrect_draw_circle_border((bitrect_buffer*)&framebuffer,cx, cy, r, br);
+          set_color_square( &framebuffer,cx,cy, r, COLOR_BLUE + (16*7));
         }
-        else
+
+        else if ( asset_index == kHeroIndex ) 
+        {
+          bitrect_draw_pentagon((bitrect_buffer*)&framebuffer,cx, cy, r);
+          // bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+          set_color_square( &framebuffer,cx,cy, r*2, COLOR_BLUE + (16*3) );
+        }
+
+        else if ( asset_index == kHeroAmmo00Index ) 
         {
           bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+          set_color_square( &framebuffer,cx,cy, r, COLOR_BLUE + (16*5) );
+        }
+
+        else if ( asset_index == kEnemyAmmo00Index ) 
+        {
+          bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+          set_color_square( &framebuffer,cx,cy, r, 31 );
+        }
+
+        else if ( asset_index == kEnemyAircraftStraightIndex )
+        {
+          bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+          set_color_square( &framebuffer,cx,cy, r, 31 );
+        }
+
+        else if ( asset_index == kEnemyAircraftOmniIndex )
+        {
+          bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+          set_color_square( &framebuffer,cx,cy, r, 31 );
+        }
+
+        else
+        {
+          bitrect_draw_star5((bitrect_buffer*)&framebuffer,cx, cy, r);
+          // bitrect_draw_circle((bitrect_buffer*)&framebuffer,cx, cy, r);
+          set_color_square( &framebuffer,cx,cy, r, 255-(17*3));
         }
       }
     }
@@ -474,6 +586,7 @@ bsu_draw( uintptr_t bsu_start )
       int   r = ((size / 15.0) * iHalfWidth);
 
       bitrect_draw_circle_2((bitrect_buffer*)&framebuffer,cx, cy, r);
+      set_color_square( &framebuffer,cx,cy, r, 128 + 8 + 16 );
     }
   }
 

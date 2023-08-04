@@ -142,6 +142,55 @@ bitrect_draw_circle(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r)
 }
 
 extern inline void
+bitrect_draw_star5(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r)
+{
+  int32_t x0  = cx-(1*r);
+  int32_t y0  = cy-(1*r);
+  int32_t x1  = cx+(1*r);
+  int32_t y1  = cy+(1*r);
+
+  for (int32_t y=y0;y<=y1;y++)
+  {
+    for (int32_t x=x0;x<=x1;x++)
+    {
+      int32_t lx0 = x-cx;
+      int32_t ly0 = y-cy;
+
+      int32_t lx = (lx0*cosf(iTime*3.0))-(ly0*sinf(iTime*3.0)); 
+      int32_t ly = (lx0*sinf(iTime*3.0))+(ly0*cosf(iTime*3.0));
+
+      int32_t d = (int32_t)f32_sd_star5(lx, ly, r, 0.5f);
+      if (d <= 0) 
+      {
+        bitrect_bit_write( bitrect, x, y );
+      }
+    }
+  }
+}
+
+extern inline void
+bitrect_draw_pentagon(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r)
+{
+  int32_t x0  = cx-(1.25*r);
+  int32_t y0  = cy-(1.25*r);
+  int32_t x1  = cx+(1.25*r);
+  int32_t y1  = cy+(1.25*r);
+
+  for (int32_t y=y0;y<=y1;y++)
+  {
+    for (int32_t x=x0;x<=x1;x++)
+    {
+      int32_t d = s32_sd_pentagon( x-cx, y-cy, r );
+      // int32_t d = (int32_t)f32_sd_star5(x-cx, y-cy, r, 0.5f);
+      if (d <= 0) 
+      {
+        bitrect_bit_write( bitrect, x, y );
+      }
+    }
+  }
+}
+
+extern inline void
 bitrect_draw_circle_2(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r)
 {
   int32_t x0  = cx-r;
@@ -153,7 +202,8 @@ bitrect_draw_circle_2(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r
   {
     for (int32_t x=x0;x<=x1;x++)
     {
-      int32_t d = s32_sd_circle( x-cx, y-cy, r );
+      int32_t off_r = (int)(3.0 * sinf( iTime * 3.0f * atan2( y, x ) ));
+      int32_t d = s32_sd_circle( x-cx, y-cy, r )-off_r;
 
 /*
       if (( x == cx ) || ( y == cy ))
@@ -168,11 +218,10 @@ bitrect_draw_circle_2(bitrect_buffer* bitrect, int32_t cx, int32_t cy, int32_t r
         int32_t dy = y-cy;
         int32_t xt = (dx * cosf( iTime * 3.f )) - (dy * sinf( iTime * 3.0f ));;
         int32_t yt = (dx * sinf( iTime * 3.f )) + (dy * cosf( iTime * 3.0f ));;
-        // int32_t enable_y = ((yt&3)==0) || ( xt == 0 );
-        // int32_t enable_x = ((xt&3)==0) || ( yt == 0 );
         int32_t enable_y = ((yt&1)==0);
         int32_t enable_x = ((xt&1)==0);
         int32_t enable = enable_x && enable_y;
+
         if (enable)
         bitrect_bit_write( bitrect, x, y );
       }
