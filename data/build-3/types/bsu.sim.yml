@@ -1,0 +1,22 @@
+play_area:
+  x: 15
+  y: 15
+assets:
+  count: 2
+  name:
+    - Enemy0
+    - Enemy1
+  size:
+    - x: 1.5
+      y: 1.5
+    - x: 2.5
+      y: 2.5
+  speed:
+    - 0.5
+    - 1.5
+  base_health:
+    - 50
+    - 100
+  max_instance_count:
+    - 5
+    - 25

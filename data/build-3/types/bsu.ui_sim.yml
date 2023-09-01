@@ -1,0 +1,20 @@
+play_area:
+  x: 15.0
+  y: 15.0
+
+assets:
+  - name: Enemy0
+    size: 
+      x: 1.5
+      y: 1.5
+    speed: 0.5
+    base_health: 50
+    max_instance_count: 5
+
+  - name: Enemy1
+    size: 
+      x: 2.5
+      y: 2.5
+    speed: 1.5
+    base_health: 100
+    max_instance_count: 25

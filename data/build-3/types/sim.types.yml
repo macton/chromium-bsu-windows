@@ -1,0 +1,107 @@
+types:
+
+  sim:
+    seq:
+      - id: play_area
+        type: vec2
+
+      - id: assets
+        type: sim_asset_table
+
+      - id: generators
+        type: generator_table
+
+  sim_asset_table:
+    seq:
+      - id: count 
+        type: u32
+
+      - id: name
+        array-of: utf8
+        count: count
+
+      - id: size
+        array-of: vec2
+        count: count
+
+      - id: speed
+        array-of: f32
+        count: count
+
+      - id: base_health
+        array-of: u32
+        count: count
+
+      - id: max_instance_count
+        array-of: u32
+        count: count
+
+  generator_table:
+    seq:
+      - id: each_count
+        type: u32
+
+      - id: group_count
+        type: u32
+
+      - id: each
+        array-of: generator_each
+        count: each_count
+
+      - id: group
+        array-of: generator_group
+        count: group_count
+
+  generator_each:
+    seq:
+      - id: asset_index
+        type: u32
+
+      - id: target_index
+        type: u32
+
+      - id: time_step
+        type: f32
+
+      - id: time_next
+        type: f32
+
+      - id: location_offset
+        type: vec2
+
+      - id: pattern_width
+        type: u32
+
+      - id: pattern
+        array-of: u32
+        count: ( pattern_width + 31 ) / 32
+
+  generator_group:
+    seq:
+      - id: asset_index
+        type: u32
+
+      - id: target_index
+        type: u32
+
+      - id: time_step
+        type: f32
+
+      - id: time_start
+        type: f32
+
+      - id: time_stop
+        type: f32
+
+      - id: time_next
+        type: f32
+
+      - id: location_offset
+        type: vec2
+
+      - id: pattern_count
+        type: u32
+
+      - id: pattern
+        array-of: u8
+        count: pattern_count

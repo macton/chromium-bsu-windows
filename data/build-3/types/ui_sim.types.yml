@@ -1,0 +1,33 @@
+types:
+
+  ui_sim:
+    seq:
+      - id: play_area
+        type: vec2
+      - id: assets
+        array-of: ui_sim_asset
+
+    map-to:
+      sim:
+        play_area: play_area
+        assets: 
+          count: assets.length
+          name: assets.map( asset => asset.name )
+          size: assets.map( asset => asset.size )
+          speed: assets.map( asset => asset.speed )
+          base_health: assets.map( asset => asset.base_health )
+          max_instance_count: assets.map( asset => asset.max_instance_count )
+
+  ui_sim_asset:
+    seq:
+      - id: name
+        type: utf8
+      - id: size
+        type: vec2
+      - id: speed
+        type: f32
+      - id: base_health
+        type: u32
+      - id: max_instance_count
+        type: u32
+

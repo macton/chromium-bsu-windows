@@ -1,0 +1,9 @@
+types:
+
+  vec2:
+    seq:
+      - id: x
+        type: f32
+      - id: y
+        type: f32
+
